@@ -18,18 +18,32 @@ const slugify = (value) => normalize(value).replace(/ /g, '-');
 const fingerprint = (value) => normalize(value);
 const singaporeDate = (year, month, day, hour = 0, minute = 0) => new Date(Date.UTC(year, month, day, hour - 8, minute));
 const singaporeParts = (date) => ({ year: date.getUTCFullYear(), month: date.getUTCMonth(), day: date.getUTCDate() });
+const AREA_HINTS = [
+  ['anchor green', 'Punggol'], ['edgefield', 'Punggol'], ['gongshang', 'Hougang'], ['wellington', 'Sembawang'],
+  ['cantonment', 'Outram'], ['yuhua', 'Jurong East'], ['ang mo kio', 'Ang Mo Kio'], ['amk ', 'Ang Mo Kio'],
+  ['bukit gombak', 'Bukit Gombak'], ['clementi', 'Clementi'], ['jurong west', 'Jurong West'], ['tampines', 'Tampines'],
+  ['east spring', 'Tampines'], ['loyang view', 'Pasir Ris'], ['dunman high', 'Kallang'], ['sengkang', 'Sengkang'],
+  ['yishun', 'Yishun'], ['delta', 'River Valley'], ['toa payoh', 'Toa Payoh'], ['tpy ', 'Toa Payoh'],
+];
 
 function expandedAliases(venue) {
   const aliases = new Set([venue.canonicalName, ...(venue.aliases || [])]);
   for (const alias of Array.from(aliases)) {
-    if (alias.includes(' - ')) aliases.add(alias.split(' - ')[0]);
+    if (alias.includes(' - ')) {
+      const short = alias.split(' - ')[0];
+      aliases.add(short);
+      if (/^Our\s+/i.test(short)) aliases.add(short.replace(/^Our\s+/i, ''));
+    }
     if (venue.kind === 'sport_hall') aliases.add(alias.replace(/\s+sports? hall\b/ig, ''));
     if (/^Our\s+/i.test(alias)) aliases.add(alias.replace(/^Our\s+/i, ''));
+    if (/^Ang Mo Kio\b/i.test(alias)) aliases.add(alias.replace(/^Ang Mo Kio/i, 'AMK'));
     aliases.add(alias.replace(/\s+hall\b/ig, ''));
     aliases.add(alias.replace(/\bsports hall\b/ig, 'sport hall'));
     aliases.add(alias.replace(/\bsport hall\b/ig, 'sports hall'));
     aliases.add(alias.replace(/\bprimary school hall\b/ig, 'pri'));
     aliases.add(alias.replace(/\bsecondary school hall\b/ig, 'sec'));
+    aliases.add(alias.replace(/\s+primary school hall\b/ig, ' primary'));
+    aliases.add(alias.replace(/\s+secondary school hall\b/ig, ' secondary'));
     aliases.add(alias.replace(/\bprimary school\b/ig, 'pri'));
     aliases.add(alias.replace(/\bsecondary school\b/ig, 'sec'));
     aliases.add(alias.replace(/\bcommunity club\b/ig, 'cc'));
@@ -60,11 +74,17 @@ function parsePrice(text) {
   return match ? Number(match[1]) : null;
 }
 
+function inferArea(text, venue) {
+  if (venue?.area) return venue.area;
+  const haystack = normalize(`${venue?.canonicalName || ''} ${text}`);
+  return AREA_HINTS.find(([hint]) => haystack.includes(normalize(hint)))?.[1] || 'Singapore';
+}
+
 function parseDate(text, postedAt) {
   const posted = new Date(postedAt);
   const year = posted.getFullYear();
   const numeric = text.match(/\b(\d{1,2})\s*(?:\/|-)\s*(\d{1,2})(?:\s*(?:\/|-)\s*(\d{2,4}))?\b/);
-  const named = text.match(/\b(\d{1,2})(?:st|nd|rd|th)?\s+(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\b/i);
+  const named = text.match(/\b(\d{1,2})(?:st|nd|rd|th)?(?:\s+|-)(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\b/i);
   let date;
   if (numeric) {
     const explicitYear = numeric[3] ? (numeric[3].length === 2 ? 2000 + Number(numeric[3]) : Number(numeric[3])) : year;
@@ -87,20 +107,32 @@ function parseDate(text, postedAt) {
 }
 
 function parseTime(text, date) {
-  const match = text.match(/\b(\d{1,2})(?:(?::|\.)(\d{2}))?\s*(am|pm)?\s*(?:-|–|—|to)\s*(\d{1,2})(?:(?::|\.)(\d{2}))?\s*(am|pm)?\b/i);
-  if (!match || !date) return null;
-  const [, startHour, startMinute = '00', startMeridiemValue, endHour, endMinute = '00', endMeridiemValue] = match;
+  const match = text.match(/\b((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm)?\s*(?:-|–|—|to)\s*((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm)?\b/i);
+  if (!date) return null;
+  const parseClock = (value) => value.includes(':') || value.includes('.') ? value.split(/[:.]/).map(Number) : value.length > 2 ? [Number(value.slice(0, -2)), Number(value.slice(-2))] : [Number(value), 0];
+  const to24 = (hour, meridiem) => { let value = Number(hour) % 12; if (meridiem?.toLowerCase() === 'pm') value += 12; return value; };
+  const parts = singaporeParts(date);
+  const formatTime = (value) => value.toLocaleTimeString('en-SG', { timeZone: 'Asia/Singapore', hour: 'numeric', minute: '2-digit' });
+  const makeStart = (value, meridiem) => { const [hour, minute] = parseClock(value); return singaporeDate(parts.year, parts.month, parts.day, to24(hour, meridiem), minute); };
+  const makeResult = (start, end) => {
+    const hours = Math.round((end - start) / 3600000 * 10) / 10;
+    return { start, end, display: `${formatTime(start)}–${formatTime(end)}`, duration: `${hours} ${hours === 1 ? 'hour' : 'hours'}` };
+  };
+  if (!match) {
+    const single = text.match(/\b((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm)\b/i);
+    const duration = text.match(/\b(\d+(?:\.\d+)?)\s*(?:hr|hrs|hour|hours)\b/i);
+    if (!single || !duration) return null;
+    const start = makeStart(single[1], single[2]);
+    return makeResult(start, new Date(start.getTime() + Number(duration[1]) * 3600000));
+  }
+  const [, startValue, startMeridiemValue, endValue, endMeridiemValue] = match;
   let startMeridiem = startMeridiemValue;
   let endMeridiem = endMeridiemValue;
   startMeridiem ||= endMeridiem; endMeridiem ||= startMeridiem;
-  const to24 = (hour, meridiem) => { let value = Number(hour) % 12; if (meridiem?.toLowerCase() === 'pm') value += 12; return value; };
-  const parts = singaporeParts(date);
-  const start = singaporeDate(parts.year, parts.month, parts.day, to24(startHour, startMeridiem), Number(startMinute));
-  const end = singaporeDate(parts.year, parts.month, parts.day, to24(endHour, endMeridiem), Number(endMinute));
-  if (end <= start) end.setHours(end.getHours() + 12);
-  const formatTime = (value) => value.toLocaleTimeString('en-SG', { timeZone: 'Asia/Singapore', hour: 'numeric', minute: '2-digit' });
-  const hours = Math.round((end - start) / 3600000 * 10) / 10;
-  return { start, end, display: `${formatTime(start)}–${formatTime(end)}`, duration: `${hours} ${hours === 1 ? 'hour' : 'hours'}` };
+  const start = makeStart(startValue, startMeridiem);
+  let end = makeStart(endValue, endMeridiem);
+  if (end <= start) end = new Date(end.getTime() + 12 * 3600000);
+  return makeResult(start, end);
 }
 
 function buildListing(message, venues) {
@@ -114,7 +146,7 @@ function buildListing(message, venues) {
   const listing = {
     id: `tg-${message.messageId}-${slugify(venueMatch.venue?.canonicalName || 'unmatched')}`,
     facility: venueMatch.venue?.canonicalName || 'Unmatched venue',
-    area: venueMatch.venue?.area || 'Singapore',
+    area: inferArea(rawText, venueMatch.venue),
     sport: /tennis/i.test(rawText) ? 'Tennis' : /basketball|hoops/i.test(rawText) ? 'Basketball' : 'Badminton',
     playAt: playAt?.toISOString() || new Date(0).toISOString(),
     postedAt,
@@ -144,10 +176,12 @@ const venues = [...activeSgVenues, ...overrides];
 const results = messages.map((message) => buildListing(message, venues));
 const byMessage = new Map(previousListings.map((listing) => [listing.sourceMessageId, listing]));
 const byFingerprint = new Map(previousListings.map((listing) => [fingerprint(listing.rawText), listing]));
+const currentUnmatched = [];
 let newCount = 0; let duplicateCount = 0;
 for (const { listing, venueMatch } of results) {
   if (byMessage.has(listing.sourceMessageId)) {
     byMessage.set(listing.sourceMessageId, listing);
+    if (!venueMatch.venue) currentUnmatched.push({ text: listing.rawText, sourceMessageId: listing.sourceMessageId, status: venueMatch.status, candidates: venueMatch.candidates || [], firstSeenAt: now.toISOString() });
     continue;
   }
   if (byFingerprint.has(fingerprint(listing.rawText))) {
@@ -157,9 +191,11 @@ for (const { listing, venueMatch } of results) {
   newCount += 1;
   byMessage.set(listing.sourceMessageId, listing);
   byFingerprint.set(fingerprint(listing.rawText), listing);
-  if (!venueMatch.venue) unmatched.push({ text: listing.rawText, sourceMessageId: listing.sourceMessageId, status: venueMatch.status, candidates: venueMatch.candidates || [], firstSeenAt: now.toISOString() });
+  if (!venueMatch.venue) currentUnmatched.push({ text: listing.rawText, sourceMessageId: listing.sourceMessageId, status: venueMatch.status, candidates: venueMatch.candidates || [], firstSeenAt: now.toISOString() });
 }
-const dedupedUnmatched = [...new Map(unmatched.map((item) => [`${item.sourceMessageId}:${item.text}`, item])).values()];
+const currentMessageIds = new Set(results.map(({ listing }) => listing.sourceMessageId));
+const retainedUnmatched = unmatched.filter((item) => !currentMessageIds.has(item.sourceMessageId));
+const dedupedUnmatched = [...new Map([...retainedUnmatched, ...currentUnmatched].map((item) => [`${item.sourceMessageId}:${item.text}`, item])).values()];
 const nextListings = [...byMessage.values()].sort((a, b) => new Date(a.playAt) - new Date(b.playAt));
 const deletedCount = nextListings.filter((listing) => listing.status === 'deleted').length;
 const expiredCount = nextListings.filter((listing) => listing.status === 'active' && new Date(listing.playAt) <= now).length;

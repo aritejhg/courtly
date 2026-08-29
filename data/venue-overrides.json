@@ -1,5 +1,25 @@
 [
   {
+    "id": "manual:singapore-expo",
+    "canonicalName": "Singapore Expo",
+    "aliases": ["singapore expo", "seh expo", "seh@expo", "expo"],
+    "source": "Telegram + OneMap",
+    "kind": "other",
+    "area": "Expo",
+    "lat": 1.335,
+    "lng": 103.962
+  },
+  {
+    "id": "manual:wellington-primary-school",
+    "canonicalName": "Wellington Primary School",
+    "aliases": ["wellington primary", "wellington pri", "wellington primary school", "wellington pri school"],
+    "source": "Telegram + OneMap",
+    "kind": "school_sport_hall",
+    "area": "Sembawang",
+    "lat": 1.442,
+    "lng": 103.824
+  },
+  {
     "id": "onepa:kolam-ayer-cc",
     "canonicalName": "Kolam Ayer CC",
     "aliases": ["kolam ayer", "kolam ayer cc", "kolam ayer community club"],

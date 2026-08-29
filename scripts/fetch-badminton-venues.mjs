@@ -26,6 +26,7 @@ function attribute(block, selector, name) {
 function aliasesFor(name) {
   const aliases = new Set([name]);
   const add = (from, to) => { if (name.toLowerCase().includes(from.toLowerCase())) aliases.add(name.replace(new RegExp(from, 'ig'), to)); };
+  if (/^Ang Mo Kio\b/i.test(name)) aliases.add(name.replace(/^Ang Mo Kio/i, 'AMK'));
   add('Sports Hall', 'Sport Hall'); add('Sport Hall', 'Sports Hall');
   add('Primary School Hall', 'Pri'); add('Secondary School Hall', 'Sec');
   add('Primary School', 'Pri'); add('Secondary School', 'Sec');

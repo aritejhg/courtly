@@ -6,7 +6,7 @@
  * play-time expiry rules in one place.
  */
 
-import { matchVenue } from './venue-mapping';
+import { inferVenueArea, matchVenue } from './venue-mapping';
 
 export type ListingStatus = 'active' | 'deleted';
 
@@ -59,7 +59,8 @@ export function inferSport(text: string): CourtListing['sport'] {
 
 export function inferArea(text: string): string {
   const venue = matchVenue(text).venue;
-  if (venue?.area) return venue.area;
+  const venueArea = inferVenueArea(text, venue);
+  if (venueArea) return venueArea;
   return AREA_NAMES.find((area) => text.toLowerCase().includes(area.toLowerCase())) ?? 'Singapore';
 }
 

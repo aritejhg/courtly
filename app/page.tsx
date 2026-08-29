@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import { ArrowLeft, ArrowUpRight, Bus, Check, ChevronDown, MapPin, Menu, MessageCircle, Navigation, Plus, Search, TrainFront, X } from 'lucide-react';
 import { getActiveListings } from '@/lib/ingestion';
 import { telegramListings } from '@/lib/telegram-listings';
-import { matchVenue } from '@/lib/venue-mapping';
+import { inferVenueArea, matchVenue } from '@/lib/venue-mapping';
 
 type Sport = 'Badminton' | 'Tennis' | 'Basketball';
 type TransitMode = 'MRT' | 'Bus' | 'Walk';
@@ -28,7 +28,7 @@ const transitFor = (area: string): Record<string, Record<TransitMode, number>> =
   const minutes = base[key] ?? 30;
   return { home: { MRT: minutes, Bus: minutes + 10, Walk: minutes * 2 + 12 }, studio: { MRT: minutes + 7, Bus: minutes + 17, Walk: minutes * 2 + 25 }, work: { MRT: Math.max(12, minutes - 4), Bus: minutes + 6, Walk: minutes * 2 + 18 } };
 };
-const courts: Court[] = telegramListings.map((listing) => { const venue = matchVenue(listing.rawText).venue; const area = venue?.area ?? listing.area; return { id: listing.id, name: venue?.canonicalName ?? listing.facility, area, sport: listing.sport === 'Other' ? 'Badminton' : listing.sport, date: listing.displayDate, day: listing.displayDay, time: listing.displayTime, duration: listing.duration, price: listing.price, owner: listing.owner, available: `${listing.displayDay} · ${listing.displayTime}`, lat: venue?.lat ?? listing.lat, lng: venue?.lng ?? listing.lng, transit: transitFor(area) }; });
+const courts: Court[] = telegramListings.map((listing) => { const venue = matchVenue(listing.rawText).venue; const area = inferVenueArea(listing.rawText, venue) ?? listing.area; return { id: listing.id, name: venue?.canonicalName ?? listing.facility, area, sport: listing.sport === 'Other' ? 'Badminton' : listing.sport, date: listing.displayDate, day: listing.displayDay, time: listing.displayTime, duration: listing.duration, price: listing.price, owner: listing.owner, available: `${listing.displayDay} · ${listing.displayTime}`, lat: venue?.lat ?? listing.lat, lng: venue?.lng ?? listing.lng, transit: transitFor(area) }; });
 
 export default function Home() {
   const mapElement = useRef<HTMLDivElement>(null);
