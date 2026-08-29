@@ -20,6 +20,14 @@ export type CourtListing = {
   sourceMessageId: string;
   sourceUrl: string;
   rawText: string;
+  displayDate: string;
+  displayDay: string;
+  displayTime: string;
+  duration: string;
+  price: number | null;
+  owner: string;
+  lat: number;
+  lng: number;
 };
 
 export type TelegramMessage = {
@@ -83,6 +91,14 @@ export function ingestTelegramMessage(message: TelegramMessage, now = new Date()
     sourceMessageId: id,
     sourceUrl: message.sourceUrl ?? 'https://t.me/your_group_invite',
     rawText,
+    displayDate: isoDate ? new Date(isoDate).toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Date unknown',
+    displayDay: isoDate ? new Date(isoDate).toLocaleDateString('en-SG', { weekday: 'long' }) : 'Day unknown',
+    displayTime: isoDate ? new Date(isoDate).toLocaleTimeString('en-SG', { hour: 'numeric', minute: '2-digit' }) : 'Time unknown',
+    duration: 'Unknown',
+    price: null,
+    owner: 'Sample Owner',
+    lat: 1.3521,
+    lng: 103.8198,
   };
 }
 
