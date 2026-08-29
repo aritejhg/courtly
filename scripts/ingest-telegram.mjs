@@ -180,7 +180,8 @@ const currentUnmatched = [];
 let newCount = 0; let duplicateCount = 0;
 for (const { listing, venueMatch } of results) {
   if (byMessage.has(listing.sourceMessageId)) {
-    byMessage.set(listing.sourceMessageId, listing);
+    const previous = byMessage.get(listing.sourceMessageId);
+    byMessage.set(listing.sourceMessageId, listing.status === 'deleted' && previous?.deletedAt ? { ...listing, deletedAt: previous.deletedAt } : listing);
     if (!venueMatch.venue) currentUnmatched.push({ text: listing.rawText, sourceMessageId: listing.sourceMessageId, status: venueMatch.status, candidates: venueMatch.candidates || [], firstSeenAt: now.toISOString() });
     continue;
   }
