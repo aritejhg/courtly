@@ -11,7 +11,7 @@ type TransitMode = 'MRT' | 'Bus' | 'Walk';
 type Court = { id: string; name: string; area: string; sport: Sport; available: string; note: string; position: { left: string; top: string }; transit: Record<string, Record<TransitMode, number>> };
 type SavedLocation = { id: string; name: string; address: string; color: string };
 
-const TELEGRAM_URL = 'https://t.me/sgbadm';
+const TELEGRAM_URL = 'https://t.me/your_group_invite';
 const initialLocations: SavedLocation[] = [
   { id: 'home', name: 'Home', address: 'Tiong Bahru', color: 'coral' },
   { id: 'studio', name: 'Studio', address: 'One-North', color: 'mint' },

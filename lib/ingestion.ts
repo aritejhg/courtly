@@ -81,7 +81,7 @@ export function ingestTelegramMessage(message: TelegramMessage, now = new Date()
     status: message.deleted ? 'deleted' : 'active',
     deletedAt: message.deleted ? now.toISOString() : undefined,
     sourceMessageId: id,
-    sourceUrl: message.sourceUrl ?? `https://t.me/sgbadm/${id}`,
+    sourceUrl: message.sourceUrl ?? 'https://t.me/your_group_invite',
     rawText,
   };
 }
@@ -98,4 +98,3 @@ export function getActiveListings(listings: CourtListing[], now = new Date()) {
 export function markListingDeleted(listing: CourtListing, deletedAt = new Date().toISOString()): CourtListing {
   return { ...listing, status: 'deleted', deletedAt };
 }
-
