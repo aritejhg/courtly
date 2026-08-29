@@ -19,7 +19,7 @@ const INITIAL_LOCATIONS: SavedLocation[] = [
   { id: 'work', name: 'Work', address: 'Raffles Place', color: 'sun' },
 ];
 const areas = ['All areas', 'Central', 'East', 'North', 'West'];
-const areaMap: Record<string, string[]> = { Central: ['Clementi', 'River Valley', 'Outram', 'Tiong Bahru', 'Tanjong Pagar', 'Toa Payoh', 'Kallang', 'Newton'], East: ['East', 'Expo', 'Tampines', 'Pasir Ris', 'Serangoon'], North: ['Hougang', 'Punggol', 'Yishun', 'Woodlands', 'Sembawang', 'Ang Mo Kio', 'Sengkang'], West: ['Jurong West', 'Jurong East', 'Bukit Gombak'] };
+const areaMap: Record<string, string[]> = { Central: ['Clementi', 'River Valley', 'Outram', 'Tiong Bahru', 'Tanjong Pagar', 'Toa Payoh', 'Kallang', 'Kolam Ayer', 'Newton'], East: ['East', 'Expo', 'Tampines', 'Pasir Ris', 'Serangoon'], North: ['Hougang', 'Punggol', 'Yishun', 'Woodlands', 'Sembawang', 'Ang Mo Kio', 'Sengkang'], West: ['Jurong West', 'Jurong East', 'Bukit Gombak'] };
 const modeIcon = (mode: TransitMode) => mode === 'MRT' ? <TrainFront size={14} /> : mode === 'Bus' ? <Bus size={14} /> : <Navigation size={14} />;
 const transitFor = (area: string): Record<string, Record<TransitMode, number>> => {
   const base: Record<string, number> = { Central: 22, East: 40, North: 35, West: 35, 'South West': 28 };

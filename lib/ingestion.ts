@@ -46,7 +46,7 @@ const SPORT_ALIASES: Array<[CourtListing['sport'], RegExp]> = [
 
 const AREA_NAMES = [
   'Queenstown', 'Tampines', 'Toa Payoh', 'Sembawang', 'Jurong West',
-  'Kallang', 'Bukit Canberra', 'Tiong Bahru', 'Woodlands', 'Pasir Ris',
+  'Kallang', 'Kolam Ayer', 'Bukit Canberra', 'Tiong Bahru', 'Woodlands', 'Pasir Ris',
 ];
 
 export function inferSport(text: string): CourtListing['sport'] {
