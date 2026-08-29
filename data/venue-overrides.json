@@ -1,0 +1,113 @@
+[
+  {
+    "id": "onepa:kolam-ayer-cc",
+    "canonicalName": "Kolam Ayer CC",
+    "aliases": ["kolam ayer", "kolam ayer cc", "kolam ayer community club"],
+    "source": "onePA",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/kolam-ayer-cc",
+    "kind": "community_club",
+    "area": "Kolam Ayer",
+    "lat": 1.32411,
+    "lng": 103.86985
+  },
+  {
+    "id": "onepa:siglap-cc",
+    "canonicalName": "Siglap CC",
+    "aliases": ["siglap", "siglap cc", "siglap community club"],
+    "source": "onePA",
+    "kind": "community_club",
+    "area": "Siglap",
+    "lat": 1.313,
+    "lng": 103.927
+  },
+  {
+    "id": "onepa:taman-jurong-cc",
+    "canonicalName": "Taman Jurong CC",
+    "aliases": ["taman jurong", "taman jurong cc", "taman jurong community club"],
+    "source": "onePA",
+    "kind": "community_club",
+    "area": "Jurong West",
+    "lat": 1.334,
+    "lng": 103.721
+  },
+  {
+    "id": "onepa:braddell-heights-cc",
+    "canonicalName": "Braddell Heights CC",
+    "aliases": ["braddell heights", "braddell heights cc", "braddell heights community club"],
+    "source": "onePA",
+    "kind": "community_club",
+    "area": "Serangoon",
+    "lat": 1.34,
+    "lng": 103.862
+  },
+  {
+    "id": "onepa:toa-payoh-cc",
+    "canonicalName": "Toa Payoh CC",
+    "aliases": ["toa payoh", "toa payoh cc", "tpy", "tpy cc", "toa payoh community club"],
+    "source": "onePA",
+    "kind": "community_club",
+    "area": "Toa Payoh",
+    "lat": 1.333,
+    "lng": 103.847
+  },
+  {
+    "id": "onepa:hwi-yoh-cc",
+    "canonicalName": "Hwi Yoh CC",
+    "aliases": ["hwi yoh", "hwi yoh cc", "hwi yoh community club"],
+    "source": "onePA",
+    "kind": "community_club",
+    "area": "Hougang",
+    "lat": 1.347,
+    "lng": 103.88
+  },
+  {
+    "id": "onepa:tiong-bahru-cc",
+    "canonicalName": "Tiong Bahru CC",
+    "aliases": ["tiong bahru", "tiong bahru cc", "tb cc", "tiong bahru community club"],
+    "source": "onePA",
+    "kind": "community_club",
+    "area": "Tiong Bahru",
+    "lat": 1.286,
+    "lng": 103.826
+  },
+  {
+    "id": "onepa:tanjong-pagar-cc",
+    "canonicalName": "Tanjong Pagar CC",
+    "aliases": ["tanjong pagar", "tanjong pagar cc", "tanjong pagar community club"],
+    "source": "onePA",
+    "kind": "community_club",
+    "area": "Tanjong Pagar",
+    "lat": 1.276,
+    "lng": 103.843
+  },
+  {
+    "id": "onepa:cairnhill-cc",
+    "canonicalName": "Cairnhill CC",
+    "aliases": ["cairnhill", "cairnhill cc", "cairnhill community club"],
+    "source": "onePA",
+    "kind": "community_club",
+    "area": "Newton",
+    "lat": 1.307,
+    "lng": 103.839
+  },
+  {
+    "id": "onepa:telok-blangah-cc",
+    "canonicalName": "Telok Blangah CC",
+    "aliases": ["telok blangah", "telok blangah cc", "telok blangah community club"],
+    "source": "onePA",
+    "kind": "community_club",
+    "area": "Telok Blangah",
+    "lat": 1.273,
+    "lng": 103.811
+  },
+  {
+    "id": "onepa:woodlands-cc",
+    "canonicalName": "Woodlands CC",
+    "aliases": ["woodlands", "woodlands cc", "woodlands community club"],
+    "source": "onePA",
+    "kind": "community_club",
+    "area": "Woodlands",
+    "lat": 1.437,
+    "lng": 103.786
+  }
+]

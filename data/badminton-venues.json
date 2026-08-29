@@ -1,0 +1,2161 @@
+[
+  {
+    "id": "active-sg:admiralty-primary-school-hall",
+    "canonicalName": "Admiralty Primary School Hall",
+    "aliases": [
+      "Admiralty Primary School Hall",
+      "Admiralty Pri",
+      "Admiralty Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/admiralty-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "11 Woodlands Circle Singapore 738907",
+    "lat": 1.442635,
+    "lng": 103.8
+  },
+  {
+    "id": "active-sg:anchor-green-primary-school-hall",
+    "canonicalName": "Anchor Green Primary School Hall",
+    "aliases": [
+      "Anchor Green Primary School Hall",
+      "Anchor Green Pri",
+      "Anchor Green Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/anchor-green-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "31 Anchorvale Drive Singapore 544969",
+    "lat": 1.39037,
+    "lng": 103.8871654
+  },
+  {
+    "id": "active-sg:ang-mo-kio-primary-school-hall",
+    "canonicalName": "Ang Mo Kio Primary School Hall",
+    "aliases": [
+      "Ang Mo Kio Primary School Hall",
+      "Ang Mo Kio Pri",
+      "Ang Mo Kio Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/ang-mo-kio-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "20 Ang Mo Kio Avenue 3 Singapore 569920",
+    "lat": 1.3693218,
+    "lng": 103.8396309
+  },
+  {
+    "id": "active-sg:angsana-primary-school-hall",
+    "canonicalName": "Angsana Primary School Hall",
+    "aliases": [
+      "Angsana Primary School Hall",
+      "Angsana Pri",
+      "Angsana Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/angsana-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "East",
+    "address": "51 Tampines Street 61 Singapore 528565",
+    "lat": 1.363606,
+    "lng": 103.9389
+  },
+  {
+    "id": "active-sg:beacon-primary-school-hall",
+    "canonicalName": "Beacon Primary School Hall",
+    "aliases": [
+      "Beacon Primary School Hall",
+      "Beacon Pri",
+      "Beacon Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/beacon-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "36 Bukit Panjang Ring Road Singapore 679944",
+    "lat": 1.384241,
+    "lng": 103.7739
+  },
+  {
+    "id": "active-sg:beatty-secondary-school-hall",
+    "canonicalName": "Beatty Secondary School Hall",
+    "aliases": [
+      "Beatty Secondary School Hall",
+      "Beatty Sec",
+      "Beatty Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/beatty-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "1 Toa Payoh North Singapore 318990",
+    "lat": 1.34179,
+    "lng": 103.8523
+  },
+  {
+    "id": "active-sg:bedok-green-primary-school-hall",
+    "canonicalName": "Bedok Green Primary School Hall",
+    "aliases": [
+      "Bedok Green Primary School Hall",
+      "Bedok Green Pri",
+      "Bedok Green Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bedok-green-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "East",
+    "address": "1 Bedok South Avenue 2 Singapore 469317",
+    "lat": 1.323996,
+    "lng": 103.9377
+  },
+  {
+    "id": "active-sg:bendemeer-primary-school-hall",
+    "canonicalName": "Bendemeer Primary School Hall",
+    "aliases": [
+      "Bendemeer Primary School Hall",
+      "Bendemeer Pri",
+      "Bendemeer Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bendemeer-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "91 Bendemeer Road Singapore 339948",
+    "lat": 1.321813,
+    "lng": 103.8654
+  },
+  {
+    "id": "active-sg:bendemeer-secondary-school-hall",
+    "canonicalName": "Bendemeer Secondary School Hall",
+    "aliases": [
+      "Bendemeer Secondary School Hall",
+      "Bendemeer Sec",
+      "Bendemeer Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bendemeer-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "1 Saint Wilfred Road Singapore 327919",
+    "lat": 1.324611,
+    "lng": 103.861
+  },
+  {
+    "id": "active-sg:bishan-clubhouse",
+    "canonicalName": "Bishan Clubhouse",
+    "aliases": [
+      "Bishan Clubhouse"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bishan-clubhouse",
+    "kind": "sport_hall",
+    "zone": "Northeast",
+    "address": "3 Bishan Street 14 Singapore 579780",
+    "lat": 1.355075,
+    "lng": 103.85
+  },
+  {
+    "id": "active-sg:bishan-sport-hall",
+    "canonicalName": "Bishan Sport Hall",
+    "aliases": [
+      "Bishan Sport Hall",
+      "Bishan Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bishan-sport-hall",
+    "kind": "sport_hall",
+    "zone": "Northeast",
+    "address": "5 Bishan Street 14 Singapore 579783",
+    "lat": 1.355283,
+    "lng": 103.8509
+  },
+  {
+    "id": "active-sg:blangah-rise-primary-school-hall",
+    "canonicalName": "Blangah Rise Primary School Hall",
+    "aliases": [
+      "Blangah Rise Primary School Hall",
+      "Blangah Rise Pri",
+      "Blangah Rise Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/blangah-rise-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "91 Telok Blangah Heights Singapore 109100",
+    "lat": 1.276145,
+    "lng": 103.8086
+  },
+  {
+    "id": "active-sg:boon-lay-secondary-school-hall",
+    "canonicalName": "Boon Lay Secondary School Hall",
+    "aliases": [
+      "Boon Lay Secondary School Hall",
+      "Boon Lay Sec",
+      "Boon Lay Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/boon-lay-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "11 Jurong West Street 65 Singapore 648354",
+    "lat": 1.342722,
+    "lng": 103.7019
+  },
+  {
+    "id": "active-sg:bowen-secondary-school-hall",
+    "canonicalName": "Bowen Secondary School Hall",
+    "aliases": [
+      "Bowen Secondary School Hall",
+      "Bowen Sec",
+      "Bowen Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bowen-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "2 Lorong Napiri Singapore 547529",
+    "lat": 1.37036,
+    "lng": 103.8777
+  },
+  {
+    "id": "active-sg:bt-panjang-primary-school-hall",
+    "canonicalName": "Bt Panjang Primary School Hall",
+    "aliases": [
+      "Bt Panjang Primary School Hall",
+      "Bt Panjang Pri",
+      "Bt Panjang Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bt-panjang-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "109 Cashew Road Singapore 679676",
+    "lat": 1.373501,
+    "lng": 103.7694
+  },
+  {
+    "id": "active-sg:bukit-batok-secondary-school-hall",
+    "canonicalName": "Bukit Batok Secondary School Hall",
+    "aliases": [
+      "Bukit Batok Secondary School Hall",
+      "Bukit Batok Sec",
+      "Bukit Batok Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bukit-batok-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "50 Bukit Batok West Avenue 8 Singapore 658962",
+    "lat": 1.349047102,
+    "lng": 103.7398772
+  },
+  {
+    "id": "active-sg:bukit-canberra-sport-hall",
+    "canonicalName": "Bukit Canberra Sport Hall",
+    "aliases": [
+      "Bukit Canberra Sport Hall",
+      "Bukit Canberra Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bukit-canberra-sport-hall",
+    "kind": "sport_hall",
+    "zone": "North",
+    "address": "21 Canberra Link Singapore 756973",
+    "lat": 1.448263,
+    "lng": 103.8228
+  },
+  {
+    "id": "active-sg:bukit-gombak-sport-hall",
+    "canonicalName": "Bukit Gombak Sport Hall",
+    "aliases": [
+      "Bukit Gombak Sport Hall",
+      "Bukit Gombak Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bukit-gombak-sport-hall",
+    "kind": "sport_hall",
+    "zone": "West",
+    "address": "810 Bukit Batok West Avenue 5 Singapore 659088",
+    "lat": 1.359812,
+    "lng": 103.7523
+  },
+  {
+    "id": "active-sg:bukit-panjang-government-high-school-hall",
+    "canonicalName": "Bukit Panjang Government High School Hall",
+    "aliases": [
+      "Bukit Panjang Government High School Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bukit-panjang-government-high-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "7 Choa Chu Kang Avenue 4 Singapore 689809",
+    "lat": 1.382242,
+    "lng": 103.7384
+  },
+  {
+    "id": "active-sg:bukit-panjang-primary-school-hall",
+    "canonicalName": "Bukit Panjang Primary School Hall",
+    "aliases": [
+      "Bukit Panjang Primary School Hall",
+      "Bukit Panjang Pri",
+      "Bukit Panjang Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bukit-panjang-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "109 Cashew Road Singapore 679676",
+    "lat": 1.373501,
+    "lng": 103.7694
+  },
+  {
+    "id": "active-sg:bukit-timah-primary-school-hall",
+    "canonicalName": "Bukit Timah Primary School Hall",
+    "aliases": [
+      "Bukit Timah Primary School Hall",
+      "Bukit Timah Pri",
+      "Bukit Timah Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bukit-timah-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "111 Lorong Kismis Singapore 598112",
+    "lat": 1.3373,
+    "lng": 103.7668
+  },
+  {
+    "id": "active-sg:bukit-view-secondary-school-hall",
+    "canonicalName": "Bukit View Secondary School Hall",
+    "aliases": [
+      "Bukit View Secondary School Hall",
+      "Bukit View Sec",
+      "Bukit View Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bukit-view-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "16 Bukit Batok Street 21 Singapore 659633",
+    "lat": 1.345733,
+    "lng": 103.7522
+  },
+  {
+    "id": "active-sg:canberra-primary-school-hall",
+    "canonicalName": "Canberra Primary School Hall",
+    "aliases": [
+      "Canberra Primary School Hall",
+      "Canberra Pri",
+      "Canberra Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/canberra-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "21 Admiralty Drive Singapore 757714",
+    "lat": 1.451233,
+    "lng": 103.8159
+  },
+  {
+    "id": "active-sg:canberra-secondary-school-hall",
+    "canonicalName": "Canberra Secondary School Hall",
+    "aliases": [
+      "Canberra Secondary School Hall",
+      "Canberra Sec",
+      "Canberra Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/canberra-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "51 Sembawang Drive Singapore 757699",
+    "lat": 1.453191,
+    "lng": 103.8142
+  },
+  {
+    "id": "active-sg:cantonment-primary-school-hall",
+    "canonicalName": "Cantonment Primary School Hall",
+    "aliases": [
+      "Cantonment Primary School Hall",
+      "Cantonment Pri",
+      "Cantonment Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/cantonment-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "1 Cantonment Close Singapore 088256",
+    "lat": 1.275473,
+    "lng": 103.84
+  },
+  {
+    "id": "active-sg:casuarina-primary-school-hall",
+    "canonicalName": "Casuarina Primary School Hall",
+    "aliases": [
+      "Casuarina Primary School Hall",
+      "Casuarina Pri",
+      "Casuarina Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/casuarina-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "East",
+    "address": "30 Pasir Ris Street 41 Singapore 518935",
+    "lat": 1.372461,
+    "lng": 103.957
+  },
+  {
+    "id": "active-sg:cedar-primary-school-hall",
+    "canonicalName": "Cedar Primary School Hall",
+    "aliases": [
+      "Cedar Primary School Hall",
+      "Cedar Pri",
+      "Cedar Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/cedar-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "15 Cedar Avenue Singapore 349700",
+    "lat": 1.335589,
+    "lng": 103.8756
+  },
+  {
+    "id": "active-sg:choa-chu-kang-sport-hall",
+    "canonicalName": "Choa Chu Kang Sport Hall",
+    "aliases": [
+      "Choa Chu Kang Sport Hall",
+      "Choa Chu Kang Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/choa-chu-kang-sport-hall",
+    "kind": "sport_hall",
+    "zone": "West",
+    "address": "1 Choa Chu Kang Street 53 Singapore 689236",
+    "lat": 1.390778,
+    "lng": 103.748
+  },
+  {
+    "id": "active-sg:christ-church-secondary-school-hall",
+    "canonicalName": "Christ Church Secondary School Hall",
+    "aliases": [
+      "Christ Church Secondary School Hall",
+      "Christ Church Sec",
+      "Christ Church Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/christ-church-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "20 Woodlands Drive 17 Singapore 737924",
+    "lat": 1.42654,
+    "lng": 103.793
+  },
+  {
+    "id": "active-sg:clementi-primary-school-hall",
+    "canonicalName": "Clementi Primary School Hall",
+    "aliases": [
+      "Clementi Primary School Hall",
+      "Clementi Pri",
+      "Clementi Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/clementi-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "8 Clementi Avenue 3 Singapore 129903",
+    "lat": 1.315063,
+    "lng": 103.7631
+  },
+  {
+    "id": "active-sg:clementi-sport-hall",
+    "canonicalName": "Clementi Sport Hall",
+    "aliases": [
+      "Clementi Sport Hall",
+      "Clementi Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/clementi-sport-hall",
+    "kind": "sport_hall",
+    "zone": "Central",
+    "address": "518 Clementi Avenue 3 Singapore 129907",
+    "lat": 1.311015,
+    "lng": 103.7649
+  },
+  {
+    "id": "active-sg:clementi-town-secondary-school-hall",
+    "canonicalName": "Clementi Town Secondary School Hall",
+    "aliases": [
+      "Clementi Town Secondary School Hall",
+      "Clementi Town Sec",
+      "Clementi Town Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/clementi-town-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "10 Clementi Avenue 3 Singapore 129904",
+    "lat": 1.315539,
+    "lng": 103.762
+  },
+  {
+    "id": "active-sg:concord-primary-school-hall",
+    "canonicalName": "Concord Primary School Hall",
+    "aliases": [
+      "Concord Primary School Hall",
+      "Concord Pri",
+      "Concord Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/concord-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "3 Choa Chu Kang Avenue 4 Singapore 689814",
+    "lat": 1.380265,
+    "lng": 103.7366
+  },
+  {
+    "id": "active-sg:crescent-girls-school-hall",
+    "canonicalName": "Crescent Girls' School Hall",
+    "aliases": [
+      "Crescent Girls' School Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/crescent-girls-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "357 Tanglin Road Singapore 247961",
+    "lat": 1.2926657,
+    "lng": 103.8179673
+  },
+  {
+    "id": "active-sg:dazhong-primary-school-hall",
+    "canonicalName": "Dazhong Primary School Hall",
+    "aliases": [
+      "Dazhong Primary School Hall",
+      "Dazhong Pri",
+      "Dazhong Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/dazhong-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "35 Bukit Batok Street 31 Singapore 659441",
+    "lat": 1.359403,
+    "lng": 103.7483
+  },
+  {
+    "id": "active-sg:delta-sport-hall",
+    "canonicalName": "Delta Sport Hall",
+    "aliases": [
+      "Delta Sport Hall",
+      "Delta Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/delta-sport-hall",
+    "kind": "sport_hall",
+    "zone": "Central",
+    "address": "900 Tiong Bahru Road Singapore 158790",
+    "lat": 1.290525,
+    "lng": 103.8206
+  },
+  {
+    "id": "active-sg:deyi-secondary-school-hall",
+    "canonicalName": "Deyi Secondary School Hall",
+    "aliases": [
+      "Deyi Secondary School Hall",
+      "Deyi Sec",
+      "Deyi Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/deyi-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "1 Ang Mo Kio Street 42 Singapore 569277",
+    "lat": 1.365997,
+    "lng": 103.8525
+  },
+  {
+    "id": "active-sg:dunman-high-school-hall",
+    "canonicalName": "Dunman High School Hall",
+    "aliases": [
+      "Dunman High School Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/dunman-high-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "East",
+    "address": "10 Tanjong Rhu Road Singapore 436895",
+    "lat": 1.299962,
+    "lng": 103.8829
+  },
+  {
+    "id": "active-sg:east-spring-primary-school-hall",
+    "canonicalName": "East Spring Primary School Hall",
+    "aliases": [
+      "East Spring Primary School Hall",
+      "East Spring Pri",
+      "East Spring Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/east-spring-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "East",
+    "address": "31 Tampines Street 33 Singapore 529258",
+    "lat": 1.352684,
+    "lng": 103.9617
+  },
+  {
+    "id": "active-sg:edgefield-primary-school-hall",
+    "canonicalName": "Edgefield Primary School Hall",
+    "aliases": [
+      "Edgefield Primary School Hall",
+      "Edgefield Pri",
+      "Edgefield Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/edgefield-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "41 Edgefield Plains Singapore 828869",
+    "lat": 1.400091,
+    "lng": 103.9078
+  },
+  {
+    "id": "active-sg:edgefield-secondary-school-hall",
+    "canonicalName": "Edgefield Secondary School Hall",
+    "aliases": [
+      "Edgefield Secondary School Hall",
+      "Edgefield Sec",
+      "Edgefield Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/edgefield-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "36 Punggol Field Singapore 828814",
+    "lat": 1.400593,
+    "lng": 103.9027
+  },
+  {
+    "id": "active-sg:elias-park-primary-school-hall",
+    "canonicalName": "Elias Park Primary School Hall",
+    "aliases": [
+      "Elias Park Primary School Hall",
+      "Elias Park Pri",
+      "Elias Park Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/elias-park-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "East",
+    "address": "11 Pasir Ris Street 52 Singapore 518866",
+    "lat": 1.375057,
+    "lng": 103.9453
+  },
+  {
+    "id": "active-sg:endeavour-primary-school-hall",
+    "canonicalName": "Endeavour Primary School Hall",
+    "aliases": [
+      "Endeavour Primary School Hall",
+      "Endeavour Pri",
+      "Endeavour Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/endeavour-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "10 Admiralty Link Singapore 757521",
+    "lat": 1.454038,
+    "lng": 103.8174
+  },
+  {
+    "id": "active-sg:eunoia-junior-college-hall",
+    "canonicalName": "Eunoia Junior College Hall",
+    "aliases": [
+      "Eunoia Junior College Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/eunoia-junior-college-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "2 Sin Ming Place Singapore 573838",
+    "lat": 1.362138,
+    "lng": 103.8413
+  },
+  {
+    "id": "active-sg:evergreen-primary-school-hall",
+    "canonicalName": "Evergreen Primary School Hall",
+    "aliases": [
+      "Evergreen Primary School Hall",
+      "Evergreen Pri",
+      "Evergreen Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/evergreen-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "31 Woodlands Circle Singapore 738908",
+    "lat": 1.444148,
+    "lng": 103.7945
+  },
+  {
+    "id": "active-sg:farrer-park-primary-school-hall",
+    "canonicalName": "Farrer Park Primary School Hall",
+    "aliases": [
+      "Farrer Park Primary School Hall",
+      "Farrer Park Pri",
+      "Farrer Park Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/farrer-park-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "2 Farrer Park Road Singapore 217567",
+    "lat": 1.3125465,
+    "lng": 103.8508898
+  },
+  {
+    "id": "active-sg:fern-green-primary-school-hall",
+    "canonicalName": "Fern Green Primary School Hall",
+    "aliases": [
+      "Fern Green Primary School Hall",
+      "Fern Green Pri",
+      "Fern Green Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/fern-green-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "70 Fernvale Link Singapore 797538",
+    "lat": 1.39732,
+    "lng": 103.8801
+  },
+  {
+    "id": "active-sg:first-toa-payoh-primary-school-hall",
+    "canonicalName": "First Toa Payoh Primary School Hall",
+    "aliases": [
+      "First Toa Payoh Primary School Hall",
+      "First Toa Payoh Pri",
+      "First Toa Payoh Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/first-toa-payoh-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "7 Lorong 8 Toa Payoh Singapore 319252",
+    "lat": 1.340143,
+    "lng": 103.8562
+  },
+  {
+    "id": "active-sg:frontier-primary-school-hall",
+    "canonicalName": "Frontier Primary School Hall",
+    "aliases": [
+      "Frontier Primary School Hall",
+      "Frontier Pri",
+      "Frontier Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/frontier-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "20 Jurong West Street 61 Singapore 648200",
+    "lat": 1.337214,
+    "lng": 103.6997
+  },
+  {
+    "id": "active-sg:gongshang-primary-school-hall",
+    "canonicalName": "Gongshang Primary School Hall",
+    "aliases": [
+      "Gongshang Primary School Hall",
+      "Gongshang Pri",
+      "Gongshang Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/gongshang-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "East",
+    "address": "1 Tampines Street 42 Singapore 529176",
+    "lat": 1.3572373,
+    "lng": 103.9491154
+  },
+  {
+    "id": "active-sg:greendale-primary-school-hall",
+    "canonicalName": "Greendale Primary School Hall",
+    "aliases": [
+      "Greendale Primary School Hall",
+      "Greendale Pri",
+      "Greendale Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/greendale-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "50 Edgedale Plains Singapore 828848",
+    "lat": 1.396464,
+    "lng": 103.9125
+  },
+  {
+    "id": "active-sg:greenridge-secondary-school-hall",
+    "canonicalName": "Greenridge Secondary School Hall",
+    "aliases": [
+      "Greenridge Secondary School Hall",
+      "Greenridge Sec",
+      "Greenridge Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/greenridge-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "31 Gangsa Road Singapore 678972",
+    "lat": 1.3756,
+    "lng": 103.764
+  },
+  {
+    "id": "active-sg:greenwood-primary-school-hall",
+    "canonicalName": "Greenwood Primary School Hall",
+    "aliases": [
+      "Greenwood Primary School Hall",
+      "Greenwood Pri",
+      "Greenwood Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/greenwood-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "11 Woodlands Drive 62 Singapore 737942",
+    "lat": 1.4399,
+    "lng": 103.8047
+  },
+  {
+    "id": "active-sg:heartbeat-bedok-activesg-sport-hall",
+    "canonicalName": "Heartbeat @ Bedok ActiveSG Sport Hall",
+    "aliases": [
+      "Heartbeat @ Bedok ActiveSG Sport Hall",
+      "Heartbeat @ Bedok ActiveSG Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/heartbeat-bedok-activesg-sport-hall",
+    "kind": "sport_hall",
+    "zone": "East",
+    "address": "Level 4 Heartbeat@Bedok , 11 Bedok North Street 1 Singapore 469662",
+    "lat": 1.326985,
+    "lng": 103.9316
+  },
+  {
+    "id": "active-sg:henry-park-primary-school-hall",
+    "canonicalName": "Henry Park Primary School Hall",
+    "aliases": [
+      "Henry Park Primary School Hall",
+      "Henry Park Pri",
+      "Henry Park Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/henry-park-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "1 Holland Grove Road Singapore 278790",
+    "lat": 1.316747,
+    "lng": 103.7841
+  },
+  {
+    "id": "active-sg:hougang-secondary-school-hall",
+    "canonicalName": "Hougang Secondary School Hall",
+    "aliases": [
+      "Hougang Secondary School Hall",
+      "Hougang Sec",
+      "Hougang Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/hougang-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "2 Hougang Street 93 Singapore 534256",
+    "lat": 1.37764,
+    "lng": 103.8825
+  },
+  {
+    "id": "active-sg:hougang-sport-hall",
+    "canonicalName": "Hougang Sport Hall",
+    "aliases": [
+      "Hougang Sport Hall",
+      "Hougang Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/hougang-sport-hall",
+    "kind": "sport_hall",
+    "zone": "Northeast",
+    "address": "93 Hougang Avenue 4 Singapore 538832",
+    "lat": 1.370449,
+    "lng": 103.8881
+  },
+  {
+    "id": "active-sg:hua-yi-secondary-school-hall",
+    "canonicalName": "Hua Yi Secondary School Hall",
+    "aliases": [
+      "Hua Yi Secondary School Hall",
+      "Hua Yi Sec",
+      "Hua Yi Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/hua-yi-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "60 Jurong West Street 42 Singapore 649371",
+    "lat": 1.352344,
+    "lng": 103.7218
+  },
+  {
+    "id": "active-sg:innova-primary-school-hall",
+    "canonicalName": "Innova Primary School Hall",
+    "aliases": [
+      "Innova Primary School Hall",
+      "Innova Pri",
+      "Innova Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/innova-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "80 Woodlands Drive 17 Singapore 737888",
+    "lat": 1.428967,
+    "lng": 103.7906
+  },
+  {
+    "id": "active-sg:jiemin-primary-school-hall",
+    "canonicalName": "Jiemin Primary School Hall",
+    "aliases": [
+      "Jiemin Primary School Hall",
+      "Jiemin Pri",
+      "Jiemin Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/jiemin-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "2 Yishun Street 71 Singapore 768515",
+    "lat": 1.427688,
+    "lng": 103.8304
+  },
+  {
+    "id": "active-sg:jing-shan-primary-school-hall",
+    "canonicalName": "Jing Shan Primary School Hall",
+    "aliases": [
+      "Jing Shan Primary School Hall",
+      "Jing Shan Pri",
+      "Jing Shan Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/jing-shan-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "5 Ang Mo Kio Street 52 Singapore 569228",
+    "lat": 1.372233,
+    "lng": 103.8521
+  },
+  {
+    "id": "active-sg:jurong-east-sport-hall",
+    "canonicalName": "Jurong East Sport Hall",
+    "aliases": [
+      "Jurong East Sport Hall",
+      "Jurong East Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/jurong-east-sport-hall",
+    "kind": "sport_hall",
+    "zone": "West",
+    "address": "21 Jurong East Street 31 Singapore 609517",
+    "lat": 1.346786,
+    "lng": 103.7293
+  },
+  {
+    "id": "active-sg:jurong-west-sport-hall",
+    "canonicalName": "Jurong West Sport Hall",
+    "aliases": [
+      "Jurong West Sport Hall",
+      "Jurong West Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/jurong-west-sport-hall",
+    "kind": "sport_hall",
+    "zone": "West",
+    "address": "20 Jurong West Street 93 Singapore 648965",
+    "lat": 1.338418,
+    "lng": 103.6938
+  },
+  {
+    "id": "active-sg:jurongville-secondary-school-hall",
+    "canonicalName": "Jurongville Secondary School Hall",
+    "aliases": [
+      "Jurongville Secondary School Hall",
+      "Jurongville Sec",
+      "Jurongville Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/jurongville-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "202 Jurong East Avenue 1 Singapore 609790",
+    "lat": 1.351289,
+    "lng": 103.7289
+  },
+  {
+    "id": "active-sg:keming-primary-school-hall",
+    "canonicalName": "Keming Primary School Hall",
+    "aliases": [
+      "Keming Primary School Hall",
+      "Keming Pri",
+      "Keming Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/keming-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "90 Bukit Batok East Avenue 6 Singapore 659762",
+    "lat": 1.345063,
+    "lng": 103.7559
+  },
+  {
+    "id": "active-sg:kuo-chuan-presbyterian-primary-school-hall",
+    "canonicalName": "Kuo Chuan Presbyterian Primary School Hall",
+    "aliases": [
+      "Kuo Chuan Presbyterian Primary School Hall",
+      "Kuo Chuan Presbyterian Pri",
+      "Kuo Chuan Presbyterian Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/kuo-chuan-presbyterian-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "8 Bishan Street 13 Singapore 579793",
+    "lat": 1.349398,
+    "lng": 103.855
+  },
+  {
+    "id": "active-sg:lakeside-primary-school-hall",
+    "canonicalName": "Lakeside Primary School Hall",
+    "aliases": [
+      "Lakeside Primary School Hall",
+      "Lakeside Pri",
+      "Lakeside Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/lakeside-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "161 Corporation Walk Singapore 618310",
+    "lat": 1.338204,
+    "lng": 103.7181
+  },
+  {
+    "id": "active-sg:lianhua-primary-school-hall",
+    "canonicalName": "Lianhua Primary School Hall",
+    "aliases": [
+      "Lianhua Primary School Hall",
+      "Lianhua Pri",
+      "Lianhua Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/lianhua-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "2 Bukit Batok Street 52 Singapore 659243",
+    "lat": 1.354163,
+    "lng": 103.7541
+  },
+  {
+    "id": "active-sg:loyang-view-secondary-school-hall",
+    "canonicalName": "Loyang View Secondary School Hall",
+    "aliases": [
+      "Loyang View Secondary School Hall",
+      "Loyang View Sec",
+      "Loyang View Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/loyang-view-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "East",
+    "address": "12 Pasir Ris Street 11 Singapore 519073",
+    "lat": 1.366584,
+    "lng": 103.9569
+  },
+  {
+    "id": "active-sg:marsiling-primary-school-hall",
+    "canonicalName": "Marsiling Primary School Hall",
+    "aliases": [
+      "Marsiling Primary School Hall",
+      "Marsiling Pri",
+      "Marsiling Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/marsiling-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "31 Woodlands Centre Road Singapore 738927",
+    "lat": 1.433839,
+    "lng": 103.7736
+  },
+  {
+    "id": "active-sg:marsiling-secondary-school-hall",
+    "canonicalName": "Marsiling Secondary School Hall",
+    "aliases": [
+      "Marsiling Secondary School Hall",
+      "Marsiling Sec",
+      "Marsiling Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/marsiling-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "12 Marsiling Rd Singapore 739110",
+    "lat": 1.436644,
+    "lng": 103.776
+  },
+  {
+    "id": "active-sg:mayflower-secondary-school-hall",
+    "canonicalName": "Mayflower Secondary School Hall",
+    "aliases": [
+      "Mayflower Secondary School Hall",
+      "Mayflower Sec",
+      "Mayflower Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/mayflower-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "2 Ang Mo Kio Street 21 Singapore 569384",
+    "lat": 1.368273,
+    "lng": 103.8354
+  },
+  {
+    "id": "active-sg:meridian-primary-school-hall",
+    "canonicalName": "Meridian Primary School Hall",
+    "aliases": [
+      "Meridian Primary School Hall",
+      "Meridian Pri",
+      "Meridian Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/meridian-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "East",
+    "address": "20 Pasir Ris Street 71 Singapore 518798",
+    "lat": 1.375528,
+    "lng": 103.9349
+  },
+  {
+    "id": "active-sg:meridian-secondary-school-hall",
+    "canonicalName": "Meridian Secondary School Hall",
+    "aliases": [
+      "Meridian Secondary School Hall",
+      "Meridian Sec",
+      "Meridian Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/meridian-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "East",
+    "address": "31 Pasir Ris Street 51 Singapore 518901",
+    "lat": 1.367247,
+    "lng": 103.949
+  },
+  {
+    "id": "active-sg:moe-evans-sport-hall",
+    "canonicalName": "MOE (Evans) Sport Hall",
+    "aliases": [
+      "MOE (Evans) Sport Hall",
+      "MOE (Evans) Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/moe-evans-sport-hall",
+    "kind": "sport_hall",
+    "zone": "Central",
+    "address": "21 Evans Road Singapore 259366",
+    "lat": 1.318506,
+    "lng": 103.8191
+  },
+  {
+    "id": "active-sg:naval-base-secondary-school-hall",
+    "canonicalName": "Naval Base Secondary School Hall",
+    "aliases": [
+      "Naval Base Secondary School Hall",
+      "Naval Base Sec",
+      "Naval Base Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/naval-base-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "901 Yishun Ring Road Singapore 768689",
+    "lat": 1.419379,
+    "lng": 103.8311
+  },
+  {
+    "id": "active-sg:new-town-secondary-school-hall",
+    "canonicalName": "New Town Secondary School Hall",
+    "aliases": [
+      "New Town Secondary School Hall",
+      "New Town Sec",
+      "New Town Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/new-town-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "1020 Dover Road Singapore 139657",
+    "lat": 1.309776,
+    "lng": 103.7732
+  },
+  {
+    "id": "active-sg:north-view-primary-school-hall",
+    "canonicalName": "North View Primary School Hall",
+    "aliases": [
+      "North View Primary School Hall",
+      "North View Pri",
+      "North View Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/north-view-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "210 Yishun Avenue 6 Singapore 768960",
+    "lat": 1.427523,
+    "lng": 103.8482
+  },
+  {
+    "id": "active-sg:north-vista-primary-school-hall",
+    "canonicalName": "North Vista Primary School Hall",
+    "aliases": [
+      "North Vista Primary School Hall",
+      "North Vista Pri",
+      "North Vista Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/north-vista-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "20 Compassvale Link Singapore 544974",
+    "lat": 1.382551,
+    "lng": 103.8963
+  },
+  {
+    "id": "active-sg:north-vista-secondary-school-hall",
+    "canonicalName": "North Vista Secondary School Hall",
+    "aliases": [
+      "North Vista Secondary School Hall",
+      "North Vista Sec",
+      "North Vista Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/north-vista-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "11 Rivervale Link Singapore 545081",
+    "lat": 1.381131,
+    "lng": 103.8992
+  },
+  {
+    "id": "active-sg:northland-primary-school-hall",
+    "canonicalName": "Northland Primary School Hall",
+    "aliases": [
+      "Northland Primary School Hall",
+      "Northland Pri",
+      "Northland Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/northland-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "15 Yishun Avenue 4 Singapore 769026",
+    "lat": 1.421304,
+    "lng": 103.8408
+  },
+  {
+    "id": "active-sg:northland-secondary-school-hall",
+    "canonicalName": "Northland Secondary School Hall",
+    "aliases": [
+      "Northland Secondary School Hall",
+      "Northland Sec",
+      "Northland Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/northland-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "3 Yishun Street 22 Singapore 768578",
+    "lat": 1.435802,
+    "lng": 103.8401
+  },
+  {
+    "id": "active-sg:northoaks-primary-school-hall",
+    "canonicalName": "Northoaks Primary School Hall",
+    "aliases": [
+      "Northoaks Primary School Hall",
+      "Northoaks Pri",
+      "Northoaks Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/northoaks-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "61 Sembawang Drive Singapore 757622",
+    "lat": 1.457329,
+    "lng": 103.8141
+  },
+  {
+    "id": "active-sg:oasis-primary-school-hall",
+    "canonicalName": "Oasis Primary School Hall",
+    "aliases": [
+      "Oasis Primary School Hall",
+      "Oasis Pri",
+      "Oasis Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/oasis-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "71 Edgefield Plains Singapore 828716",
+    "lat": 1.404624,
+    "lng": 103.9111
+  },
+  {
+    "id": "active-sg:our-tampines-hub-community-auditorium",
+    "canonicalName": "Our Tampines Hub - Community Auditorium",
+    "aliases": [
+      "Our Tampines Hub - Community Auditorium"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/our-tampines-hub-community-auditorium",
+    "kind": "sport_hall",
+    "zone": "East",
+    "address": "1 Tampines Walk Singapore 528523",
+    "lat": 1.353547,
+    "lng": 103.9404
+  },
+  {
+    "id": "active-sg:pasir-ris-crest-secondary-school-hall",
+    "canonicalName": "Pasir Ris Crest Secondary School Hall",
+    "aliases": [
+      "Pasir Ris Crest Secondary School Hall",
+      "Pasir Ris Crest Sec",
+      "Pasir Ris Crest Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/pasir-ris-crest-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "East",
+    "address": "11 Pasir Ris Street 41 Singapore 518934",
+    "lat": 1.372841,
+    "lng": 103.9597
+  },
+  {
+    "id": "active-sg:pasir-ris-secondary-school-hall",
+    "canonicalName": "Pasir Ris Secondary School Hall",
+    "aliases": [
+      "Pasir Ris Secondary School Hall",
+      "Pasir Ris Sec",
+      "Pasir Ris Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/pasir-ris-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "East",
+    "address": "390 Tampines Street 21 Singapore 529400",
+    "lat": 1.354227,
+    "lng": 103.949
+  },
+  {
+    "id": "active-sg:pasir-ris-sport-hall",
+    "canonicalName": "Pasir Ris Sport Hall",
+    "aliases": [
+      "Pasir Ris Sport Hall",
+      "Pasir Ris Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/pasir-ris-sport-hall",
+    "kind": "sport_hall",
+    "zone": "East",
+    "address": "120 Pasir Ris Central Singapore 519640",
+    "lat": 1.374059,
+    "lng": 103.9519
+  },
+  {
+    "id": "active-sg:peicai-secondary-school-hall",
+    "canonicalName": "Peicai Secondary School Hall",
+    "aliases": [
+      "Peicai Secondary School Hall",
+      "Peicai Sec",
+      "Peicai Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/peicai-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "10 Serangoon Avenue 4 Singapore 556094",
+    "lat": 1.359516,
+    "lng": 103.87
+  },
+  {
+    "id": "active-sg:peirce-secondary-school-hall",
+    "canonicalName": "Peirce Secondary School Hall",
+    "aliases": [
+      "Peirce Secondary School Hall",
+      "Peirce Sec",
+      "Peirce Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/peirce-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "10 Sin Ming Walk Singapore 575566",
+    "lat": 1.366659,
+    "lng": 103.8302
+  },
+  {
+    "id": "active-sg:peiying-primary-school-hall",
+    "canonicalName": "Peiying Primary School Hall",
+    "aliases": [
+      "Peiying Primary School Hall",
+      "Peiying Pri",
+      "Peiying Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/peiying-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "651 Yishun Ring Road Singapore 768687",
+    "lat": 1.417233,
+    "lng": 103.8304
+  },
+  {
+    "id": "active-sg:pioneer-primary-school-hall-juying",
+    "canonicalName": "Pioneer Primary School Hall (Juying)",
+    "aliases": [
+      "Pioneer Primary School Hall (Juying)",
+      "Pioneer Pri (Juying)",
+      "Pioneer Pri Hall (Juying)"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/pioneer-primary-school-hall-juying",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "31 Jurong West Street 91 Singapore 649037",
+    "lat": 1.339023,
+    "lng": 103.6878
+  },
+  {
+    "id": "active-sg:poi-ching-school-hall",
+    "canonicalName": "Poi Ching School Hall",
+    "aliases": [
+      "Poi Ching School Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/poi-ching-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "East",
+    "address": "21 Tampines Street 71 Singapore 529067",
+    "lat": 1.357651,
+    "lng": 103.9352
+  },
+  {
+    "id": "active-sg:punggol-green-primary-school-hall",
+    "canonicalName": "Punggol Green Primary School Hall",
+    "aliases": [
+      "Punggol Green Primary School Hall",
+      "Punggol Green Pri",
+      "Punggol Green Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/punggol-green-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "98 Punggol Walk Singapore 828772",
+    "lat": 1.4020375,
+    "lng": 103.8987629
+  },
+  {
+    "id": "active-sg:punggol-secondary-school-hall",
+    "canonicalName": "Punggol Secondary School Hall",
+    "aliases": [
+      "Punggol Secondary School Hall",
+      "Punggol Sec",
+      "Punggol Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/punggol-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "51 Edgefield Plains Singapore 828870",
+    "lat": 1.402057,
+    "lng": 103.9092
+  },
+  {
+    "id": "active-sg:punggol-view-primary-school-hall",
+    "canonicalName": "Punggol View Primary School Hall",
+    "aliases": [
+      "Punggol View Primary School Hall",
+      "Punggol View Pri",
+      "Punggol View Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/punggol-view-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "9 Punggol Place Singapore 828845",
+    "lat": 1.405789,
+    "lng": 103.9052
+  },
+  {
+    "id": "active-sg:qihua-primary-school-hall",
+    "canonicalName": "Qihua Primary School Hall",
+    "aliases": [
+      "Qihua Primary School Hall",
+      "Qihua Pri",
+      "Qihua Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/qihua-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "5 Woodlands Street 81 Singapore 738525",
+    "lat": 1.442036,
+    "lng": 103.7883
+  },
+  {
+    "id": "active-sg:queenstown-primary-school-hall",
+    "canonicalName": "Queenstown Primary School Hall",
+    "aliases": [
+      "Queenstown Primary School Hall",
+      "Queenstown Pri",
+      "Queenstown Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/queenstown-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "310 Margaret Drive Singapore 149303",
+    "lat": 1.295529,
+    "lng": 103.8076
+  },
+  {
+    "id": "active-sg:queensway-secondary-school-hall",
+    "canonicalName": "Queensway Secondary School Hall",
+    "aliases": [
+      "Queensway Secondary School Hall",
+      "Queensway Sec",
+      "Queensway Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/queensway-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "2A Margaret Drive Singapore 149295",
+    "lat": 1.300223,
+    "lng": 103.8022
+  },
+  {
+    "id": "active-sg:radin-mas-primary-school-hall",
+    "canonicalName": "Radin Mas Primary School Hall",
+    "aliases": [
+      "Radin Mas Primary School Hall",
+      "Radin Mas Pri",
+      "Radin Mas Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/radin-mas-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "1 Bukit Purmei Avenue Singapore 099840",
+    "lat": 1.274897,
+    "lng": 103.8241
+  },
+  {
+    "id": "active-sg:red-swastika-school-hall",
+    "canonicalName": "Red Swastika School Hall",
+    "aliases": [
+      "Red Swastika School Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/red-swastika-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "East",
+    "address": "350 Bedok North Avenue 3 Singapore 469719",
+    "lat": 1.333243,
+    "lng": 103.9343
+  },
+  {
+    "id": "active-sg:riverside-secondary-school-hall",
+    "canonicalName": "Riverside Secondary School Hall",
+    "aliases": [
+      "Riverside Secondary School Hall",
+      "Riverside Sec",
+      "Riverside Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/riverside-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "3 Woodlands Street 81 Singapore 738524",
+    "lat": 1.441102,
+    "lng": 103.7883
+  },
+  {
+    "id": "active-sg:rivervale-primary-school-hall",
+    "canonicalName": "Rivervale Primary School Hall",
+    "aliases": [
+      "Rivervale Primary School Hall",
+      "Rivervale Pri",
+      "Rivervale Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/rivervale-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "80 Rivervale Drive Singapore 545092",
+    "lat": 1.393251,
+    "lng": 103.9018
+  },
+  {
+    "id": "active-sg:rulang-primary-school-hall",
+    "canonicalName": "Rulang Primary School Hall",
+    "aliases": [
+      "Rulang Primary School Hall",
+      "Rulang Pri",
+      "Rulang Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/rulang-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "6 Jurong West Street 52 Singapore 649295",
+    "lat": 1.3467387,
+    "lng": 103.718458
+  },
+  {
+    "id": "active-sg:sembawang-primary-school-hall",
+    "canonicalName": "Sembawang Primary School Hall",
+    "aliases": [
+      "Sembawang Primary School Hall",
+      "Sembawang Pri",
+      "Sembawang Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/sembawang-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "10 Sembawang Drive Singapore 757715",
+    "lat": 1.445074,
+    "lng": 103.821
+  },
+  {
+    "id": "active-sg:seng-kang-primary-school-hall",
+    "canonicalName": "Seng Kang Primary School Hall",
+    "aliases": [
+      "Seng Kang Primary School Hall",
+      "Seng Kang Pri",
+      "Seng Kang Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/seng-kang-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "21 Compassvale Walk Singapore 545166",
+    "lat": 1.389497,
+    "lng": 103.8998
+  },
+  {
+    "id": "active-sg:seng-kang-secondary-school-hall",
+    "canonicalName": "Seng Kang Secondary School Hall",
+    "aliases": [
+      "Seng Kang Secondary School Hall",
+      "Seng Kang Sec",
+      "Seng Kang Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/seng-kang-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "10 Compassvale Lane Singapore 545090",
+    "lat": 1.386521,
+    "lng": 103.8984
+  },
+  {
+    "id": "active-sg:sengkang-green-primary-school-hall",
+    "canonicalName": "Sengkang Green Primary School Hall",
+    "aliases": [
+      "Sengkang Green Primary School Hall",
+      "Sengkang Green Pri",
+      "Sengkang Green Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/sengkang-green-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "15 Fernvale Road Singapore 797636",
+    "lat": 1.39254,
+    "lng": 103.875
+  },
+  {
+    "id": "active-sg:sengkang-sport-hall",
+    "canonicalName": "Sengkang Sport Hall",
+    "aliases": [
+      "Sengkang Sport Hall",
+      "Sengkang Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/sengkang-sport-hall",
+    "kind": "sport_hall",
+    "zone": "Northeast",
+    "address": "57 Anchorvale Road Singapore 544964",
+    "lat": 1.395466,
+    "lng": 103.8858
+  },
+  {
+    "id": "active-sg:senja-cashew-sport-hall",
+    "canonicalName": "Senja-Cashew Sport Hall",
+    "aliases": [
+      "Senja-Cashew Sport Hall",
+      "Senja-Cashew Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/senja-cashew-sport-hall",
+    "kind": "sport_hall",
+    "zone": "West",
+    "address": "101 Bukit Panjang Road Singapore 679910",
+    "lat": 1.381638,
+    "lng": 103.7647
+  },
+  {
+    "id": "active-sg:serangoon-garden-secondary-school-hall",
+    "canonicalName": "Serangoon Garden Secondary School Hall",
+    "aliases": [
+      "Serangoon Garden Secondary School Hall",
+      "Serangoon Garden Sec",
+      "Serangoon Garden Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/serangoon-garden-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "21 Serangoon North Avenue 1 Singapore 555889",
+    "lat": 1.369326,
+    "lng": 103.8693
+  },
+  {
+    "id": "active-sg:serangoon-secondary-school-hall",
+    "canonicalName": "Serangoon Secondary School Hall",
+    "aliases": [
+      "Serangoon Secondary School Hall",
+      "Serangoon Sec",
+      "Serangoon Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/serangoon-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "11 Upper Serangoon View Singapore 534237",
+    "lat": 1.374655,
+    "lng": 103.9021
+  },
+  {
+    "id": "active-sg:shuqun-primary-school-hall",
+    "canonicalName": "Shuqun Primary School Hall",
+    "aliases": [
+      "Shuqun Primary School Hall",
+      "Shuqun Pri",
+      "Shuqun Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/shuqun-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "8 Jurong West Street 51 Singapore 649332",
+    "lat": 1.347603,
+    "lng": 103.7215
+  },
+  {
+    "id": "active-sg:south-view-primary-school-hall",
+    "canonicalName": "South View Primary School Hall",
+    "aliases": [
+      "South View Primary School Hall",
+      "South View Pri",
+      "South View Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/south-view-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "6 Choa Chu Kang Central Singapore 689762",
+    "lat": 1.381431,
+    "lng": 103.7472
+  },
+  {
+    "id": "active-sg:st-anthony-s-primary-school-hall",
+    "canonicalName": "St Anthony's Primary School Hall",
+    "aliases": [
+      "St Anthony's Primary School Hall",
+      "St Anthony's Pri",
+      "St Anthony's Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/st-anthonys-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "30 Bukit Batok Street 32 Singapore 659401",
+    "lat": 1.364119,
+    "lng": 103.7493
+  },
+  {
+    "id": "active-sg:st-gabriel-s-secondary-school-hall",
+    "canonicalName": "St Gabriel's Secondary School Hall",
+    "aliases": [
+      "St Gabriel's Secondary School Hall",
+      "St Gabriel's Sec",
+      "St Gabriel's Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/st-gabriels-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "24 Serangoon Avenue 1 Singapore 556140",
+    "lat": 1.346488,
+    "lng": 103.8761
+  },
+  {
+    "id": "active-sg:swiss-cottage-secondary-school-hall",
+    "canonicalName": "Swiss Cottage Secondary School Hall",
+    "aliases": [
+      "Swiss Cottage Secondary School Hall",
+      "Swiss Cottage Sec",
+      "Swiss Cottage Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/swiss-cottage-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "3 Bukit Batok Street 34 Singapore 659322",
+    "lat": 1.364717,
+    "lng": 103.7504
+  },
+  {
+    "id": "active-sg:teck-ghee-primary-school-hall",
+    "canonicalName": "Teck Ghee Primary School Hall",
+    "aliases": [
+      "Teck Ghee Primary School Hall",
+      "Teck Ghee Pri",
+      "Teck Ghee Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/teck-ghee-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "1 Ang Mo Kio Street 32 Singapore 569299",
+    "lat": 1.36565,
+    "lng": 103.851
+  },
+  {
+    "id": "active-sg:unity-primary-school-hall",
+    "canonicalName": "Unity Primary School Hall",
+    "aliases": [
+      "Unity Primary School Hall",
+      "Unity Pri",
+      "Unity Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/unity-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "21 Choa Chu Kang Crescent Singapore 688268",
+    "lat": 1.402855,
+    "lng": 103.7468
+  },
+  {
+    "id": "active-sg:unity-secondary-school-hall",
+    "canonicalName": "Unity Secondary School Hall",
+    "aliases": [
+      "Unity Secondary School Hall",
+      "Unity Sec",
+      "Unity Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/unity-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "20 Choa Chu Kang Street 62 Singapore 689143",
+    "lat": 1.400015,
+    "lng": 103.746
+  },
+  {
+    "id": "active-sg:waterway-primary-school-hall",
+    "canonicalName": "Waterway Primary School Hall",
+    "aliases": [
+      "Waterway Primary School Hall",
+      "Waterway Pri",
+      "Waterway Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/waterway-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "70 Punggol Drive Singapore 828802",
+    "lat": 1.398828,
+    "lng": 103.9186
+  },
+  {
+    "id": "active-sg:west-view-primary-school-hall",
+    "canonicalName": "West View Primary School Hall",
+    "aliases": [
+      "West View Primary School Hall",
+      "West View Pri",
+      "West View Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/west-view-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "31 Senja Road Singapore 677742",
+    "lat": 1.383785,
+    "lng": 103.7603
+  },
+  {
+    "id": "active-sg:westwood-secondary-school-hall",
+    "canonicalName": "Westwood Secondary School Hall",
+    "aliases": [
+      "Westwood Secondary School Hall",
+      "Westwood Sec",
+      "Westwood Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/westwood-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "11 Jurong West Street 25 Singapore 648350",
+    "lat": 1.353737,
+    "lng": 103.7018
+  },
+  {
+    "id": "active-sg:whitley-secondary-school-hall",
+    "canonicalName": "Whitley Secondary School Hall",
+    "aliases": [
+      "Whitley Secondary School Hall",
+      "Whitley Sec",
+      "Whitley Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/whitley-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "30 Bishan Street 24 Singapore 579747",
+    "lat": 1.3551284,
+    "lng": 103.84237
+  },
+  {
+    "id": "active-sg:woodgrove-primary-school-hall",
+    "canonicalName": "Woodgrove Primary School Hall",
+    "aliases": [
+      "Woodgrove Primary School Hall",
+      "Woodgrove Pri",
+      "Woodgrove Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/woodgrove-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "2 Woodlands Drive 14 Singapore 738079",
+    "lat": 1.433103,
+    "lng": 103.7906
+  },
+  {
+    "id": "active-sg:woodlands-secondary-school-hall",
+    "canonicalName": "Woodlands Secondary School Hall",
+    "aliases": [
+      "Woodlands Secondary School Hall",
+      "Woodlands Sec",
+      "Woodlands Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/woodlands-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "11 Marsiling Road Singapore 739111",
+    "lat": 1.439125,
+    "lng": 103.7746
+  },
+  {
+    "id": "active-sg:woodlands-sport-hall",
+    "canonicalName": "Woodlands Sport Hall",
+    "aliases": [
+      "Woodlands Sport Hall",
+      "Woodlands Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/woodlands-sport-hall",
+    "kind": "sport_hall",
+    "zone": "North",
+    "address": "2 Woodlands Street 12 Singapore 738620",
+    "lat": 1.43414,
+    "lng": 103.7799
+  },
+  {
+    "id": "active-sg:xinghua-primary-school-hall",
+    "canonicalName": "Xinghua Primary School Hall",
+    "aliases": [
+      "Xinghua Primary School Hall",
+      "Xinghua Pri",
+      "Xinghua Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/xinghua-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "45 Hougang Avenue 1 Singapore 538882",
+    "lat": 1.357997,
+    "lng": 103.8902
+  },
+  {
+    "id": "active-sg:yew-tee-primary-school-hall",
+    "canonicalName": "Yew Tee Primary School Hall",
+    "aliases": [
+      "Yew Tee Primary School Hall",
+      "Yew Tee Pri",
+      "Yew Tee Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/yew-tee-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "10 Choa Chu Kang Street 64 Singapore 689100",
+    "lat": 1.3968514,
+    "lng": 103.7510161
+  },
+  {
+    "id": "active-sg:yio-chu-kang-secondary-school-hall",
+    "canonicalName": "Yio Chu Kang Secondary School Hall",
+    "aliases": [
+      "Yio Chu Kang Secondary School Hall",
+      "Yio Chu Kang Sec",
+      "Yio Chu Kang Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/yio-chu-kang-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "3063 Ang Mo Kio Avenue 5 Singapore 569868",
+    "lat": 1.377976,
+    "lng": 103.8421
+  },
+  {
+    "id": "active-sg:yio-chu-kang-sport-hall",
+    "canonicalName": "Yio Chu Kang Sport Hall",
+    "aliases": [
+      "Yio Chu Kang Sport Hall",
+      "Yio Chu Kang Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/yio-chu-kang-sport-hall",
+    "kind": "sport_hall",
+    "zone": "North",
+    "address": "214 Ang Mo Kio Avenue 9 Singapore 569780",
+    "lat": 1.383626,
+    "lng": 103.8459
+  },
+  {
+    "id": "active-sg:yishun-primary-school-hall",
+    "canonicalName": "Yishun Primary School Hall",
+    "aliases": [
+      "Yishun Primary School Hall",
+      "Yishun Pri",
+      "Yishun Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/yishun-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "500 Yishun Ring Road Singapore 768679",
+    "lat": 1.433386,
+    "lng": 103.8341
+  },
+  {
+    "id": "active-sg:yishun-sport-hall",
+    "canonicalName": "Yishun Sport Hall",
+    "aliases": [
+      "Yishun Sport Hall",
+      "Yishun Sports Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/yishun-sport-hall",
+    "kind": "sport_hall",
+    "zone": "North",
+    "address": "101 Yishun Avenue 1 Singapore 769130",
+    "lat": 1.412018,
+    "lng": 103.8312
+  },
+  {
+    "id": "active-sg:yishun-town-secondary-school-hall",
+    "canonicalName": "Yishun Town Secondary School Hall",
+    "aliases": [
+      "Yishun Town Secondary School Hall",
+      "Yishun Town Sec",
+      "Yishun Town Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/yishun-town-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "North",
+    "address": "6 Yishun Street 21 Singapore 768610",
+    "lat": 1.432322,
+    "lng": 103.8381
+  },
+  {
+    "id": "active-sg:yuan-ching-secondary-school-hall",
+    "canonicalName": "Yuan Ching Secondary School Hall",
+    "aliases": [
+      "Yuan Ching Secondary School Hall",
+      "Yuan Ching Sec",
+      "Yuan Ching Sec Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/yuan-ching-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "103 Yuan Ching Road Singapore 618654",
+    "lat": 1.342006,
+    "lng": 103.7209
+  },
+  {
+    "id": "active-sg:yuhua-primary-school-hall",
+    "canonicalName": "Yuhua Primary School Hall",
+    "aliases": [
+      "Yuhua Primary School Hall",
+      "Yuhua Pri",
+      "Yuhua Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/yuhua-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "West",
+    "address": "158 Jurong East Street 24 Singapore 609558",
+    "lat": 1.343019,
+    "lng": 103.7411188
+  },
+  {
+    "id": "active-sg:zhonghua-primary-school-hall",
+    "canonicalName": "Zhonghua Primary School Hall",
+    "aliases": [
+      "Zhonghua Primary School Hall",
+      "Zhonghua Pri",
+      "Zhonghua Pri Hall"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/zhonghua-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Northeast",
+    "address": "12 Serangoon Avenue 4 Singapore 556095",
+    "lat": 1.360203,
+    "lng": 103.8698
+  }
+]

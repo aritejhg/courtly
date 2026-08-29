@@ -6,6 +6,8 @@
  * play-time expiry rules in one place.
  */
 
+import { matchVenue } from './venue-mapping';
+
 export type ListingStatus = 'active' | 'deleted';
 
 export type CourtListing = {
@@ -28,6 +30,8 @@ export type CourtListing = {
   owner: string;
   lat: number;
   lng: number;
+  venueId?: string;
+  venueMatch?: 'deterministic' | 'ambiguous' | 'unmatched';
 };
 
 export type TelegramMessage = {
@@ -54,6 +58,8 @@ export function inferSport(text: string): CourtListing['sport'] {
 }
 
 export function inferArea(text: string): string {
+  const venue = matchVenue(text).venue;
+  if (venue?.area) return venue.area;
   return AREA_NAMES.find((area) => text.toLowerCase().includes(area.toLowerCase())) ?? 'Singapore';
 }
 
@@ -62,6 +68,8 @@ function slugify(value: string) {
 }
 
 function inferFacility(text: string) {
+  const venue = matchVenue(text).venue;
+  if (venue) return venue.canonicalName;
   const firstLine = text.split(/\r?\n/).map((line) => line.trim()).find(Boolean) ?? 'Singapore court';
   return firstLine.replace(/^(court\s*(swap|to let go)|swap)[:\-\s]*/i, '').slice(0, 80);
 }
@@ -78,6 +86,7 @@ export function ingestTelegramMessage(message: TelegramMessage, now = new Date()
   const isoDate = rawText.match(/\b(20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?(?:Z|[+-]\d{2}:?\d{2})?)\b/)?.[1];
   const playAt = isoDate ? new Date(isoDate).toISOString() : new Date(0).toISOString();
   const facility = inferFacility(rawText);
+  const venueMatch = matchVenue(rawText);
 
   return {
     id: `tg-${id}-${slugify(facility)}`,
@@ -99,6 +108,8 @@ export function ingestTelegramMessage(message: TelegramMessage, now = new Date()
     owner: 'Sample Owner',
     lat: 1.3521,
     lng: 103.8198,
+    venueId: venueMatch.venue?.id,
+    venueMatch: venueMatch.status,
   };
 }
 
