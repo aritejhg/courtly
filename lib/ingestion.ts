@@ -20,8 +20,12 @@ export type CourtListing = {
   status: ListingStatus;
   deletedAt?: string;
   sourceMessageId: string;
+  sourceTelegramMessageId?: string;
+  listingIndex?: number;
   sourceUrl: string;
   rawText: string;
+  listingText?: string;
+  sourceRawText?: string;
   displayDate: string;
   displayDay: string;
   displayTime: string;

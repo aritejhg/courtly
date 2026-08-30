@@ -50,7 +50,11 @@ function aliasesFor(venue: Venue) {
       aliases.add(short);
       if (/^Our\s+/i.test(short)) aliases.add(short.replace(/^Our\s+/i, ''));
     }
-    if (venue.kind === 'sport_hall') aliases.add(alias.replace(/\s+sports? hall\b/ig, ''));
+    if (venue.kind === 'sport_hall') {
+      const base = alias.replace(/\s+sports? hall\b/ig, '').trim();
+      aliases.add(base);
+      aliases.add(`${base} SH`);
+    }
     if (/^Our\s+/i.test(alias)) aliases.add(alias.replace(/^Our\s+/i, ''));
     if (/^Ang Mo Kio\b/i.test(alias)) aliases.add(alias.replace(/^Ang Mo Kio/i, 'AMK'));
     aliases.add(alias.replace(/\s+hall\b/ig, ''));

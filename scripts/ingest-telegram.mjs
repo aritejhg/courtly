@@ -15,7 +15,7 @@ const now = new Date(process.env.INGEST_NOW || Date.now());
 const normalize = (value) => value.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
 const readJson = async (path, fallback) => { try { return JSON.parse(await readFile(path, 'utf8')); } catch { return fallback; } };
 const slugify = (value) => normalize(value).replace(/ /g, '-');
-const fingerprint = (value) => normalize(value);
+const fingerprint = (value) => normalize(typeof value === 'string' ? value : (value.listingText || value.rawText || ''));
 const singaporeDate = (year, month, day, hour = 0, minute = 0) => new Date(Date.UTC(year, month, day, hour - 8, minute));
 const singaporeParts = (date) => ({ year: date.getUTCFullYear(), month: date.getUTCMonth(), day: date.getUTCDate() });
 const AREA_HINTS = [
@@ -34,7 +34,11 @@ function expandedAliases(venue) {
       aliases.add(short);
       if (/^Our\s+/i.test(short)) aliases.add(short.replace(/^Our\s+/i, ''));
     }
-    if (venue.kind === 'sport_hall') aliases.add(alias.replace(/\s+sports? hall\b/ig, ''));
+    if (venue.kind === 'sport_hall') {
+      const base = alias.replace(/\s+sports? hall\b/ig, '').trim();
+      aliases.add(base);
+      aliases.add(`${base} SH`);
+    }
     if (/^Our\s+/i.test(alias)) aliases.add(alias.replace(/^Our\s+/i, ''));
     if (/^Ang Mo Kio\b/i.test(alias)) aliases.add(alias.replace(/^Ang Mo Kio/i, 'AMK'));
     aliases.add(alias.replace(/\s+hall\b/ig, ''));
@@ -83,16 +87,15 @@ function inferArea(text, venue) {
 function parseDate(text, postedAt) {
   const posted = new Date(postedAt);
   const year = singaporeParts(posted).year;
-  const numeric = text.match(/\b(\d{1,2})\s*(?:\/|-)\s*(\d{1,2})(?:\s*(?:\/|-)\s*(\d{2,4}))?\b/);
+  const numeric = text.match(/(?<![:\d])\b(\d{1,2})\s*(?:\/|-)\s*(\d{1,2})(?:\s*(?:\/|-)\s*(\d{2,4}))?\b/);
   const named = text.match(/\b(\d{1,2})(?:st|nd|rd|th)?(?:\s+|-)(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\b/i);
   let date;
-  if (numeric) {
-    const explicitYear = numeric[3] ? (numeric[3].length === 2 ? 2000 + Number(numeric[3]) : Number(numeric[3])) : year;
-    date = singaporeDate(explicitYear, Number(numeric[2]) - 1, Number(numeric[1]), 12);
-  }
-  else if (named) {
+  if (named) {
     const month = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'].findIndex((value) => named[2].toLowerCase().startsWith(value));
     date = singaporeDate(year, month, Number(named[1]), 12);
+  } else if (numeric) {
+    const explicitYear = numeric[3] ? (numeric[3].length === 2 ? 2000 + Number(numeric[3]) : Number(numeric[3])) : year;
+    date = singaporeDate(explicitYear, Number(numeric[2]) - 1, Number(numeric[1]), 12);
   } else if (/\btomorrow\b/i.test(text)) {
     const parts = singaporeParts(posted); date = new Date(singaporeDate(parts.year, parts.month, parts.day, 12).getTime() + 86400000);
   } else if (/\btoday\b/i.test(text)) {
@@ -138,16 +141,17 @@ function parseTime(text, date) {
   return makeResult(start, end);
 }
 
-function buildListing(message, venues) {
+function buildListing(message, venues, partText = message.text, listingIndex = 0, partCount = 1) {
   const postedAt = message.postedAt || now.toISOString();
-  const rawText = String(message.text || '').trim();
+  const sourceRawText = String(message.text || '').trim();
+  const rawText = String(partText || '').trim();
   const venueMatch = matchVenue(rawText, venues);
   const date = parseDate(rawText, postedAt);
   const time = parseTime(rawText, date);
   const playAt = time?.start || date;
   const isDeleted = Boolean(message.deleted || /\b(taken|gone|claimed|deleted|no longer available)\b/i.test(rawText));
   const listing = {
-    id: `tg-${message.messageId}-${slugify(venueMatch.venue?.canonicalName || 'unmatched')}`,
+    id: `tg-${message.messageId}${partCount > 1 ? `-${listingIndex + 1}` : ''}-${slugify(venueMatch.venue?.canonicalName || 'unmatched')}`,
     facility: venueMatch.venue?.canonicalName || 'Unmatched venue',
     area: inferArea(rawText, venueMatch.venue),
     sport: /tennis/i.test(rawText) ? 'Tennis' : /basketball|hoops/i.test(rawText) ? 'Basketball' : 'Badminton',
@@ -155,9 +159,13 @@ function buildListing(message, venues) {
     postedAt,
     status: isDeleted ? 'deleted' : playAt && playAt > now ? 'active' : 'expired',
     ...(isDeleted ? { deletedAt: now.toISOString() } : {}),
-    sourceMessageId: String(message.messageId),
+    sourceMessageId: `${message.messageId}${partCount > 1 ? `:${listingIndex + 1}` : ''}`,
+    sourceTelegramMessageId: String(message.messageId),
+    ...(partCount > 1 ? { listingIndex: listingIndex + 1 } : {}),
     sourceUrl: message.sourceUrl || SOURCE_URL,
-    rawText,
+    rawText: sourceRawText,
+    listingText: rawText,
+    sourceRawText,
     displayDate: date ? date.toLocaleDateString('en-SG', { timeZone: 'Asia/Singapore', day: 'numeric', month: 'short', year: 'numeric' }) : 'Date unknown',
     displayDay: date ? date.toLocaleDateString('en-SG', { timeZone: 'Asia/Singapore', weekday: 'long' }) : 'Day unknown',
     displayTime: time?.display || 'Time unknown',
@@ -176,9 +184,18 @@ const [messages, activeSgVenues, overrides, previousListings, unmatched] = await
   readJson(messagesPath, []), readJson(venuesPath, []), readJson('data/venue-overrides.json', []), readJson(outputPath, []), readJson(unmatchedPath, []),
 ]);
 const venues = [...activeSgVenues, ...overrides];
-const results = messages.map((message) => buildListing(message, venues));
+const results = messages.flatMap((message) => {
+  const parts = Array.isArray(message.listings) && message.listings.length ? message.listings : [{ text: message.text }];
+  return parts.map((part, index) => buildListing(message, venues, part.text, index, parts.length));
+});
 const byMessage = new Map(previousListings.map((listing) => [listing.sourceMessageId, listing]));
-const byFingerprint = new Map(previousListings.map((listing) => [fingerprint(listing.rawText), listing]));
+const splitParentIds = new Set(messages.filter((message) => Array.isArray(message.listings) && message.listings.length > 1).map((message) => String(message.messageId)));
+const currentSourceIds = new Set(results.map(({ listing }) => listing.sourceMessageId));
+for (const [sourceMessageId, listing] of byMessage) {
+  const parentId = listing.sourceTelegramMessageId || listing.sourceMessageId;
+  if (splitParentIds.has(String(parentId)) && !currentSourceIds.has(sourceMessageId)) byMessage.delete(sourceMessageId);
+}
+const byFingerprint = new Map(previousListings.map((listing) => [fingerprint(listing), listing]));
 const currentUnmatched = [];
 let newCount = 0; let duplicateCount = 0;
 for (const { listing, venueMatch } of results) {
@@ -188,13 +205,13 @@ for (const { listing, venueMatch } of results) {
     if (!venueMatch.venue) currentUnmatched.push({ text: listing.rawText, sourceMessageId: listing.sourceMessageId, status: venueMatch.status, candidates: venueMatch.candidates || [], firstSeenAt: now.toISOString() });
     continue;
   }
-  if (byFingerprint.has(fingerprint(listing.rawText))) {
+  if (byFingerprint.has(fingerprint(listing))) {
     duplicateCount += 1;
     continue;
   }
   newCount += 1;
   byMessage.set(listing.sourceMessageId, listing);
-  byFingerprint.set(fingerprint(listing.rawText), listing);
+  byFingerprint.set(fingerprint(listing), listing);
   if (!venueMatch.venue) currentUnmatched.push({ text: listing.rawText, sourceMessageId: listing.sourceMessageId, status: venueMatch.status, candidates: venueMatch.candidates || [], firstSeenAt: now.toISOString() });
 }
 const currentMessageIds = new Set(results.map(({ listing }) => listing.sourceMessageId));

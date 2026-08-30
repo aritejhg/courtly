@@ -1,5 +1,31 @@
 [
   {
+    "id": "onepa:buangkok-cc",
+    "canonicalName": "Buangkok CC",
+    "aliases": ["Buangkok", "Buangkok CC", "Buangkok Community Club"],
+    "source": "People's Association / data.gov.sg",
+    "sourceUrl": "https://data.gov.sg/datasets/d_9de02d3fb33d96da1855f4fbef549a0f/view",
+    "kind": "community_club",
+    "zone": "Northeast",
+    "address": "70 Compassvale Bow, #01-25, Singapore 544692",
+    "area": "Sengkang",
+    "lat": 1.3831519264566876,
+    "lng": 103.89229581728699
+  },
+  {
+    "id": "alias:active-sg-sengkang-sh",
+    "canonicalName": "Sengkang Sport Hall",
+    "aliases": ["Sengkang SH"],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/sengkang-sport-hall",
+    "kind": "sport_hall",
+    "zone": "Northeast",
+    "address": "57 Anchorvale Road Singapore 544964",
+    "area": "Sengkang",
+    "lat": 1.395466,
+    "lng": 103.8858
+  },
+  {
     "id": "manual:singapore-expo",
     "canonicalName": "Singapore Expo",
     "aliases": ["singapore expo", "seh expo", "seh@expo", "expo"],
