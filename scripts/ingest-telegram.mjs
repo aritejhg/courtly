@@ -68,7 +68,7 @@ function matchVenue(text, venues) {
   if (!hits.length) return { venue: null, status: 'unmatched' };
   hits.sort((a, b) => b.length - a.length);
   const top = hits.filter((hit) => hit.length === hits[0].length);
-  const unique = [...new Map(top.map((hit) => [hit.venue.id, hit])).values()];
+  const unique = [...new Map(top.map((hit) => [hit.venue.canonicalName, hit])).values()];
   if (unique.length !== 1) return { venue: null, status: 'ambiguous', candidates: unique.map((hit) => hit.venue.canonicalName) };
   return { venue: unique[0].venue, status: 'deterministic', alias: unique[0].alias };
 }
