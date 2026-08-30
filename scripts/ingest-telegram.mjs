@@ -82,7 +82,7 @@ function inferArea(text, venue) {
 
 function parseDate(text, postedAt) {
   const posted = new Date(postedAt);
-  const year = posted.getFullYear();
+  const year = singaporeParts(posted).year;
   const numeric = text.match(/\b(\d{1,2})\s*(?:\/|-)\s*(\d{1,2})(?:\s*(?:\/|-)\s*(\d{2,4}))?\b/);
   const named = text.match(/\b(\d{1,2})(?:st|nd|rd|th)?(?:\s+|-)(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\b/i);
   let date;
@@ -100,7 +100,10 @@ function parseDate(text, postedAt) {
   }
   if (!date || Number.isNaN(date.getTime())) return null;
   const postedParts = singaporeParts(posted);
-  if (!numeric?.[3] && date < singaporeDate(postedParts.year, postedParts.month, postedParts.day)) {
+  // A nearby past date is stale, not a listing for next year. Only roll over
+  // when the date is more than half a year behind the post date, which covers
+  // unqualified Jan dates posted in late-year without reviving old listings.
+  if (!numeric?.[3] && date < singaporeDate(postedParts.year, postedParts.month, postedParts.day) && posted.getTime() - date.getTime() > 180 * 86400000) {
     const parts = singaporeParts(date); date = singaporeDate(parts.year + 1, parts.month, parts.day, 12);
   }
   return date;
@@ -150,7 +153,7 @@ function buildListing(message, venues) {
     sport: /tennis/i.test(rawText) ? 'Tennis' : /basketball|hoops/i.test(rawText) ? 'Basketball' : 'Badminton',
     playAt: playAt?.toISOString() || new Date(0).toISOString(),
     postedAt,
-    status: isDeleted ? 'deleted' : 'active',
+    status: isDeleted ? 'deleted' : playAt && playAt > now ? 'active' : 'expired',
     ...(isDeleted ? { deletedAt: now.toISOString() } : {}),
     sourceMessageId: String(message.messageId),
     sourceUrl: message.sourceUrl || SOURCE_URL,
@@ -199,7 +202,7 @@ const retainedUnmatched = unmatched.filter((item) => !currentMessageIds.has(item
 const dedupedUnmatched = [...new Map([...retainedUnmatched, ...currentUnmatched].map((item) => [`${item.sourceMessageId}:${item.text}`, item])).values()];
 const nextListings = [...byMessage.values()].sort((a, b) => new Date(a.playAt) - new Date(b.playAt));
 const deletedCount = nextListings.filter((listing) => listing.status === 'deleted').length;
-const expiredCount = nextListings.filter((listing) => listing.status === 'active' && new Date(listing.playAt) <= now).length;
+const expiredCount = nextListings.filter((listing) => listing.status === 'expired').length;
 await mkdir('data', { recursive: true });
 await writeFile(outputPath, `${JSON.stringify(nextListings, null, 2)}\n`);
 await writeFile(unmatchedPath, `${JSON.stringify(dedupedUnmatched, null, 2)}\n`);
