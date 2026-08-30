@@ -36,3 +36,5 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+
+# dedicated local Chrome automation profile lives outside the repo

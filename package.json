@@ -11,8 +11,11 @@
     "start": "wrangler dev --config dist/server/wrangler.json",
     "lint": "oxlint",
     "format": "oxfmt",
+    "test": "node --test",
     "venues:refresh": "node scripts/fetch-badminton-venues.mjs",
-    "ingest:telegram": "node scripts/ingest-telegram.mjs"
+    "ingest:telegram": "node scripts/ingest-telegram.mjs",
+    "ingest:local": "node scripts/run-local-ingestion.mjs",
+    "ingest:local:dry": "node scripts/run-local-ingestion.mjs --dry-run --no-llm"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",
