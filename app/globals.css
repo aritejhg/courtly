@@ -276,6 +276,19 @@ a {
   border: 1px solid var(--line);
   border-radius: 6px;
 }
+.build-footer {
+  color: var(--muted);
+  font-size: 10px;
+  margin: 14px auto 0;
+  max-width: 1320px;
+  padding: 0 20px 18px;
+  text-align: right;
+}
+.build-footer code {
+  color: var(--ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  overflow-wrap: anywhere;
+}
 .map-wrap {
   min-width: 0;
   overflow: hidden;
@@ -853,6 +866,9 @@ a {
   }
   .saved-list {
     width: 100%;
+  }
+  .build-footer {
+    padding: 0 14px 16px;
   }
 }
 @media (max-width: 800px) {

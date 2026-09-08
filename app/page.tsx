@@ -251,6 +251,7 @@ export default function Home() {
   const [routePlan, setRoutePlan] = useState<RoutePlan | null>(null);
   const [routeLoading, setRouteLoading] = useState(false);
   const [routeError, setRouteError] = useState('');
+  const [backendCommit, setBackendCommit] = useState('');
   const [now] = useState(() => new Date());
   const activeListings = useMemo(
     () => getActiveListings(telegramListings, now),
@@ -357,6 +358,21 @@ export default function Home() {
     selectedCourt?.lng,
     selectedCourt?.playAt,
   ]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetch('/api/build', { cache: 'no-store' })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error('Build info unavailable')))
+      .then((payload: { commit?: string }) => {
+        if (!cancelled) setBackendCommit(payload.commit || 'unknown');
+      })
+      .catch(() => {
+        if (!cancelled) setBackendCommit('unavailable');
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     try {
@@ -815,6 +831,9 @@ export default function Home() {
           ) : null}
         </aside>
       </section>
+      <footer className="build-footer" aria-label="Backend build version">
+        Backend build <code>{backendCommit || 'loading…'}</code>
+      </footer>
     </main>
   );
 }

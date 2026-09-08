@@ -7,6 +7,7 @@
   },
   "scripts": {
     "dev": "vinext dev",
+    "prebuild": "node scripts/write-build-info.mjs",
     "build": "vinext build",
     "publish:cloudflare": "node scripts/publish-cloudflare.mjs",
     "publish:cloudflare:dry": "node scripts/publish-cloudflare.mjs --dry-run",
