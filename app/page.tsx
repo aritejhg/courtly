@@ -65,6 +65,7 @@ type RoutePlan = {
   arriveAt: string;
   source: 'OneMap' | 'Estimate';
 };
+type BackendStatus = 'checking' | 'connected' | 'unavailable';
 
 const TELEGRAM_URL = 'https://t.me/your_group_invite';
 const TELEGRAM_INTERNAL_CHAT_ID = '9876543210';
@@ -252,6 +253,7 @@ export default function Home() {
   const [routeLoading, setRouteLoading] = useState(false);
   const [routeError, setRouteError] = useState('');
   const [backendCommit, setBackendCommit] = useState('');
+  const [backendStatus, setBackendStatus] = useState<BackendStatus>('checking');
   const [now] = useState(() => new Date());
   const activeListings = useMemo(
     () => getActiveListings(telegramListings, now),
@@ -361,16 +363,25 @@ export default function Home() {
 
   useEffect(() => {
     let cancelled = false;
-    void fetch('/api/build', { cache: 'no-store' })
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 5000);
+    void fetch('/api/build', { cache: 'no-store', signal: controller.signal })
       .then((response) => response.ok ? response.json() : Promise.reject(new Error('Build info unavailable')))
       .then((payload: { commit?: string }) => {
-        if (!cancelled) setBackendCommit(payload.commit || 'unknown');
+        if (!cancelled && payload.commit) {
+          setBackendCommit(payload.commit);
+          setBackendStatus('connected');
+        } else if (!cancelled) {
+          setBackendStatus('unavailable');
+        }
       })
       .catch(() => {
-        if (!cancelled) setBackendCommit('unavailable');
+        if (!cancelled) setBackendStatus('unavailable');
       });
     return () => {
       cancelled = true;
+      window.clearTimeout(timeout);
+      controller.abort();
     };
   }, []);
 
@@ -832,7 +843,16 @@ export default function Home() {
         </aside>
       </section>
       <footer className="build-footer" aria-label="Backend build version">
-        Backend build <code>{backendCommit || 'loading…'}</code>
+        <span className={`build-footer-status ${backendStatus}`} role="status">
+          <span className="build-footer-dot" aria-hidden="true" />
+          {backendStatus === 'connected' ? (
+            <>Backend build <code>{backendCommit}</code></>
+          ) : backendStatus === 'checking' ? (
+            'Checking backend…'
+          ) : (
+            'Backend unavailable'
+          )}
+        </span>
       </footer>
     </main>
   );

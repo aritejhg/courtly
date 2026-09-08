@@ -284,6 +284,26 @@ a {
   padding: 0 20px 18px;
   text-align: right;
 }
+.build-footer-status {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+  max-width: 100%;
+}
+.build-footer-dot {
+  background: #9aa7a2;
+  border-radius: 50%;
+  display: inline-block;
+  flex: 0 0 auto;
+  height: 6px;
+  width: 6px;
+}
+.build-footer-status.connected .build-footer-dot {
+  background: var(--green);
+}
+.build-footer-status.unavailable .build-footer-dot {
+  background: var(--coral);
+}
 .build-footer code {
   color: var(--ink);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
