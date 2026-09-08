@@ -15,11 +15,6 @@ const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === 'seatbelt';
 const localBindingConfig = {
   main: 'vinext/server/fetch-handler',
   compatibility_flags: ['nodejs_compat'],
-  assets: {
-    // Middleware must run before static chunks because the client bundle
-    // contains the authenticated Telegram listing feed.
-    run_worker_first: true,
-  },
   d1_databases: d1
     ? [
         {

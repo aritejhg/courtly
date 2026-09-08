@@ -9,8 +9,5 @@ export async function middleware(request: Request) {
 }
 
 export const config = {
-  // The client bundle contains the authenticated Telegram feed. Protect static
-  // chunks too; otherwise an unauthenticated caller can fetch the data without
-  // passing through the page gate.
-  matcher: ['/((?!favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };
