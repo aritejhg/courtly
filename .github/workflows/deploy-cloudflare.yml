@@ -1,0 +1,51 @@
+name: Deploy Courtly to Cloudflare
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: courtly-production-deploy
+  cancel-in-progress: false
+
+jobs:
+  test-build-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Verify venue mappings
+        run: npm run venues:verify
+
+      - name: Build production app
+        run: npm run build
+
+      - name: Publish Worker
+        run: npm run publish:cloudflare
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      - name: Verify protected production edge
+        shell: bash
+        run: |
+          status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' https://courtly.example.workers.dev/)"
+          test "$status" = "401"
