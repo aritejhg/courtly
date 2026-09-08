@@ -7,6 +7,7 @@ app_dir="${COURTLY_APP_DIR:-/opt/courtly/app}"
 deploy_key="${COURTLY_GITHUB_KEY:-/opt/courtly/.ssh/github_deploy_key}"
 known_hosts="${COURTLY_GITHUB_KNOWN_HOSTS:-/opt/courtly/.ssh/github_known_hosts}"
 lock_path="$app_dir/work/github-deploy.lock"
+deployed_marker="$app_dir/.courtly-source-commit"
 
 mkdir -p "$app_dir/work"
 exec 9>"$lock_path"
@@ -25,7 +26,8 @@ fi
 
 target_commit="$(git -C "$source_dir" rev-parse origin/main)"
 current_commit="$(git -C "$source_dir" rev-parse HEAD 2>/dev/null || true)"
-if [[ "$current_commit" == "$target_commit" ]]; then
+deployed_commit="$(cat "$deployed_marker" 2>/dev/null || true)"
+if [[ "$current_commit" == "$target_commit" && "$deployed_commit" == "$target_commit" ]]; then
   exit 0
 fi
 
@@ -41,6 +43,7 @@ rsync -a --delete \
   --exclude='work/' \
   --exclude='node_modules/' \
   --exclude='dist/' \
+  --exclude='.courtly-source-commit' \
   --exclude='data/ambiguity-review-history.json' \
   --exclude='data/parser-ambiguities.json' \
   --exclude='data/telegram-listings.json' \
@@ -56,4 +59,5 @@ if [[ "$old_lock_hash" != "$new_lock_hash" ]]; then
   npm --prefix "$app_dir" ci --no-audit --no-fund
 fi
 
+printf '%s\n' "$target_commit" > "$deployed_marker"
 printf 'Courtly Oracle source updated to %s\n' "$target_commit"
