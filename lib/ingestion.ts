@@ -16,6 +16,7 @@ export type CourtListing = {
   area: string;
   sport: 'Badminton' | 'Tennis' | 'Basketball' | 'Other';
   playAt: string;
+  playEndAt: string;
   postedAt: string;
   status: ListingStatus;
   deletedAt?: string;
@@ -32,8 +33,9 @@ export type CourtListing = {
   duration: string;
   price: number | null;
   owner: string;
-  lat: number;
-  lng: number;
+  ownerUsername?: string;
+  lat?: number;
+  lng?: number;
   venueId?: string;
   venueMatch?: 'deterministic' | 'ambiguous' | 'unmatched';
 };
@@ -99,6 +101,7 @@ export function ingestTelegramMessage(message: TelegramMessage, now = new Date()
     area: inferArea(rawText),
     sport: inferSport(rawText),
     playAt,
+    playEndAt: playAt,
     postedAt,
     status: message.deleted ? 'deleted' : new Date(playAt).getTime() > now.getTime() ? 'active' : 'expired',
     deletedAt: message.deleted ? now.toISOString() : undefined,
@@ -111,8 +114,9 @@ export function ingestTelegramMessage(message: TelegramMessage, now = new Date()
     duration: 'Unknown',
     price: null,
     owner: 'Sample Owner',
-    lat: 1.3521,
-    lng: 103.8198,
+    ...(venueMatch.venue?.lat != null && venueMatch.venue?.lng != null
+      ? { lat: venueMatch.venue.lat, lng: venueMatch.venue.lng }
+      : {}),
     venueId: venueMatch.venue?.id,
     venueMatch: venueMatch.status,
   };

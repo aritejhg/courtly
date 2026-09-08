@@ -11,8 +11,8 @@ export type Venue = {
   area?: string;
   address?: string;
   zone?: string;
-  lat: number;
-  lng: number;
+  lat?: number;
+  lng?: number;
 };
 
 export type VenueMatch = {
@@ -45,6 +45,12 @@ export function inferVenueArea(text: string, venue?: Venue | null) {
 function aliasesFor(venue: Venue) {
   const aliases = new Set([venue.canonicalName, ...(venue.aliases ?? [])]);
   for (const alias of Array.from(aliases)) {
+    // Telegram often writes a location-qualified venue as `Name (Location)`
+    // when the catalog uses `Name @ Location`.
+    const atLocation = alias.match(/^(.*?)\s*@\s*(.+)$/);
+    if (atLocation) aliases.add(`${atLocation[1]} (${atLocation[2]})`);
+    const parenthesizedLocation = alias.match(/^(.*?)\s*\(([^)]+)\)$/);
+    if (parenthesizedLocation) aliases.add(`${parenthesizedLocation[1]} @ ${parenthesizedLocation[2]}`);
     if (alias.includes(' - ')) {
       const short = alias.split(' - ')[0];
       aliases.add(short);
@@ -54,6 +60,20 @@ function aliasesFor(venue: Venue) {
       const base = alias.replace(/\s+sports? hall\b/ig, '').trim();
       aliases.add(base);
       aliases.add(`${base} SH`);
+      // Telegram shorthand commonly omits the ActiveSG source-brand suffix.
+      if (/\s+activesg\b/i.test(alias)) {
+        const withoutActiveSg = alias.replace(/\s+activesg\b/ig, '').trim();
+        aliases.add(withoutActiveSg);
+        aliases.add(withoutActiveSg.replace(/\s+sports? hall\b/ig, '').trim());
+      }
+      const nameWords = normalizeVenueText(venue.canonicalName)
+        .split(' ')
+        .filter((word) => !['sport', 'sports', 'hall', 'activesg'].includes(word));
+      if (nameWords.length >= 2) {
+        const initials = nameWords.map((word) => word[0]).join('');
+        aliases.add(`${initials} Sport Hall`);
+        aliases.add(`${initials} Sports Hall`);
+      }
     }
     if (/^Our\s+/i.test(alias)) aliases.add(alias.replace(/^Our\s+/i, ''));
     if (/^Ang Mo Kio\b/i.test(alias)) aliases.add(alias.replace(/^Ang Mo Kio/i, 'AMK'));
@@ -69,16 +89,50 @@ function aliasesFor(venue: Venue) {
     aliases.add(alias.replace(/\bcommunity club\b/ig, 'cc'));
     aliases.add(alias.replace(/\bcc\b/ig, 'community club'));
   }
-  return [...aliases].map(normalizeVenueText).filter((alias) => alias.length >= 4);
+  // Preserve verified three-letter Telegram abbreviations (for example KFF).
+  return [...aliases].map(normalizeVenueText).filter((alias) => alias.length >= 3);
 }
 
 export function matchVenue(text: string, venues = badmintonVenues): VenueMatch {
   const normalizedText = normalizeVenueText(text);
+  const stripListingMetadata = (value: string) => value
+    .replace(/\b(?:today|tonight|tomorrow|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?|jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b/gi, ' ')
+    .replace(/\b\d+\b/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const strictCandidates = new Set([
+    normalizedText,
+    ...text.split(/\r?\n/).map((line) => normalizeVenueText(line)
+      .replace(/^(?:venue|location|place)\s*[:-]?\s*/i, '')
+      .replace(/[.,:;]+$/g, '')
+      .trim())
+      .filter(Boolean),
+    ...text.split(/\r?\n/).map((line) => stripListingMetadata(normalizeVenueText(line)
+      .replace(/^(?:venue|location|place)\s*[:-]?\s*/i, '')))
+      .filter(Boolean),
+  ]);
+  const directOwners = new Map<string, Set<string>>();
+  for (const venue of venues) {
+    for (const directAlias of [venue.canonicalName, ...(venue.aliases ?? [])]) {
+      const key = normalizeVenueText(directAlias);
+      const owners = directOwners.get(key) ?? new Set<string>();
+      owners.add(normalizeVenueText(venue.canonicalName));
+      directOwners.set(key, owners);
+    }
+  }
+  const explicitlyCommunityClub = /\b(?:cc|community\s+(?:club|centre))\b/i.test(normalizedText)
+    && !/\b(?:school|pri(?:mary)?|sec(?:ondary)?|sport(?:s)?\s*hall|sh)\b/i.test(normalizedText);
   const hits: Array<{ venue: Venue; alias: string; length: number }> = [];
   for (const venue of venues) {
+    // Do not let a broad sport-hall alias (for example `Hougang`) match an
+    // explicit community-club listing (`Hougang CC`) and attach wrong coords.
+    if (explicitlyCommunityClub && venue.kind !== 'community_club') continue;
     for (const alias of aliasesFor(venue)) {
-      const escaped = alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      if (new RegExp(`(^| )${escaped}( |$)`, 'i').test(normalizedText)) hits.push({ venue, alias, length: alias.length });
+      const owners = directOwners.get(alias);
+      if (owners?.size && !owners.has(normalizeVenueText(venue.canonicalName))) continue;
+      // A verified alias is a strict key. Do not match a known venue as a
+      // substring of an unknown venue name.
+      if (strictCandidates.has(alias)) hits.push({ venue, alias, length: alias.length });
     }
   }
   if (!hits.length) return { venue: null, status: 'unmatched' };

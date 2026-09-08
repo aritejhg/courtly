@@ -178,6 +178,7 @@
     "canonicalName": "Blangah Rise Primary School Hall",
     "aliases": [
       "Blangah Rise Primary School Hall",
+      "Blangah Rise Pri Sch",
       "Blangah Rise Pri",
       "Blangah Rise Pri Hall"
     ],
@@ -852,6 +853,7 @@
     "canonicalName": "Henry Park Primary School Hall",
     "aliases": [
       "Henry Park Primary School Hall",
+      "Henry Park Pri Sch",
       "Henry Park Pri",
       "Henry Park Pri Hall"
     ],
@@ -963,7 +965,9 @@
     "canonicalName": "Jurong East Sport Hall",
     "aliases": [
       "Jurong East Sport Hall",
-      "Jurong East Sports Hall"
+      "Jurong East Sports Hall",
+      "JESH Jurong East Sports Hall",
+      "JE SH Jurong East Sports Hall"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/jurong-east-sport-hall",
@@ -993,6 +997,7 @@
     "canonicalName": "Jurongville Secondary School Hall",
     "aliases": [
       "Jurongville Secondary School Hall",
+      "Jurongville sec school",
       "Jurongville Sec",
       "Jurongville Sec Hall"
     ],
@@ -1200,6 +1205,8 @@
     "canonicalName": "New Town Secondary School Hall",
     "aliases": [
       "New Town Secondary School Hall",
+      "New Town Secondary School",
+      "Newtown secondary school",
       "New Town Sec",
       "New Town Sec Hall"
     ],
@@ -1327,7 +1334,10 @@
     "id": "active-sg:our-tampines-hub-community-auditorium",
     "canonicalName": "Our Tampines Hub - Community Auditorium",
     "aliases": [
-      "Our Tampines Hub - Community Auditorium"
+      "Our Tampines Hub - Community Auditorium",
+      "OTH",
+      "OTH Our Tampines Hub",
+      "Tampines Hub"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/our-tampines-hub-community-auditorium",
@@ -1421,6 +1431,7 @@
     "canonicalName": "Peiying Primary School Hall",
     "aliases": [
       "Peiying Primary School Hall",
+      "Peiying primary school (Yishun)",
       "Peiying Pri",
       "Peiying Pri Hall"
     ],
@@ -1799,6 +1810,8 @@
     "canonicalName": "St Anthony's Primary School Hall",
     "aliases": [
       "St Anthony's Primary School Hall",
+      "St Anthony's Primary",
+      "St Anthony Primary",
       "St Anthony's Pri",
       "St Anthony's Pri Hall"
     ],
@@ -1815,6 +1828,10 @@
     "canonicalName": "St Gabriel's Secondary School Hall",
     "aliases": [
       "St Gabriel's Secondary School Hall",
+      "St Gabriel secondary school",
+      "St. Gabriel secondary school",
+      "St. Gabriel secondary school (Serangoon)",
+      "St. Gabriel Sec hall",
       "St Gabriel's Sec",
       "St Gabriel's Sec Hall"
     ],
@@ -2022,6 +2039,7 @@
     "canonicalName": "Yew Tee Primary School Hall",
     "aliases": [
       "Yew Tee Primary School Hall",
+      "Yew tee pri Sch",
       "Yew Tee Pri",
       "Yew Tee Pri Hall"
     ],
@@ -2132,6 +2150,7 @@
     "canonicalName": "Yuhua Primary School Hall",
     "aliases": [
       "Yuhua Primary School Hall",
+      "Yuhua pri school",
       "Yuhua Pri",
       "Yuhua Pri Hall"
     ],

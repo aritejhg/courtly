@@ -15,15 +15,14 @@ if ($Uninstall) {
 }
 
 $node = (Get-Command node.exe -ErrorAction Stop).Source
-$action = New-ScheduledTaskAction -Execute $node -Argument "`"$runner`"" -WorkingDirectory $projectRoot
+$action = New-ScheduledTaskAction -Execute $node -Argument "`"$runner`" --publish" -WorkingDirectory $projectRoot
 $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Hours 1)
 $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 45)
 $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Limited
-Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Settings $settings -Principal $principal -Description 'Code-only Courtly Telegram ingestion. Codex Luna-low runs only for new parser ambiguities.' -Force | Out-Null
+Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Settings $settings -Principal $principal -Description 'Hourly Courtly Telegram ingestion, deterministic parsing, build, and Cloudflare publish.' -Force | Out-Null
 
 if ($RunNow) {
   Start-ScheduledTask -TaskName $taskName
 }
 
 Get-ScheduledTask -TaskName $taskName | Select-Object TaskName, State
-

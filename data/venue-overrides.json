@@ -1,5 +1,79 @@
 [
   {
+    "id": "manual:sbh-sims",
+    "canonicalName": "SBH @ Sims",
+    "aliases": ["SBH @ Sims", "SBH Sims"],
+    "source": "Telegram listing",
+    "kind": "other",
+    "area": "Geylang",
+    "address": "Geylang Lorong 23"
+  },
+  {
+    "id": "manual:kampong-glam-cc",
+    "canonicalName": "Kampong Glam CC",
+    "aliases": ["Kampong Glam CC", "Kampong Glam Community Club"],
+    "source": "Repeated exact Telegram venue name",
+    "kind": "community_club",
+    "area": "Kallang"
+  },
+  {
+    "id": "manual:potong-pasir-cc",
+    "canonicalName": "Potong Pasir CC",
+    "aliases": ["Potong Pasir CC", "Potong Pasir Community Club"],
+    "source": "Repeated exact Telegram venue name",
+    "kind": "community_club",
+    "area": "Potong Pasir"
+  },
+  {
+    "id": "manual:kff-guillemard",
+    "canonicalName": "KFF Guillemard",
+    "aliases": ["KFF", "KFF Guillemard"],
+    "source": "Telegram listing shorthand",
+    "kind": "sport_hall",
+    "area": "Kallang"
+  },
+  {
+    "id": "onepa:henderson-cc",
+    "canonicalName": "Henderson CC",
+    "aliases": ["Henderson", "Henderson CC", "Henderson Community Club"],
+    "source": "People's Association / onePA",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/henderson-cc",
+    "kind": "community_club",
+    "area": "Bukit Merah",
+    "address": "500 Bukit Merah View, Singapore 159682"
+  },
+  {
+    "id": "onepa:ayer-rajah-cc",
+    "canonicalName": "Ayer Rajah CC",
+    "aliases": ["Ayer Rajah", "Ayer Rajah CC", "Ayer Rajah Community Club", "Ayer Rajah Community Centre"],
+    "source": "People's Association / onePA",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/ayer-rajah-cc",
+    "kind": "community_club",
+    "area": "Jurong East",
+    "address": "150 Pandan Gardens, Singapore 609335"
+  },
+  {
+    "id": "onepa:yew-tee-cc",
+    "canonicalName": "Yew Tee CC",
+    "aliases": ["Yew Tee", "Yew Tee CC", "Yew Tee Community Club"],
+    "source": "People's Association / onePA",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/yew-tee-cc",
+    "kind": "community_club",
+    "area": "Choa Chu Kang",
+    "address": "20 Choa Chu Kang Street 52, Yew Tee Community Building, Singapore 689286"
+  },
+  {
+    "id": "manual:the-sports-arina-jalan-kayu",
+    "canonicalName": "The Sports Arina @ Jalan Kayu",
+    "aliases": ["The Sports Arina Jalan Kayu", "Sports Arina Jalan Kayu", "TSA Jalan Kayu"],
+    "source": "OnePA / The Sports Arina",
+    "sourceUrl": "https://www.onepa.gov.sg/events/jalan-kayu-csn-badminton-interest-group-2026-19196657",
+    "kind": "sport_hall",
+    "zone": "Northeast",
+    "address": "20A Fernvale Road, Singapore 799951",
+    "area": "Sengkang"
+  },
+  {
     "id": "onepa:buangkok-cc",
     "canonicalName": "Buangkok CC",
     "aliases": ["Buangkok", "Buangkok CC", "Buangkok Community Club"],
@@ -28,7 +102,7 @@
   {
     "id": "manual:singapore-expo",
     "canonicalName": "Singapore Expo",
-    "aliases": ["singapore expo", "seh expo", "seh@expo", "expo"],
+    "aliases": ["singapore expo", "seh expo", "seh@expo", "sbh expo", "sbh@expo", "SBH East", "SBH East Coast @ Expo", "expo"],
     "source": "Telegram + OneMap",
     "kind": "other",
     "area": "Expo",
@@ -38,7 +112,7 @@
   {
     "id": "manual:wellington-primary-school",
     "canonicalName": "Wellington Primary School",
-    "aliases": ["wellington primary", "wellington pri", "wellington primary school", "wellington pri school"],
+    "aliases": ["wellington primary", "wellington pri", "wellington primary school", "wellington primary school hall", "wellington pri school", "Wellington Pri (Sembawang)"],
     "source": "Telegram + OneMap",
     "kind": "school_sport_hall",
     "area": "Sembawang",
@@ -119,12 +193,24 @@
   {
     "id": "onepa:tanjong-pagar-cc",
     "canonicalName": "Tanjong Pagar CC",
-    "aliases": ["tanjong pagar", "tanjong pagar cc", "tanjong pagar community club"],
+    "aliases": ["tanjong pagar", "tanjong pagar cc", "tanjong pagar community club", "tg pagar cc"],
     "source": "onePA",
     "kind": "community_club",
     "area": "Tanjong Pagar",
     "lat": 1.276,
     "lng": 103.843
+  },
+  {
+    "id": "onepa:jalan-besar-cc",
+    "canonicalName": "Jalan Besar CC",
+    "aliases": ["jalan besar", "jalan besar cc", "jalan besar community club", "jln besar cc"],
+    "source": "onePA",
+    "sourceUrl": "https://www.onepa.gov.sg/events/king-george-s-ave-rc-low-impact-aerobics-10-july-2026-e47201973",
+    "kind": "community_club",
+    "area": "Kallang",
+    "address": "69 Jellicoe Road, Singapore 208737",
+    "lat": 1.30778,
+    "lng": 103.86168
   },
   {
     "id": "onepa:cairnhill-cc",
@@ -155,5 +241,72 @@
     "area": "Woodlands",
     "lat": 1.437,
     "lng": 103.786
+  },
+  {
+    "id": "onepa:queenstown-cc",
+    "canonicalName": "Queenstown CC",
+    "aliases": ["queenstown", "queenstown cc", "queenstown community club", "queenstown community centre"],
+    "source": "onePA",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/queenstown-cc",
+    "kind": "community_club",
+    "area": "Queenstown",
+    "address": "365 Commonwealth Avenue, Singapore 149732"
+  },
+  {
+    "id": "onepa:geylang-serai-cc",
+    "canonicalName": "Geylang Serai CC",
+    "aliases": ["Geylang Serai", "Geylang Serai CC", "Geylang Serai Community Club"],
+    "source": "People's Association / onePA",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/geylang-serai-cc",
+    "kind": "community_club",
+    "area": "Geylang"
+  },
+  {
+    "id": "telegram:radin-mas-cc",
+    "canonicalName": "Radin Mas CC",
+    "aliases": ["Radin Mas CC"],
+    "source": "Repeated exact Telegram venue name",
+    "kind": "community_club",
+    "area": "Bukit Merah"
+  },
+  {
+    "id": "telegram:hong-kah-north-cc",
+    "canonicalName": "Hong Kah North CC",
+    "aliases": ["Hong Kah North CC"],
+    "source": "Repeated exact Telegram venue name",
+    "kind": "community_club",
+    "area": "Bukit Gombak"
+  },
+  {
+    "id": "telegram:zhenghua-cc",
+    "canonicalName": "Zhenghua CC",
+    "aliases": ["Zhenghua CC", "Zhenghua CC (Bukit Panjang)"],
+    "source": "Repeated exact Telegram venue name",
+    "kind": "community_club",
+    "area": "Bukit Panjang"
+  },
+  {
+    "id": "telegram:sbh-geylang",
+    "canonicalName": "SBH Geylang",
+    "aliases": ["SBH Geylang"],
+    "source": "Repeated exact Telegram venue name",
+    "kind": "other",
+    "area": "Geylang"
+  },
+  {
+    "id": "telegram:west-coast-cc",
+    "canonicalName": "West Coast CC",
+    "aliases": ["West Coast CC"],
+    "source": "Repeated exact Telegram venue name",
+    "kind": "community_club",
+    "area": "Clementi"
+  },
+  {
+    "id": "telegram:hougang-cc",
+    "canonicalName": "Hougang CC",
+    "aliases": ["Hougang CC"],
+    "source": "Repeated exact Telegram venue name",
+    "kind": "community_club",
+    "area": "Hougang"
   }
 ]
