@@ -1471,10 +1471,13 @@ a {
   }
   .listing-rail-heading { padding: 2px 8px 12px; }
   .listing-rail-heading h2 { font-size: 18px; }
-  .listing-card-title { font-size: 15px; }
-  .listing-card-meta { font-size: 12px; }
+  .listing-card-title { font-size: 17px; }
+  .listing-card-meta { font-size: 15px; line-height: 1.45; }
   .listing-card-facts strong,
-  .listing-eta { font-size: 13px; }
+  .listing-eta { font-size: 16px; }
+  .listing-card-main { gap: 9px; padding: 16px 10px 16px 14px; }
+  .listing-card-meta svg,
+  .listing-eta svg { height: 16px; width: 16px; }
   .detail-drawer {
     bottom: 12px;
     left: 12px;
