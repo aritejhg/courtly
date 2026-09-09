@@ -467,7 +467,7 @@ export default function Home() {
       map = L.map(mapElement.current, {
         zoomControl: false,
         scrollWheelZoom: true,
-      }).setView([1.3521, 103.8198], 11);
+      }).setView([1.3521, 103.8198], 12);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap contributors',
@@ -703,9 +703,6 @@ export default function Home() {
         {selectedCourt ? (
           <aside className="detail-panel detail-drawer" aria-label="Selected listing details">
             <button className="drawer-close" type="button" onClick={() => setSelectedId('')} aria-label="Close listing details" title="Close listing details"><X size={16} /></button>
-          <div className="detail-top">
-            <span className="route-label">Selected listing</span>
-          </div>
           <div className="detail-title">
             <h1>{selectedCourt.name}</h1>
             <span>
