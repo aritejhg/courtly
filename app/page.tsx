@@ -475,7 +475,9 @@ export default function Home() {
       map = L.map(mapElement.current, {
         zoomControl: false,
         scrollWheelZoom: true,
-      }).setView([1.3521, 103.8198], 12);
+      // Keep the island visually clear of the listings rail on the left.
+      // At zoom 12 this westward centre offset shifts the map content ~7.5 cm right.
+      }).setView([1.3521, 103.72], 12);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap contributors',

@@ -227,16 +227,18 @@ a {
 .date-popover {
   background: var(--panel);
   border: 1px solid var(--line);
+  border-radius: 16px;
   color: var(--ink);
   max-width: calc(100vw - 24px);
-  min-width: 320px;
+  min-width: 0;
   overflow: hidden;
   position: relative;
   z-index: 1000;
-  width: auto;
+  width: fit-content;
 }
 .date-popover [data-slot='calendar'] {
   background: var(--panel);
+  padding: 0;
 }
 .calendar-clear {
   background: transparent;
@@ -1155,7 +1157,7 @@ a {
   appearance: none;
   background: #f4f8f5;
   border: 1px solid #dce7e1;
-  border-radius: 9px;
+  border-radius: 999px;
   color: #53655e;
   cursor: pointer;
   font-size: 12px;
