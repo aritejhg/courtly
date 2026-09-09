@@ -1370,7 +1370,7 @@ a {
   padding: 20px 14px 14px;
   position: absolute;
   top: 84px;
-  width: 390px;
+  width: 420px;
 }
 .listing-rail-heading {
   padding: 2px 10px 16px;
@@ -1378,30 +1378,38 @@ a {
 .listing-rail-heading h2 {
   font-size: 20px;
 }
-.eyebrow { font-size: 11px; }
-.sort-note { font-size: 12px; }
+.eyebrow { font-size: 12px; }
+.sort-note { font-size: 14px; }
 .listing-rail .listing-results-list {
   gap: 8px;
   overflow-x: hidden;
   padding: 14px 2px 4px;
 }
-.listing-card-title { font-size: 16px; }
-.listing-card-meta { font-size: 13px; }
+.listing-card-title { font-size: 18px; }
+.listing-card-meta { font-size: 16px; line-height: 1.4; }
 .listing-card-facts strong,
-.listing-eta { font-size: 14px; }
-.listing-card-main { gap: 8px; padding: 14px 8px 14px 14px; }
-.listing-card-actions a { height: 42px; width: 42px; }
+.listing-eta { font-size: 17px; }
+.listing-card-main { gap: 10px; padding: 17px 10px 17px 16px; }
+.listing-card-actions a { height: 46px; width: 46px; }
 .detail-drawer {
   bottom: 24px;
-  left: 430px;
+  left: 454px;
   overflow-x: hidden;
   overflow-y: auto;
   padding: 22px 24px 24px;
   position: absolute;
   top: 84px;
-  width: 420px;
+  width: 460px;
 }
-.drawer-close { font-size: 13px; min-height: 36px; }
+.drawer-close { font-size: 14px; min-height: 40px; }
+.detail-drawer .detail-title h1 { font-size: 30px; }
+.detail-drawer .detail-title > span { font-size: 16px; }
+.detail-drawer .detail-grid small,
+.detail-drawer .active-badge,
+.detail-drawer .route-label { font-size: 13px; }
+.detail-drawer .detail-grid strong { font-size: 18px; }
+.detail-drawer .detail-grid span,
+.detail-drawer .transit-heading > span:last-child { font-size: 15px; }
 .build-footer {
   bottom: 10px;
   margin: 0;
@@ -1415,8 +1423,8 @@ a {
 .map-note { bottom: 16px; left: 16px; }
 
 @media (max-width: 1100px) and (min-width: 801px) {
-  .listing-rail { left: 18px; width: 320px; }
-  .detail-drawer { left: 352px; width: 360px; }
+  .listing-rail { left: 18px; width: 340px; }
+  .detail-drawer { left: 372px; width: 390px; }
   .toolbar { left: 18px; right: 18px; }
 }
 
@@ -1451,7 +1459,7 @@ a {
     overflow: hidden;
     padding: 0;
   }
-  .map-wrap { border-radius: 0; inset: 0; }
+  .map-wrap { border-radius: 0; height: auto; inset: 0; min-height: 0; }
   .listing-rail {
     bottom: auto;
     left: 12px;
