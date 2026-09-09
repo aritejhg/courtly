@@ -685,8 +685,11 @@ export default function Home() {
               return (
                 <article className={`listing-card ${court.id === selectedCourt?.id ? 'selected' : ''}`} key={court.id}>
                   <button className="listing-card-main" type="button" onClick={() => setSelectedId((current) => current === court.id ? '' : court.id)} aria-expanded={court.id === selectedCourt?.id}>
-                    <span className="listing-card-title">{court.name}</span>
-                    <span className="listing-card-meta"><MapPin size={13} />{court.area}<span>·</span><Clock3 size={13} />{court.date} · {court.time}</span>
+                    <span className="listing-card-title">
+                      <span className="listing-card-name">{court.name}</span>
+                      <span className="listing-card-locality">({court.area})</span>
+                    </span>
+                    <span className="listing-card-meta"><Clock3 size={13} />{court.date} · {court.time}</span>
                     <span className="listing-card-facts"><strong>{court.price === null ? 'Price on request' : `$${court.price.toFixed(2)} / court`}</strong><span className="listing-eta"><TrainFront size={13} />{eta ? `${eta} min` : '—'}</span></span>
                   </button>
                   <div className="listing-card-actions">

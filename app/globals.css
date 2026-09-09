@@ -1193,13 +1193,15 @@ a {
   outline-offset: -2px;
 }
 .listing-card-title {
-  font-size: 14px;
-  font-weight: 800;
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
   line-height: 1.25;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  min-width: 0;
 }
+.listing-card-name { font-weight: 800; }
+.listing-card-locality { color: var(--muted); font-size: .82em; font-weight: 400; }
 .listing-card-meta,
 .listing-card-facts,
 .listing-eta {
@@ -1210,9 +1212,9 @@ a {
 .listing-card-meta {
   color: var(--muted);
   font-size: 12px;
+  flex-wrap: wrap;
   gap: 5px;
-  overflow: hidden;
-  white-space: nowrap;
+  white-space: normal;
 }
 .listing-card-meta svg { color: #76a88d; flex: 0 0 auto; }
 .listing-card-meta > span { color: #a2afa9; }
@@ -1220,12 +1222,7 @@ a {
   gap: 9px;
   justify-content: space-between;
 }
-.listing-card-facts strong {
-  font-size: 12px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+.listing-card-facts strong { font-size: 12px; }
 .listing-eta {
   color: #4c9273;
   flex: 0 0 auto;
@@ -1385,12 +1382,13 @@ a {
   overflow-x: hidden;
   padding: 14px 2px 4px;
 }
-.listing-rail .listing-card-title { font-size: 18px; }
-.listing-rail .listing-card-meta { font-size: 16px; line-height: 1.4; }
+.listing-rail .listing-card-title { font-size: 17px; }
+.listing-rail .listing-card-locality { font-size: 14px; }
+.listing-rail .listing-card-meta { font-size: 14px; line-height: 1.4; }
 .listing-rail .listing-card-meta > span { font-size: inherit; }
 .listing-rail .listing-card-facts strong,
-.listing-rail .listing-eta { font-size: 17px; }
-.listing-card-main { gap: 10px; padding: 17px 10px 17px 16px; }
+.listing-rail .listing-eta { font-size: 15px; }
+.listing-card-main { gap: 8px; padding: 14px 10px 14px 16px; }
 .listing-card-actions a { height: 46px; width: 46px; }
 .detail-drawer {
   bottom: 24px;
@@ -1472,11 +1470,12 @@ a {
   }
   .listing-rail-heading { padding: 2px 8px 12px; }
   .listing-rail-heading h2 { font-size: 18px; }
-  .listing-rail .listing-card-title { font-size: 17px; }
-  .listing-rail .listing-card-meta { font-size: 15px; line-height: 1.45; }
+  .listing-rail .listing-card-title { font-size: 16px; }
+  .listing-rail .listing-card-locality { font-size: 13px; }
+  .listing-rail .listing-card-meta { font-size: 14px; line-height: 1.45; }
   .listing-rail .listing-card-facts strong,
-  .listing-rail .listing-eta { font-size: 16px; }
-  .listing-card-main { gap: 9px; padding: 16px 10px 16px 14px; }
+  .listing-rail .listing-eta { font-size: 15px; }
+  .listing-card-main { gap: 8px; padding: 13px 10px 13px 14px; }
   .listing-card-meta svg,
   .listing-eta svg { height: 16px; width: 16px; }
   .detail-drawer {
