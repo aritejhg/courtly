@@ -716,10 +716,15 @@ export default function Home() {
             <div className="time-menu" role="listbox" aria-label={`Choose ${activeTimeField === 'from' ? 'start' : 'end'} time`}>
               <div className="time-menu-heading">{activeTimeField === 'from' ? 'Start time' : 'End time'}</div>
               <div className="time-menu-options">
-                {Array.from({ length: 18 }, (_, hour) => {
-                  const value = `${String(hour + 6).padStart(2, '0')}:00`;
+                {Array.from({ length: 48 }, (_, index) => {
+                  const hour = Math.floor(index / 2);
+                  const minute = index % 2 === 0 ? '00' : '30';
+                  const value = `${String(hour).padStart(2, '0')}:${minute}`;
+                  const selected = activeTimeField === 'from' ? timeFrom === value : timeTo === value;
                   return (
                     <button
+                      aria-selected={selected}
+                      className={selected ? 'selected' : ''}
                       key={value}
                       type="button"
                       onMouseDown={(event) => event.preventDefault()}
