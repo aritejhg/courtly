@@ -240,11 +240,13 @@ export default function Home() {
   const [selectedId, setSelectedId] = useState('');
   const [query, setQuery] = useState('');
   const [area, setArea] = useState('All areas');
+  const [areaMenuOpen, setAreaMenuOpen] = useState(false);
   const [dateFilter, setDateFilter] = useState('');
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [timeFrom, setTimeFrom] = useState('');
   const [timeTo, setTimeTo] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('datetime-asc');
+  const [sortMenuOpen, setSortMenuOpen] = useState(false);
   const [originId, setOriginId] = useState('');
   const [mode, setMode] = useState<TransitMode>('Public transport');
   const [locations, setLocations] = useState<SavedLocation[]>(INITIAL_LOCATIONS);
@@ -603,16 +605,28 @@ export default function Home() {
           )}
         </label>
         <div className={`select-box${area !== 'All areas' ? ' is-active' : ''}`}>
-          <select
-            value={area}
-            onChange={(event) => setArea(event.target.value)}
-            aria-label="Filter by area"
-          >
-            {areas.map((item) => (
-              <option key={item}>{item}</option>
-            ))}
-          </select>
-          <ChevronDown size={14} />
+          <Popover open={areaMenuOpen} onOpenChange={setAreaMenuOpen}>
+            <PopoverTrigger className="filter-menu-trigger" aria-label="Filter by area">
+              <span>{area}</span>
+              <ChevronDown size={14} />
+            </PopoverTrigger>
+            <PopoverContent className="filter-menu" align="start">
+              {areas.map((item) => (
+                <button
+                  className={area === item ? 'selected' : ''}
+                  key={item}
+                  onClick={() => {
+                    setArea(item);
+                    setAreaMenuOpen(false);
+                  }}
+                  type="button"
+                >
+                  <span>{item}</span>
+                  {area === item && <Check size={15} />}
+                </button>
+              ))}
+            </PopoverContent>
+          </Popover>
         </div>
         <div className={`date-filter${dateFilter ? ' is-active' : ''}`}>
           <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
@@ -681,15 +695,33 @@ export default function Home() {
               <span className="eyebrow">Matched listings</span>
               <h2>{sortedCourts.length} available courts</h2>
             </div>
-            <div className="sort-control">
-              <select value={sortBy} onChange={(event) => setSortBy(event.target.value as SortOption)} aria-label="Sort listings">
-                <option value="datetime-asc">Earliest first</option>
-                <option value="datetime-desc">Latest first</option>
-                <option value="price-asc">Price: low to high</option>
-                <option value="price-desc">Price: high to low</option>
-              </select>
-              <ChevronDown size={14} aria-hidden="true" />
-            </div>
+            <Popover open={sortMenuOpen} onOpenChange={setSortMenuOpen}>
+              <PopoverTrigger className="sort-menu-trigger" aria-label="Sort listings">
+                <span>{sortBy === 'datetime-asc' ? 'Earliest first' : sortBy === 'datetime-desc' ? 'Latest first' : sortBy === 'price-asc' ? 'Price: low to high' : 'Price: high to low'}</span>
+                <ChevronDown size={14} aria-hidden="true" />
+              </PopoverTrigger>
+              <PopoverContent className="filter-menu sort-menu" align="end">
+                {([
+                  ['datetime-asc', 'Earliest first'],
+                  ['datetime-desc', 'Latest first'],
+                  ['price-asc', 'Price: low to high'],
+                  ['price-desc', 'Price: high to low'],
+                ] as const).map(([value, label]) => (
+                  <button
+                    className={sortBy === value ? 'selected' : ''}
+                    key={value}
+                    onClick={() => {
+                      setSortBy(value);
+                      setSortMenuOpen(false);
+                    }}
+                    type="button"
+                  >
+                    <span>{label}</span>
+                    {sortBy === value && <Check size={15} />}
+                  </button>
+                ))}
+              </PopoverContent>
+            </Popover>
           </div>
           <div className="listing-results-list">
             {sortedCourts.length ? sortedCourts.map((court) => {
