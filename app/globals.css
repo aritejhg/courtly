@@ -1144,11 +1144,33 @@ a {
   letter-spacing: .13em;
   text-transform: uppercase;
 }
-.sort-note {
+.sort-control {
+  align-items: center;
   color: var(--muted);
-  font-size: 10px;
-  padding-top: 4px;
-  white-space: nowrap;
+  display: flex;
+  margin-top: 1px;
+  position: relative;
+}
+.sort-control select {
+  appearance: none;
+  background: #f4f8f5;
+  border: 1px solid #dce7e1;
+  border-radius: 9px;
+  color: #53655e;
+  cursor: pointer;
+  font-size: 12px;
+  height: 32px;
+  outline: none;
+  padding: 0 29px 0 10px;
+}
+.sort-control select:focus-visible {
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px #e1f5e9;
+}
+.sort-control svg {
+  pointer-events: none;
+  position: absolute;
+  right: 9px;
 }
 .listing-rail .listing-results-list {
   display: flex;
@@ -1392,7 +1414,7 @@ a {
   font-size: 20px;
 }
 .eyebrow { font-size: 12px; }
-.sort-note { font-size: 14px; }
+.sort-control select { font-size: 14px; }
 .listing-rail .listing-results-list {
   gap: 8px;
   overflow-x: hidden;

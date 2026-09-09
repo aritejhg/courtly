@@ -66,6 +66,7 @@ type RoutePlan = {
   source: 'OneMap' | 'Estimate';
 };
 type BackendStatus = 'checking' | 'connected' | 'unavailable';
+type SortOption = 'datetime-asc' | 'datetime-desc' | 'price-asc' | 'price-desc';
 
 const TELEGRAM_URL = 'https://t.me/your_group_invite';
 const TELEGRAM_INTERNAL_CHAT_ID = '9876543210';
@@ -243,6 +244,7 @@ export default function Home() {
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [timeFrom, setTimeFrom] = useState('');
   const [timeTo, setTimeTo] = useState('');
+  const [sortBy, setSortBy] = useState<SortOption>('datetime-asc');
   const [originId, setOriginId] = useState('');
   const [mode, setMode] = useState<TransitMode>('Public transport');
   const [locations, setLocations] = useState<SavedLocation[]>(INITIAL_LOCATIONS);
@@ -288,8 +290,14 @@ export default function Home() {
     [area, query, visibleCourts],
   );
   const sortedCourts = useMemo(
-    () => [...filteredCourts].sort((a, b) => Date.parse(a.playAt) - Date.parse(b.playAt)),
-    [filteredCourts],
+    () => [...filteredCourts].sort((a, b) => {
+      if (sortBy === 'datetime-asc') return Date.parse(a.playAt) - Date.parse(b.playAt);
+      if (sortBy === 'datetime-desc') return Date.parse(b.playAt) - Date.parse(a.playAt);
+      if (a.price === null) return 1;
+      if (b.price === null) return -1;
+      return sortBy === 'price-asc' ? a.price - b.price : b.price - a.price;
+    }),
+    [filteredCourts, sortBy],
   );
   const selectedCourt = sortedCourts.find((court) => court.id === selectedId);
   const origin =
@@ -671,7 +679,15 @@ export default function Home() {
               <span className="eyebrow">Matched listings</span>
               <h2>{sortedCourts.length} available courts</h2>
             </div>
-            <span className="sort-note">Earliest first</span>
+            <div className="sort-control">
+              <select value={sortBy} onChange={(event) => setSortBy(event.target.value as SortOption)} aria-label="Sort listings">
+                <option value="datetime-asc">Earliest first</option>
+                <option value="datetime-desc">Latest first</option>
+                <option value="price-asc">Price: low to high</option>
+                <option value="price-desc">Price: high to low</option>
+              </select>
+              <ChevronDown size={14} aria-hidden="true" />
+            </div>
           </div>
           <div className="listing-results-list">
             {sortedCourts.length ? sortedCourts.map((court) => {
