@@ -51,6 +51,7 @@ type Court = {
   lng?: number;
   sourceUrl: string;
   sourceMessageId: string;
+  postedAt: string;
   ownerUsername?: string;
 };
 type SavedLocation = {
@@ -142,6 +143,7 @@ const courts: Court[] = telegramListings.map((listing) => {
     lng: venue?.lng ?? listing.lng,
     sourceUrl: listing.sourceUrl,
     sourceMessageId: listing.sourceMessageId,
+    postedAt: listing.postedAt,
     ownerUsername: listing.ownerUsername,
   };
 });
@@ -235,7 +237,7 @@ export default function Home() {
   const mapRef = useRef<LeafletMap | null>(null);
   const markerLayer = useRef<LayerGroup | null>(null);
   const [mapReady, setMapReady] = useState(false);
-  const [selectedId, setSelectedId] = useState('queenstown');
+  const [selectedId, setSelectedId] = useState('');
   const [query, setQuery] = useState('');
   const [area, setArea] = useState('All areas');
   const [dateFilter, setDateFilter] = useState('');
@@ -254,6 +256,7 @@ export default function Home() {
   const [routeError, setRouteError] = useState('');
   const [backendCommit, setBackendCommit] = useState('');
   const [backendStatus, setBackendStatus] = useState<BackendStatus>('checking');
+  const [listingEtaById, setListingEtaById] = useState<Record<string, number>>({});
   const [now] = useState(() => new Date());
   const activeListings = useMemo(
     () => getActiveListings(telegramListings, now),
@@ -285,9 +288,11 @@ export default function Home() {
       }),
     [area, query, visibleCourts],
   );
-  const selectedCourt =
-    filteredCourts.find((court) => court.id === selectedId) ??
-    filteredCourts[0];
+  const sortedCourts = useMemo(
+    () => [...filteredCourts].sort((a, b) => Date.parse(b.postedAt) - Date.parse(a.postedAt)),
+    [filteredCourts],
+  );
+  const selectedCourt = sortedCourts.find((court) => court.id === selectedId);
   const origin =
     locations.find((location) => location.id === originId) ?? locations[0];
   const messageId = selectedCourt?.sourceMessageId.split(':')[0];
@@ -363,11 +368,41 @@ export default function Home() {
 
   useEffect(() => {
     let cancelled = false;
+    async function calculateListingEtas() {
+      if (!origin?.address) {
+        setListingEtaById({});
+        return;
+      }
+      try {
+        const originPoint = await geocodeSavedLocation(origin.address);
+        const next = Object.fromEntries(
+          sortedCourts
+            .filter((court) => Number.isFinite(court.lat) && Number.isFinite(court.lng))
+            .map((court) => [
+              court.id,
+              fallbackTransitMinutes(originPoint, { lat: court.lat!, lng: court.lng! }, 'Public transport'),
+            ]),
+        );
+        if (!cancelled) setListingEtaById(next);
+      } catch {
+        if (!cancelled) setListingEtaById({});
+      }
+    }
+    void calculateListingEtas();
+    return () => {
+      cancelled = true;
+    };
+  }, [origin?.address, sortedCourts]);
+
+  useEffect(() => {
+    let cancelled = false;
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 5000);
     void fetch('/api/build', { cache: 'no-store', signal: controller.signal })
-      .then((response) => response.ok ? response.json() : Promise.reject(new Error('Build info unavailable')))
-      .then((payload: { commit?: string }) => {
+      .then((response) => response.ok
+        ? response.json() as Promise<{ commit?: string }>
+        : Promise.reject(new Error('Build info unavailable')))
+      .then((payload) => {
         if (!cancelled && payload.commit) {
           setBackendCommit(payload.commit);
           setBackendStatus('connected');
@@ -843,7 +878,7 @@ export default function Home() {
         </aside>
       </section>
       <footer className="build-footer" aria-label="Backend build version">
-        <span className={`build-footer-status ${backendStatus}`} role="status">
+        <output className={`build-footer-status ${backendStatus}`}>
           <span className="build-footer-dot" aria-hidden="true" />
           {backendStatus === 'connected' ? (
             <>Backend build <code>{backendCommit}</code></>
@@ -852,7 +887,7 @@ export default function Home() {
           ) : (
             'Backend unavailable'
           )}
-        </span>
+        </output>
       </footer>
     </main>
   );
