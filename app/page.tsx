@@ -245,6 +245,10 @@ export default function Home() {
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [timeFrom, setTimeFrom] = useState('');
   const [timeTo, setTimeTo] = useState('');
+  const [timeMenuOpen, setTimeMenuOpen] = useState(false);
+  const [activeTimeField, setActiveTimeField] = useState<'from' | 'to'>('from');
+  const timeFromRef = useRef<HTMLInputElement>(null);
+  const timeToRef = useRef<HTMLInputElement>(null);
   const [sortBy, setSortBy] = useState<SortOption>('datetime-asc');
   const [sortMenuOpen, setSortMenuOpen] = useState(false);
   const [originId, setOriginId] = useState('');
@@ -658,28 +662,85 @@ export default function Home() {
             </PopoverContent>
           </Popover>
         </div>
-        <div className={`time-filter${timeFrom || timeTo ? ' is-active' : ''}`} aria-label="Filter by time">
+        <div
+          className={`time-filter${timeFrom || timeTo ? ' is-active' : ''}`}
+          aria-label="Filter by time"
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) {
+              window.setTimeout(() => setTimeMenuOpen(false), 120);
+            }
+          }}
+        >
           <input
-            type="time"
+            ref={timeFromRef}
+            type="text"
+            inputMode="numeric"
+            placeholder="--:--"
             value={timeFrom}
             onInput={(event) => {
               const input = event.currentTarget;
               setTimeFrom(input.value);
-              if (input.value) window.setTimeout(() => input.blur(), 0);
+              if (/^\d{2}:\d{2}$/.test(input.value)) {
+                setTimeMenuOpen(false);
+                window.setTimeout(() => input.blur(), 0);
+              }
+            }}
+            onFocus={() => {
+              setActiveTimeField('from');
+              setTimeMenuOpen(true);
             }}
             aria-label="Start time"
           />
           <span>–</span>
           <input
-            type="time"
+            ref={timeToRef}
+            type="text"
+            inputMode="numeric"
+            placeholder="--:--"
             value={timeTo}
             onInput={(event) => {
               const input = event.currentTarget;
               setTimeTo(input.value);
-              if (input.value) window.setTimeout(() => input.blur(), 0);
+              if (/^\d{2}:\d{2}$/.test(input.value)) {
+                setTimeMenuOpen(false);
+                window.setTimeout(() => input.blur(), 0);
+              }
+            }}
+            onFocus={() => {
+              setActiveTimeField('to');
+              setTimeMenuOpen(true);
             }}
             aria-label="End time"
           />
+          {timeMenuOpen && (
+            <div className="time-menu" role="listbox" aria-label={`Choose ${activeTimeField === 'from' ? 'start' : 'end'} time`}>
+              <div className="time-menu-heading">{activeTimeField === 'from' ? 'Start time' : 'End time'}</div>
+              <div className="time-menu-options">
+                {Array.from({ length: 18 }, (_, hour) => {
+                  const value = `${String(hour + 6).padStart(2, '0')}:00`;
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => {
+                        if (activeTimeField === 'from') {
+                          setTimeFrom(value);
+                          timeFromRef.current?.blur();
+                        } else {
+                          setTimeTo(value);
+                          timeToRef.current?.blur();
+                        }
+                        setTimeMenuOpen(false);
+                      }}
+                    >
+                      {value}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
         {(dateFilter || timeFrom || timeTo) && (
           <button

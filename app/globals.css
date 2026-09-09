@@ -207,6 +207,7 @@ a {
   gap: 5px;
   height: 35px;
   padding: 0 12px;
+  position: relative;
 }
 .time-filter:focus-within {
   border-color: var(--green);
@@ -221,10 +222,52 @@ a {
   cursor: text;
   width: 84px;
 }
-.time-filter input::-webkit-calendar-picker-indicator { display: none; }
-.time-filter input::-webkit-inner-spin-button { display: none; }
+.time-filter input::placeholder { color: var(--muted); opacity: 1; }
 .time-filter > span {
   color: var(--muted);
+}
+.time-menu {
+  animation: island-in .14s ease-out;
+  background: rgba(255, 255, 255, .98);
+  border: 1px solid rgba(170, 194, 183, .95);
+  border-radius: 16px;
+  box-shadow: 0 14px 34px rgba(29, 62, 48, .2);
+  left: 0;
+  min-width: 236px;
+  padding: 8px;
+  position: absolute;
+  top: calc(100% + 8px);
+  z-index: 1200;
+}
+.time-menu-heading {
+  color: #51685d;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  padding: 3px 5px 7px;
+  text-transform: uppercase;
+}
+.time-menu-options {
+  display: grid;
+  gap: 3px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.time-menu button {
+  background: transparent;
+  border: 0;
+  border-radius: 9px;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 13px;
+  min-height: 32px;
+  padding: 0 6px;
+  transition: background-color .14s ease, color .14s ease;
+}
+.time-menu button:hover,
+.time-menu button:focus-visible {
+  background: #e2f4e9;
+  color: #206c4d;
+  outline: none;
 }
 .date-popover {
   background: var(--panel);
