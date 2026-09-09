@@ -1381,9 +1381,13 @@ a {
   gap: 8px;
   overflow-x: hidden;
   padding: 14px 2px 4px;
+  scrollbar-width: none;
 }
+.listing-rail .listing-results-list::-webkit-scrollbar,
+.detail-drawer::-webkit-scrollbar { display: none; }
 .listing-rail .listing-card-title { font-size: 17px; }
-.listing-rail .listing-card-locality { font-size: 14px; }
+.listing-rail .listing-card-name { font-size: 17px; font-weight: 800; }
+.listing-rail .listing-card-locality { font-size: 13px; font-weight: 400; }
 .listing-rail .listing-card-meta { font-size: 14px; line-height: 1.4; }
 .listing-rail .listing-card-meta > span { font-size: inherit; }
 .listing-rail .listing-card-facts strong,
@@ -1391,6 +1395,7 @@ a {
 .listing-card-main { gap: 8px; padding: 14px 10px 14px 16px; }
 .listing-card-actions a { height: 46px; width: 46px; }
 .detail-drawer {
+  border-radius: 20px;
   bottom: 24px;
   left: 454px;
   overflow-x: hidden;
@@ -1470,8 +1475,9 @@ a {
   }
   .listing-rail-heading { padding: 2px 8px 12px; }
   .listing-rail-heading h2 { font-size: 18px; }
-  .listing-rail .listing-card-title { font-size: 16px; }
-  .listing-rail .listing-card-locality { font-size: 13px; }
+  .listing-rail .listing-card-title,
+  .listing-rail .listing-card-name { font-size: 16px; }
+  .listing-rail .listing-card-locality { font-size: 12px; }
   .listing-rail .listing-card-meta { font-size: 14px; line-height: 1.45; }
   .listing-rail .listing-card-facts strong,
   .listing-rail .listing-eta { font-size: 15px; }
