@@ -1158,7 +1158,10 @@ a {
   max-height: none;
   overflow-y: auto;
   padding: 12px 2px 3px;
+  scrollbar-width: none;
 }
+.listing-rail .listing-results-list::-webkit-scrollbar,
+.detail-drawer::-webkit-scrollbar { display: none; }
 .listing-card {
   align-items: stretch;
   background: #f7faf8;
@@ -1235,6 +1238,7 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: hidden;
 }
 .listing-card-actions a {
   align-items: center;
@@ -1245,7 +1249,15 @@ a {
   justify-content: center;
   width: 36px;
 }
-.listing-card-actions a:hover { background: #e7f5ec; color: #317557; }
+.listing-card-actions a {
+  transition: color .16s ease, transform .16s ease;
+}
+.listing-card-actions a:hover,
+.listing-card-actions a:focus-visible {
+  background: transparent;
+  color: #24795a;
+  transform: scale(1.08);
+}
 .detail-drawer {
   display: flex;
   flex-direction: column;
@@ -1253,21 +1265,23 @@ a {
   overflow-y: auto;
   padding: 18px 22px 22px;
   position: relative;
+  scrollbar-width: none;
 }
 .drawer-close {
   align-items: center;
   align-self: flex-end;
-  background: #f0f7f2;
-  border: 0;
+  background: #f7faf8;
+  border: 1px solid #dbe9e1;
   border-radius: 999px;
   color: #4c8771;
   cursor: pointer;
   display: inline-flex;
-  font-size: 11px;
-  gap: 4px;
-  padding: 6px 10px 6px 7px;
+  height: 30px;
+  justify-content: center;
+  padding: 0;
+  width: 30px;
 }
-.drawer-close:hover { background: #e2f2e8; }
+.drawer-close:hover { background: #eaf5ee; color: #267657; }
 .detail-drawer .back-link { margin-top: 18px; }
 .map-wrap { min-width: 0; }
 .real-map .leaflet-tile-pane {

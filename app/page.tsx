@@ -5,7 +5,6 @@ import type { LayerGroup, Map as LeafletMap } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { format } from 'date-fns';
 import {
-  ArrowLeft,
   ArrowUpRight,
   CarFront,
   Check,
@@ -703,13 +702,9 @@ export default function Home() {
         </section>
         {selectedCourt ? (
           <aside className="detail-panel detail-drawer" aria-label="Selected listing details">
-            <button className="drawer-close" type="button" onClick={() => setSelectedId('')} aria-label="Minimize listing details"><ChevronDown size={18} /> Minimize</button>
+            <button className="drawer-close" type="button" onClick={() => setSelectedId('')} aria-label="Close listing details" title="Close listing details"><X size={16} /></button>
           <div className="detail-top">
             <span className="route-label">Selected listing</span>
-            <span className="active-badge">
-              <span />
-              Active
-            </span>
           </div>
           <div className="detail-title">
             <h1>{selectedCourt.name}</h1>
@@ -863,14 +858,6 @@ export default function Home() {
               )}
             </div>
           </div>
-          <a
-            className="back-link"
-            href={TELEGRAM_URL}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <ArrowLeft size={14} /> Back to group
-          </a>
           </aside>
         ) : null}
         <div className="map-wrap">
