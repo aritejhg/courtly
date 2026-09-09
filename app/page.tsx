@@ -662,10 +662,10 @@ export default function Home() {
           <input
             type="time"
             value={timeFrom}
-            onChange={(event) => {
+            onInput={(event) => {
               const input = event.currentTarget;
               setTimeFrom(input.value);
-              if (input.value) window.requestAnimationFrame(() => input.blur());
+              if (input.value) window.setTimeout(() => input.blur(), 0);
             }}
             aria-label="Start time"
           />
@@ -673,10 +673,10 @@ export default function Home() {
           <input
             type="time"
             value={timeTo}
-            onChange={(event) => {
+            onInput={(event) => {
               const input = event.currentTarget;
               setTimeTo(input.value);
-              if (input.value) window.requestAnimationFrame(() => input.blur());
+              if (input.value) window.setTimeout(() => input.blur(), 0);
             }}
             aria-label="End time"
           />
