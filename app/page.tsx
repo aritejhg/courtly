@@ -289,7 +289,7 @@ export default function Home() {
     [area, query, visibleCourts],
   );
   const sortedCourts = useMemo(
-    () => [...filteredCourts].sort((a, b) => Date.parse(b.postedAt) - Date.parse(a.postedAt)),
+    () => [...filteredCourts].sort((a, b) => Date.parse(a.playAt) - Date.parse(b.playAt)),
     [filteredCourts],
   );
   const selectedCourt = sortedCourts.find((court) => court.id === selectedId);
@@ -300,9 +300,9 @@ export default function Home() {
   const ownerUrl = selectedCourt?.ownerUsername
     ? `https://t.me/${selectedCourt.ownerUsername.replace(/^@/, '')}`
     : messageUrl;
-  const hasVerifiedCoordinates = Boolean(selectedCourt) && Number.isFinite(selectedCourt.lat) && Number.isFinite(selectedCourt.lng);
+  const hasVerifiedCoordinates = Boolean(selectedCourt) && Number.isFinite(selectedCourt?.lat) && Number.isFinite(selectedCourt?.lng);
   const directionsUrl = hasVerifiedCoordinates
-    ? `https://www.google.com/maps/dir/?api=1&destination=${selectedCourt.lat},${selectedCourt.lng}&travelmode=${mode === 'Public transport' ? 'transit' : mode === 'Drive' ? 'driving' : 'walking'}${origin?.address ? `&origin=${encodeURIComponent(origin.address + ', Singapore')}` : ''}`
+    ? `https://www.google.com/maps/dir/?api=1&destination=${selectedCourt?.lat},${selectedCourt?.lng}&travelmode=${mode === 'Public transport' ? 'transit' : mode === 'Drive' ? 'driving' : 'walking'}${origin?.address ? `&origin=${encodeURIComponent(origin.address + ', Singapore')}` : ''}`
     : null;
 
   useEffect(() => {
@@ -319,6 +319,7 @@ export default function Home() {
         return;
       }
       setRouteLoading(true);
+      setRoutePlan(null);
       setRouteError('');
       try {
         const originPoint = await geocodeSavedLocation(origin.address);
@@ -437,9 +438,11 @@ export default function Home() {
         if (valid.length) {
           setLocations(valid);
           const storedOriginId = localStorage.getItem(ORIGIN_STORAGE_KEY);
-          if (storedOriginId && valid.some((location) => location.id === storedOriginId)) {
-            setOriginId(storedOriginId);
-          }
+          setOriginId(
+            storedOriginId && valid.some((location) => location.id === storedOriginId)
+              ? storedOriginId
+              : valid[0].id,
+          );
         }
       }
     } catch {
@@ -490,7 +493,7 @@ export default function Home() {
       if (cancelled || !markerLayer.current) return;
       markerLayer.current.clearLayers();
       const positions = new Map<string, number>();
-      filteredCourts.forEach((court) => {
+      sortedCourts.forEach((court) => {
         if (!Number.isFinite(court.lat) || !Number.isFinite(court.lng)) return;
         const key = `${court.lat},${court.lng}`;
         const duplicateIndex = positions.get(key) ?? 0;
@@ -514,7 +517,7 @@ export default function Home() {
     return () => {
       cancelled = true;
     };
-  }, [filteredCourts, mapReady, selectedId]);
+  }, [sortedCourts, mapReady, selectedId]);
   function addLocation() {
     const name = newLocationName.trim();
     const address = newLocationAddress.trim();
@@ -577,7 +580,7 @@ export default function Home() {
         </div>
       </header>
       <section className="toolbar" aria-label="Court filters">
-        <label className="search-box">
+        <label className={`search-box${query ? ' is-active' : ''}`}>
           <Search size={16} />
           <input
             value={query}
@@ -590,7 +593,7 @@ export default function Home() {
             </button>
           )}
         </label>
-        <div className="select-box">
+        <div className={`select-box${area !== 'All areas' ? ' is-active' : ''}`}>
           <select
             value={area}
             onChange={(event) => setArea(event.target.value)}
@@ -602,7 +605,7 @@ export default function Home() {
           </select>
           <ChevronDown size={14} />
         </div>
-        <div className="date-filter">
+        <div className={`date-filter${dateFilter ? ' is-active' : ''}`}>
           <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
             <PopoverTrigger className="date-filter-trigger" aria-label="Choose date">
               <CalendarDays size={16} />
@@ -632,7 +635,7 @@ export default function Home() {
             </PopoverContent>
           </Popover>
         </div>
-        <div className="time-filter" aria-label="Filter by time">
+        <div className={`time-filter${timeFrom || timeTo ? ' is-active' : ''}`} aria-label="Filter by time">
           <Clock3 size={16} />
           <input
             type="time"
@@ -662,50 +665,42 @@ export default function Home() {
         )}
         <span className="active-count">{filteredCourts.length} active</span>
       </section>
-      <section className="utility-layout" id="map">
-        <div className="map-wrap">
-          <div
-            ref={mapElement}
-            className="real-map"
-            aria-label="OpenStreetMap of Singapore with court locations"
-          />
-          <div className="map-note">
-            <span>
-              <span className="map-dot" />
-              {filteredCourts.length} matching listings
-            </span>
-            <span>Click a pin for details</span>
-          </div>
-        </div>
-        <aside className="detail-panel">
-          <section className="listing-results" aria-label="Matching listings">
-            <div className="listing-results-heading">
-              <span className="route-label">Matching listings</span>
-              <span>{filteredCourts.length}</span>
+      <section className={`utility-layout ${selectedCourt ? 'has-drawer' : ''}`} id="map">
+        <section className="listing-rail" aria-label="Matching listings">
+          <div className="listing-rail-heading">
+            <div>
+              <span className="eyebrow">Matched listings</span>
+              <h2>{sortedCourts.length} available courts</h2>
             </div>
-            {filteredCourts.length ? (
-              <ul className="listing-results-list">
-                {filteredCourts.map((court) => (
-                  <li key={court.id}>
-                    <button
-                      type="button"
-                      className={court.id === selectedCourt?.id ? 'selected' : ''}
-                      onClick={() => setSelectedId(court.id)}
-                    >
-                      <strong>{court.name}</strong>
-                      <span>{court.date} · {court.time}</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <output className="listing-empty">
-                No listings match these filters.
-              </output>
-            )}
-          </section>
-          {selectedCourt ? (
-            <>
+            <span className="sort-note">Earliest first</span>
+          </div>
+          <div className="listing-results-list">
+            {sortedCourts.length ? sortedCourts.map((court) => {
+              const courtMessageId = court.sourceMessageId.split(':')[0];
+              const courtMessageUrl = `https://t.me/c/${TELEGRAM_INTERNAL_CHAT_ID}/${courtMessageId}`;
+              const courtOwnerUrl = court.ownerUsername
+                ? `https://t.me/${court.ownerUsername.replace(/^@/, '')}`
+                : courtMessageUrl;
+              const eta = court.id === selectedCourt?.id && routePlan ? routePlan.minutes : listingEtaById[court.id];
+              return (
+                <article className={`listing-card ${court.id === selectedCourt?.id ? 'selected' : ''}`} key={court.id}>
+                  <button className="listing-card-main" type="button" onClick={() => setSelectedId((current) => current === court.id ? '' : court.id)} aria-expanded={court.id === selectedCourt?.id}>
+                    <span className="listing-card-title">{court.name}</span>
+                    <span className="listing-card-meta"><MapPin size={13} />{court.area}<span>·</span><Clock3 size={13} />{court.date} · {court.time}</span>
+                    <span className="listing-card-facts"><strong>{court.price === null ? 'Price on request' : `$${court.price.toFixed(2)} / court`}</strong><span className="listing-eta"><TrainFront size={13} />{eta ? `${eta} min` : '—'}</span></span>
+                  </button>
+                  <div className="listing-card-actions">
+                    <a href={courtMessageUrl} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} aria-label={`Open message for ${court.name}`} title="Open Telegram message"><MessageCircle size={15} /></a>
+                    <a href={courtOwnerUrl} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} aria-label={`Contact ${court.owner}`} title="Contact owner"><ArrowUpRight size={15} /></a>
+                  </div>
+                </article>
+              );
+            }) : <output className="listing-empty">No listings match these filters.</output>}
+          </div>
+        </section>
+        {selectedCourt ? (
+          <aside className="detail-panel detail-drawer" aria-label="Selected listing details">
+            <button className="drawer-close" type="button" onClick={() => setSelectedId('')} aria-label="Minimize listing details"><ChevronDown size={18} /> Minimize</button>
           <div className="detail-top">
             <span className="route-label">Selected listing</span>
             <span className="active-badge">
@@ -873,9 +868,22 @@ export default function Home() {
           >
             <ArrowLeft size={14} /> Back to group
           </a>
-            </>
-          ) : null}
-        </aside>
+          </aside>
+        ) : null}
+        <div className="map-wrap">
+          <div
+            ref={mapElement}
+            className="real-map"
+            aria-label="OpenStreetMap of Singapore with court locations"
+          />
+          <div className="map-note">
+            <span>
+              <span className="map-dot" />
+              {filteredCourts.length} matching listings
+            </span>
+            <span>Click a pin for details</span>
+          </div>
+        </div>
       </section>
       <footer className="build-footer" aria-label="Backend build version">
         <output className={`build-footer-status ${backendStatus}`}>
