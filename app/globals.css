@@ -1362,7 +1362,7 @@ a {
   background: rgba(255, 255, 255, .96);
   border: 1px solid rgba(188, 207, 198, .95);
   box-shadow: 0 16px 44px rgba(28, 55, 44, .18), 0 2px 8px rgba(28, 55, 44, .08);
-  z-index: 700;
+  z-index: 900;
 }
 .listing-rail {
   bottom: 24px;
@@ -1425,6 +1425,7 @@ a {
   .utility-header { height: 64px; }
   .toolbar {
     display: flex;
+    flex-wrap: nowrap;
     gap: 8px;
     left: 12px;
     overflow-x: auto;
@@ -1475,7 +1476,7 @@ a {
     top: calc(164px + min(40vh, 380px) + 10px);
     width: auto;
   }
-  .build-footer { bottom: 6px; right: 12px; }
+  .build-footer { display: none; }
   .map-note { bottom: 10px; left: 10px; }
 }
 
