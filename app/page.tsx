@@ -482,8 +482,8 @@ export default function Home() {
         zoomControl: false,
         scrollWheelZoom: true,
       // Keep the island visually clear of the listings rail on the left.
-      // At zoom 12 this westward centre offset shifts the map content ~7.5 cm right.
-      }).setView([1.3521, 103.72], 12);
+      // At zoom 12 this westward centre offset shifts the map content ~6.5 cm right.
+      }).setView([1.3521, 103.733], 12);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap contributors',
