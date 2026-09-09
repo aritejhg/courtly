@@ -1203,7 +1203,7 @@ a {
   line-height: 1.25;
   min-width: 0;
 }
-.listing-card-name { font-weight: 400; }
+.listing-card-name { font-weight: 500; }
 .listing-card-locality { color: var(--muted); font-size: .82em; font-weight: 400; }
 .listing-card-meta,
 .listing-card-facts,
@@ -1402,7 +1402,7 @@ a {
 .listing-rail .listing-results-list::-webkit-scrollbar,
 .detail-drawer::-webkit-scrollbar { display: none; }
 .listing-rail .listing-card-title { font-size: 17px; }
-.listing-rail .listing-card-name { font-size: 17px; font-weight: 400; }
+.listing-rail .listing-card-name { font-size: 17px; font-weight: 500; }
 .listing-rail .listing-card-locality { font-size: 13px; font-weight: 400; }
 .listing-rail .listing-card-meta { font-size: 14px; line-height: 1.4; }
 .listing-rail .listing-card-meta > span { font-size: inherit; }
