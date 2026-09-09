@@ -192,8 +192,7 @@ a {
   padding: 0 10px;
   white-space: nowrap;
 }
-.date-filter-trigger svg,
-.time-filter > svg {
+.date-filter-trigger svg {
   color: var(--muted);
   flex: 0 0 auto;
 }
@@ -205,9 +204,9 @@ a {
   color: var(--muted);
   display: flex;
   font-size: 11px;
-  gap: 6px;
+  gap: 5px;
   height: 35px;
-  padding: 0 9px;
+  padding: 0 12px;
 }
 .time-filter:focus-within {
   border-color: var(--green);
@@ -219,8 +218,11 @@ a {
   color: var(--ink);
   font-size: 12px;
   outline: 0;
-  width: 93px;
+  cursor: text;
+  width: 84px;
 }
+.time-filter input::-webkit-calendar-picker-indicator { display: none; }
+.time-filter input::-webkit-inner-spin-button { display: none; }
 .time-filter > span {
   color: var(--muted);
 }

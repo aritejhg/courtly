@@ -659,18 +659,25 @@ export default function Home() {
           </Popover>
         </div>
         <div className={`time-filter${timeFrom || timeTo ? ' is-active' : ''}`} aria-label="Filter by time">
-          <Clock3 size={16} />
           <input
             type="time"
             value={timeFrom}
-            onChange={(event) => setTimeFrom(event.target.value)}
+            onChange={(event) => {
+              const input = event.currentTarget;
+              setTimeFrom(input.value);
+              if (input.value) window.requestAnimationFrame(() => input.blur());
+            }}
             aria-label="Start time"
           />
           <span>–</span>
           <input
             type="time"
             value={timeTo}
-            onChange={(event) => setTimeTo(event.target.value)}
+            onChange={(event) => {
+              const input = event.currentTarget;
+              setTimeTo(input.value);
+              if (input.value) window.requestAnimationFrame(() => input.blur());
+            }}
             aria-label="End time"
           />
         </div>
