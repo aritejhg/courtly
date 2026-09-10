@@ -12,7 +12,6 @@ import {
   ChevronDown,
   Clock3,
   MapPin,
-  Menu,
   MessageCircle,
   Navigation,
   Plus,
@@ -544,9 +543,9 @@ export default function Home() {
         mapRef.current?.invalidateSize();
         mapRef.current?.fitBounds(bounds, {
           // Keep markers clear of the desktop listing rail or mobile controls.
-          paddingTopLeft: isMobile ? [28, 182] : [470, 128],
-          paddingBottomRight: isMobile ? [28, 182] : [48, 48],
-          maxZoom: 12,
+          paddingTopLeft: isMobile ? [20, 170] : [470, 128],
+          paddingBottomRight: isMobile ? [20, 130] : [48, 48],
+          maxZoom: isMobile ? 13 : 12,
         });
         initialMapFit.current = true;
       }
@@ -594,13 +593,13 @@ export default function Home() {
     setSelectedId((current) => current === id ? '' : id);
     setMobileDrawerExpanded(true);
   }
-  function handleMobileDrawerPointerStart(event: React.PointerEvent<HTMLButtonElement>) {
+  function handleMobileDrawerPointerStart(event: React.PointerEvent<HTMLElement>) {
     mobileDrawerPointerStart.current = event.clientY;
     mobileDrawerPointerOffset.current = 0;
     mobileDrawerDidDrag.current = false;
     event.currentTarget.setPointerCapture(event.pointerId);
   }
-  function handleMobileDrawerPointerMove(event: React.PointerEvent<HTMLButtonElement>) {
+  function handleMobileDrawerPointerMove(event: React.PointerEvent<HTMLElement>) {
     if (mobileDrawerPointerStart.current === null) return;
     mobileDrawerPointerOffset.current = event.clientY - mobileDrawerPointerStart.current;
   }
@@ -611,6 +610,12 @@ export default function Home() {
     if (Math.abs(distance) > 12) mobileDrawerDidDrag.current = true;
     if (distance < -36) setMobileDrawerExpanded(true);
     if (distance > 36) setMobileDrawerExpanded(false);
+  }
+  function toggleMobileDrawer() {
+    setMobileDrawerExpanded((current) => !current);
+  }
+  function shouldIgnoreMobileDrawerGesture(target: EventTarget | null) {
+    return target instanceof Element && Boolean(target.closest('button, a, input, select, textarea'));
   }
 
   return (
@@ -633,9 +638,6 @@ export default function Home() {
             <MessageCircle size={15} /> Telegram group{' '}
             <ArrowUpRight size={13} />
           </a>
-          <button className="menu-button" aria-label="Menu">
-            <Menu size={19} />
-          </button>
         </div>
       </header>
       <section className="toolbar" aria-label="Court filters">
@@ -819,7 +821,7 @@ export default function Home() {
                 mobileDrawerDidDrag.current = false;
                 return;
               }
-              setMobileDrawerExpanded((current) => !current);
+              toggleMobileDrawer();
             }}
             onPointerDown={handleMobileDrawerPointerStart}
             onPointerMove={handleMobileDrawerPointerMove}
@@ -828,7 +830,22 @@ export default function Home() {
           >
             <span aria-hidden="true" />
           </button>
-          <div className="listing-rail-heading">
+          <div
+            className="listing-rail-heading mobile-drawer-gesture-zone"
+            onClick={(event) => {
+              if (mobileDrawerDidDrag.current) {
+                mobileDrawerDidDrag.current = false;
+                return;
+              }
+              if (!shouldIgnoreMobileDrawerGesture(event.target)) toggleMobileDrawer();
+            }}
+            onPointerDown={(event) => {
+              if (!shouldIgnoreMobileDrawerGesture(event.target)) handleMobileDrawerPointerStart(event);
+            }}
+            onPointerMove={handleMobileDrawerPointerMove}
+            onPointerUp={handleMobileDrawerPointerEnd}
+            onPointerCancel={handleMobileDrawerPointerEnd}
+          >
             <div>
               <span className="eyebrow">Matched listings</span>
               <h2>{sortedCourts.length} available courts</h2>

@@ -92,12 +92,6 @@ a {
 .back-link:hover {
   color: var(--coral);
 }
-.menu-button {
-  background: none;
-  border: 0;
-  color: var(--muted);
-  display: none;
-}
 .toolbar {
   align-items: center;
   display: flex;
@@ -897,9 +891,6 @@ a {
 @media (max-width: 800px) {
   .utility-header {
     padding: 0 14px;
-  }
-  .menu-button {
-    display: flex;
   }
   .group-link {
     font-size: 0;
@@ -1790,9 +1781,12 @@ a {
     height: 56px;
     padding: 0 14px;
   }
-  .last-updated,
   .group-link { display: none; }
-  .menu-button { display: inline-flex; }
+  .last-updated {
+    display: inline;
+    font-size: 11px;
+    white-space: nowrap;
+  }
   .toolbar {
     align-items: stretch;
     display: grid;
@@ -1884,6 +1878,11 @@ a {
     min-height: 76px;
     padding: 2px 8px 12px;
   }
+  .mobile-drawer-gesture-zone {
+    cursor: grab;
+    touch-action: none;
+  }
+  .mobile-drawer-gesture-zone:active { cursor: grabbing; }
   .listing-rail .listing-results-list {
     flex: 1 1 auto;
     max-height: none;
