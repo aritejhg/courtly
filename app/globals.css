@@ -1894,17 +1894,19 @@ a {
     touch-action: pan-y;
   }
   .detail-drawer {
+    background: #fff;
     border-bottom: 0;
     border-radius: 22px 22px 0 0;
     bottom: 0;
-    height: min(82svh, 700px);
+    /* Preserve a clear map/filter zone above a compact details sheet. */
+    height: min(68svh, 570px);
     left: 0;
     max-height: none;
     padding: 18px 18px max(18px, env(safe-area-inset-bottom));
     right: 0;
     top: auto;
     width: 100%;
-    z-index: 1200;
+    z-index: 1300;
   }
   .utility-layout.has-drawer .listing-rail { visibility: hidden; }
   .map-note {
