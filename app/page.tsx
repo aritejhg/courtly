@@ -238,6 +238,10 @@ export default function Home() {
   const markerLayer = useRef<LayerGroup | null>(null);
   const [mapReady, setMapReady] = useState(false);
   const [selectedId, setSelectedId] = useState('');
+  const [mobileDrawerExpanded, setMobileDrawerExpanded] = useState(false);
+  const mobileDrawerPointerStart = useRef<number | null>(null);
+  const mobileDrawerPointerOffset = useRef(0);
+  const mobileDrawerDidDrag = useRef(false);
   const [query, setQuery] = useState('');
   const [area, setArea] = useState('All areas');
   const [areaMenuOpen, setAreaMenuOpen] = useState(false);
@@ -525,7 +529,10 @@ export default function Home() {
           }),
         });
         marker.bindTooltip(court.name, { direction: 'top', offset: [0, -10] });
-        marker.on('click', () => setSelectedId(court.id));
+        marker.on('click', () => {
+          setSelectedId(court.id);
+          setMobileDrawerExpanded(true);
+        });
         marker.addTo(markerLayer.current!);
       });
     });
@@ -567,6 +574,28 @@ export default function Home() {
     const next = locations.filter((location) => location.id !== id);
     setLocations(next);
     if (originId === id) setOriginId(next[0].id);
+  }
+  function selectCourt(id: string) {
+    setSelectedId((current) => current === id ? '' : id);
+    setMobileDrawerExpanded(true);
+  }
+  function handleMobileDrawerPointerStart(event: React.PointerEvent<HTMLButtonElement>) {
+    mobileDrawerPointerStart.current = event.clientY;
+    mobileDrawerPointerOffset.current = 0;
+    mobileDrawerDidDrag.current = false;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+  function handleMobileDrawerPointerMove(event: React.PointerEvent<HTMLButtonElement>) {
+    if (mobileDrawerPointerStart.current === null) return;
+    mobileDrawerPointerOffset.current = event.clientY - mobileDrawerPointerStart.current;
+  }
+  function handleMobileDrawerPointerEnd() {
+    const distance = mobileDrawerPointerOffset.current;
+    mobileDrawerPointerStart.current = null;
+    mobileDrawerPointerOffset.current = 0;
+    if (Math.abs(distance) > 12) mobileDrawerDidDrag.current = true;
+    if (distance < -36) setMobileDrawerExpanded(true);
+    if (distance > 36) setMobileDrawerExpanded(false);
   }
 
   return (
@@ -761,8 +790,30 @@ export default function Home() {
         )}
         <span className="active-count">{filteredCourts.length} active</span>
       </section>
-      <section className={`utility-layout ${selectedCourt ? 'has-drawer' : ''}`} id="map">
-        <section className="listing-rail" aria-label="Matching listings">
+      <section className={`utility-layout ${selectedCourt ? 'has-drawer' : ''} sheet-${mobileDrawerExpanded ? 'expanded' : 'peek'}`} id="map">
+        <section
+          className={`listing-rail ${mobileDrawerExpanded ? 'is-expanded' : ''}`}
+          aria-label="Matching listings"
+        >
+          <button
+            className="mobile-drawer-handle"
+            type="button"
+            aria-label={mobileDrawerExpanded ? 'Collapse listings' : 'Expand listings'}
+            aria-expanded={mobileDrawerExpanded}
+            onClick={() => {
+              if (mobileDrawerDidDrag.current) {
+                mobileDrawerDidDrag.current = false;
+                return;
+              }
+              setMobileDrawerExpanded((current) => !current);
+            }}
+            onPointerDown={handleMobileDrawerPointerStart}
+            onPointerMove={handleMobileDrawerPointerMove}
+            onPointerUp={handleMobileDrawerPointerEnd}
+            onPointerCancel={handleMobileDrawerPointerEnd}
+          >
+            <span aria-hidden="true" />
+          </button>
           <div className="listing-rail-heading">
             <div>
               <span className="eyebrow">Matched listings</span>
@@ -806,7 +857,7 @@ export default function Home() {
               const eta = court.id === selectedCourt?.id && routePlan ? routePlan.minutes : listingEtaById[court.id];
               return (
                 <article className={`listing-card ${court.id === selectedCourt?.id ? 'selected' : ''}`} key={court.id}>
-                  <button className="listing-card-main" type="button" onClick={() => setSelectedId((current) => current === court.id ? '' : court.id)} aria-expanded={court.id === selectedCourt?.id}>
+                  <button className="listing-card-main" type="button" onClick={() => selectCourt(court.id)} aria-expanded={court.id === selectedCourt?.id}>
                     <span className="listing-card-title">
                       <span className="listing-card-name">{court.name}</span>
                       <span className="listing-card-locality">({court.area})</span>
@@ -824,8 +875,8 @@ export default function Home() {
           </div>
         </section>
         {selectedCourt ? (
-          <aside className="detail-panel detail-drawer" aria-label="Selected listing details">
-            <button className="drawer-close" type="button" onClick={() => setSelectedId('')} aria-label="Close listing details" title="Close listing details"><X size={16} /></button>
+          <aside className={`detail-panel detail-drawer ${mobileDrawerExpanded ? 'is-expanded' : ''}`} aria-label="Selected listing details">
+            <button className="drawer-close" type="button" onClick={() => { setSelectedId(''); setMobileDrawerExpanded(false); }} aria-label="Close listing details" title="Close listing details"><X size={16} /></button>
           <div className="detail-title">
             <h1>{selectedCourt.name}</h1>
             <span>

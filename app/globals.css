@@ -1782,3 +1782,120 @@ a {
   .listing-rail,
   .detail-drawer { animation: none; }
 }
+
+/* Mobile map workspace: filters stay on-map and listings behave like a bottom sheet. */
+.mobile-drawer-handle { display: none; }
+
+@media (max-width: 800px) {
+  .utility-header {
+    height: 56px;
+    padding: 0 14px;
+  }
+  .last-updated,
+  .group-link { display: none; }
+  .menu-button { display: inline-flex; }
+  .toolbar {
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 8px;
+    left: 12px;
+    overflow: visible;
+    right: 12px;
+    top: 68px;
+    white-space: normal;
+    z-index: 1250;
+  }
+  .toolbar .search-box {
+    flex: 1 0 100%;
+    width: 100%;
+  }
+  .toolbar .select-box,
+  .toolbar .date-filter,
+  .toolbar .time-filter,
+  .toolbar .clear-filters,
+  .toolbar .active-count { flex: 0 0 auto; }
+  .toolbar .time-filter input { width: 58px; }
+  .utility-layout,
+  .utility-layout.has-drawer {
+    height: calc(100svh - 56px);
+    position: absolute;
+  }
+  .listing-rail {
+    border-bottom: 0;
+    border-radius: 22px 22px 0 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    height: min(76svh, 640px);
+    left: 0;
+    max-height: none;
+    padding: 4px 12px max(12px, env(safe-area-inset-bottom));
+    right: 0;
+    top: auto;
+    transform: translateY(calc(100% - 154px));
+    transition: transform .22s ease;
+    width: 100%;
+    z-index: 1000;
+  }
+  .utility-layout.sheet-expanded .listing-rail { transform: translateY(0); }
+  .mobile-drawer-handle {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    display: flex;
+    flex: 0 0 28px;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    touch-action: none;
+    width: 100%;
+  }
+  .mobile-drawer-handle span {
+    background: #a7bbb0;
+    border-radius: 999px;
+    display: block;
+    height: 5px;
+    width: 44px;
+  }
+  .listing-rail-heading {
+    flex: 0 0 auto;
+    min-height: 76px;
+    padding: 2px 8px 12px;
+  }
+  .listing-rail .listing-results-list {
+    flex: 1 1 auto;
+    max-height: none;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-bottom: 8px;
+    touch-action: pan-y;
+  }
+  .detail-drawer {
+    border-bottom: 0;
+    border-radius: 22px 22px 0 0;
+    bottom: 0;
+    height: min(82svh, 700px);
+    left: 0;
+    max-height: none;
+    padding: 18px 18px max(18px, env(safe-area-inset-bottom));
+    right: 0;
+    top: auto;
+    width: 100%;
+    z-index: 1200;
+  }
+  .utility-layout.has-drawer .listing-rail { visibility: hidden; }
+  .map-note {
+    bottom: 170px;
+    max-width: calc(100vw - 24px);
+  }
+}
+
+@media (max-width: 380px) {
+  .toolbar .time-filter { display: none; }
+  .listing-rail { transform: translateY(calc(100% - 148px)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .listing-rail { transition: none; }
+}
