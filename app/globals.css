@@ -1,6 +1,5 @@
-@import 'tailwindcss';
+@import '../node_modules/tailwindcss/index.css';
 @import 'tw-animate-css';
-@import 'shadcn/tailwind.css';
 @import 'leaflet/dist/leaflet.css';
 
 :root {
@@ -1821,12 +1820,15 @@ a {
     position: absolute;
   }
   .listing-rail {
+    animation: none;
     border-bottom: 0;
     border-radius: 22px 22px 0 0;
     bottom: 0;
     display: flex;
     flex-direction: column;
-    height: min(76svh, 640px);
+    /* Keep the expanded sheet below the on-map filter island so its handle
+       remains reachable for a downward swipe. */
+    height: calc(100svh - 286px);
     left: 0;
     max-height: none;
     padding: 4px 12px max(12px, env(safe-area-inset-bottom));
@@ -1893,7 +1895,9 @@ a {
 
 @media (max-width: 380px) {
   .toolbar .time-filter { display: none; }
-  .listing-rail { transform: translateY(calc(100% - 148px)); }
+  .listing-rail {
+    transform: translateY(calc(100% - 148px));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
