@@ -1795,8 +1795,9 @@ a {
   .menu-button { display: inline-flex; }
   .toolbar {
     align-items: stretch;
-    flex-wrap: wrap;
-    gap: 8px;
+    display: grid;
+    gap: 6px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.18fr);
     left: 12px;
     overflow: visible;
     right: 12px;
@@ -1805,15 +1806,35 @@ a {
     z-index: 1250;
   }
   .toolbar .search-box {
-    flex: 1 0 100%;
+    grid-column: 1 / -1;
     width: 100%;
   }
   .toolbar .select-box,
   .toolbar .date-filter,
-  .toolbar .time-filter,
-  .toolbar .clear-filters,
-  .toolbar .active-count { flex: 0 0 auto; }
-  .toolbar .time-filter input { width: 58px; }
+  .toolbar .time-filter {
+    grid-column: auto;
+    min-width: 0;
+    width: 100%;
+  }
+  .toolbar .filter-menu-trigger,
+  .toolbar .date-filter-trigger {
+    font-size: 14px;
+    min-width: 0;
+    padding: 0 9px;
+  }
+  .toolbar .time-filter {
+    gap: 3px;
+    padding: 0 8px;
+  }
+  .toolbar .time-filter input {
+    flex: 1 1 0;
+    min-width: 0;
+    width: 0;
+  }
+  .toolbar .clear-filters {
+    grid-column: 1 / -1;
+    justify-self: end;
+  }
   .utility-layout,
   .utility-layout.has-drawer {
     height: calc(100svh - 56px);
@@ -1826,9 +1847,8 @@ a {
     bottom: 0;
     display: flex;
     flex-direction: column;
-    /* Keep the expanded sheet below the on-map filter island so its handle
-       remains reachable for a downward swipe. */
-    height: calc(100svh - 286px);
+    /* Keep the expanded sheet below the compact on-map filter island. */
+    height: calc(100svh - 182px);
     left: 0;
     max-height: none;
     padding: 4px 12px max(12px, env(safe-area-inset-bottom));
@@ -1894,10 +1914,7 @@ a {
 }
 
 @media (max-width: 380px) {
-  .toolbar .time-filter { display: none; }
-  .listing-rail {
-    transform: translateY(calc(100% - 148px));
-  }
+  .listing-rail { transform: translateY(calc(100% - 148px)); }
 }
 
 @media (prefers-reduced-motion: reduce) {

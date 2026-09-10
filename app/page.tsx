@@ -236,6 +236,7 @@ export default function Home() {
   const mapElement = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LeafletMap | null>(null);
   const markerLayer = useRef<LayerGroup | null>(null);
+  const initialMapFit = useRef(false);
   const [mapReady, setMapReady] = useState(false);
   const [selectedId, setSelectedId] = useState('');
   const [mobileDrawerExpanded, setMobileDrawerExpanded] = useState(false);
@@ -502,6 +503,7 @@ export default function Home() {
       map?.remove();
       mapRef.current = null;
       markerLayer.current = null;
+      initialMapFit.current = false;
       setMapReady(false);
     };
   }, []);
@@ -512,6 +514,7 @@ export default function Home() {
       if (cancelled || !markerLayer.current) return;
       markerLayer.current.clearLayers();
       const positions = new Map<string, number>();
+      const bounds = L.latLngBounds([]);
       sortedCourts.forEach((court) => {
         if (!Number.isFinite(court.lat) || !Number.isFinite(court.lng)) return;
         const key = `${court.lat},${court.lng}`;
@@ -520,6 +523,7 @@ export default function Home() {
         const angle = duplicateIndex * 1.4;
          const lat = court.lat! + (duplicateIndex ? Math.sin(angle) * 0.0012 : 0);
          const lng = court.lng! + (duplicateIndex ? Math.cos(angle) * 0.0012 : 0);
+        bounds.extend([lat, lng]);
         const marker = L.marker([lat, lng], {
           icon: L.divIcon({
             className: `court-marker ${court.id === selectedId ? 'selected' : ''}`,
@@ -535,6 +539,17 @@ export default function Home() {
         });
         marker.addTo(markerLayer.current!);
       });
+      if (!initialMapFit.current && bounds.isValid()) {
+        const isMobile = window.matchMedia('(max-width: 800px)').matches;
+        mapRef.current?.invalidateSize();
+        mapRef.current?.fitBounds(bounds, {
+          // Keep markers clear of the desktop listing rail or mobile controls.
+          paddingTopLeft: isMobile ? [28, 182] : [470, 128],
+          paddingBottomRight: isMobile ? [28, 182] : [48, 48],
+          maxZoom: 12,
+        });
+        initialMapFit.current = true;
+      }
     });
     return () => {
       cancelled = true;
@@ -788,7 +803,6 @@ export default function Home() {
             Clear
           </button>
         )}
-        <span className="active-count">{filteredCourts.length} active</span>
       </section>
       <section className={`utility-layout ${selectedCourt ? 'has-drawer' : ''} sheet-${mobileDrawerExpanded ? 'expanded' : 'peek'}`} id="map">
         <section
