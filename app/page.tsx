@@ -1051,13 +1051,6 @@ export default function Home() {
             className="real-map"
             aria-label="OpenStreetMap of Singapore with court locations"
           />
-          <div className="map-note">
-            <span>
-              <span className="map-dot" />
-              {filteredCourts.length} matching listings
-            </span>
-            <span>Click a pin for details</span>
-          </div>
         </div>
       </section>
       <footer className="build-footer" aria-label="Backend build version">
