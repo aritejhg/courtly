@@ -26,8 +26,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { getActiveListings } from '@/lib/ingestion';
+import type { CourtListing } from '@/lib/ingestion';
 import { matchesListingDateTime } from '@/lib/listing-filters';
-import { telegramListings } from '@/lib/telegram-listings';
 import { badmintonVenues, inferVenueArea, matchVenue } from '@/lib/venue-mapping';
 
 type Sport = 'Badminton';
@@ -114,7 +114,7 @@ const calendarDateFromKey = (value: string) => {
   const [year, month, day] = value.split('-').map(Number);
   return year && month && day ? new Date(year, month - 1, day, 12) : undefined;
 };
-const courts: Court[] = telegramListings.map((listing) => {
+function toCourt(listing: CourtListing): Court {
   const listingText = listing.listingText ?? listing.rawText;
   const persistedVenue = listing.venueId
     ? badmintonVenues.find((candidate) => candidate.id === listing.venueId)
@@ -145,14 +145,13 @@ const courts: Court[] = telegramListings.map((listing) => {
     postedAt: listing.postedAt,
     ownerUsername: listing.ownerUsername,
   };
-});
+}
 const formatSingaporeTime = (value: Date) =>
   value.toLocaleTimeString('en-SG', {
     timeZone: 'Asia/Singapore',
     hour: 'numeric',
     minute: '2-digit',
   });
-const lastUpdated = telegramListings.reduce((latest, listing) => Math.max(latest, Date.parse(listing.postedAt)), 0);
 const geocodeCache = new Map<string, { lat: number; lng: number }>();
 async function geocodeSavedLocation(address: string) {
   const query = `${address.trim()}, Singapore`;
@@ -265,13 +264,20 @@ export default function Home() {
   const [routePlan, setRoutePlan] = useState<RoutePlan | null>(null);
   const [routeLoading, setRouteLoading] = useState(false);
   const [routeError, setRouteError] = useState('');
+  const [telegramListings, setTelegramListings] = useState<CourtListing[]>([]);
+  const [listingFeedStatus, setListingFeedStatus] = useState<'loading' | 'ready' | 'unavailable'>('loading');
   const [backendCommit, setBackendCommit] = useState('');
   const [backendStatus, setBackendStatus] = useState<BackendStatus>('checking');
   const [listingEtaById, setListingEtaById] = useState<Record<string, number>>({});
   const [now] = useState(() => new Date());
+  const courts = useMemo(() => telegramListings.map(toCourt), [telegramListings]);
+  const lastUpdated = useMemo(
+    () => telegramListings.reduce((latest, listing) => Math.max(latest, Date.parse(listing.postedAt)), 0),
+    [telegramListings],
+  );
   const activeListings = useMemo(
     () => getActiveListings(telegramListings, now),
-    [now],
+    [now, telegramListings],
   );
   const dateTimeFilteredListings = useMemo(
     () => activeListings.filter((listing) => matchesListingDateTime(listing, {
@@ -286,7 +292,7 @@ export default function Home() {
       courts.filter((court) =>
         dateTimeFilteredListings.some((listing) => listing.id === court.id),
       ),
-    [dateTimeFilteredListings],
+    [courts, dateTimeFilteredListings],
   );
   const filteredCourts = useMemo(
     () =>
@@ -321,6 +327,28 @@ export default function Home() {
   const directionsUrl = hasVerifiedCoordinates
     ? `https://www.google.com/maps/dir/?api=1&destination=${selectedCourt?.lat},${selectedCourt?.lng}&travelmode=${mode === 'Public transport' ? 'transit' : mode === 'Drive' ? 'driving' : 'walking'}${origin?.address ? `&origin=${encodeURIComponent(origin.address + ', Singapore')}` : ''}`
     : null;
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadListings() {
+      try {
+        const response = await fetch('/api/listings', { cache: 'no-store' });
+        if (!response.ok) throw new Error('Listing feed unavailable');
+        const payload = (await response.json()) as { listings?: unknown };
+        if (!Array.isArray(payload.listings)) throw new Error('Listing feed invalid');
+        if (!cancelled) {
+          setTelegramListings(payload.listings as CourtListing[]);
+          setListingFeedStatus('ready');
+        }
+      } catch {
+        if (!cancelled) setListingFeedStatus('unavailable');
+      }
+    }
+    void loadListings();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -848,7 +876,13 @@ export default function Home() {
           >
             <div>
               <span className="eyebrow">Matched listings</span>
-              <h2>{sortedCourts.length} available courts</h2>
+              <h2>
+                {listingFeedStatus === 'loading'
+                  ? 'Loading listings…'
+                  : listingFeedStatus === 'unavailable'
+                    ? 'Listings unavailable'
+                    : `${sortedCourts.length} available courts`}
+              </h2>
             </div>
             <Popover open={sortMenuOpen} onOpenChange={setSortMenuOpen}>
               <PopoverTrigger className="sort-menu-trigger" aria-label="Sort listings">

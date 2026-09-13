@@ -7,10 +7,15 @@ import { readTelegramFromChrome } from './lib/chrome-telegram.mjs';
 import { findDeletedMessageIds, readTelegramFromClient, saveTelegramState } from './lib/telegram-client.mjs';
 import { isPotentialCourtMessage } from './lib/telegram-parser.mjs';
 
+if (process.env.COURTLY_RUNTIME !== 'hermes') {
+  console.error('Production ingestion runs only on the ingestion host.');
+  process.exit(2);
+}
+
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workDir = join(root, 'work');
-const lockPath = join(workDir, 'local-ingestion.lock');
-const logPath = join(workDir, 'local-ingestion.jsonl');
+const lockPath = join(workDir, 'production-ingestion.lock');
+const logPath = join(workDir, 'production-ingestion.jsonl');
 const messagesPath = join(root, 'data', 'telegram-messages.json');
 const ambiguitiesPath = join(root, 'data', 'parser-ambiguities.json');
 const reviewHistoryPath = join(root, 'data', 'ambiguity-review-history.json');
@@ -383,9 +388,9 @@ async function main() {
   if (!dryRun && changed) {
     await runStage('build', () => runNpmScript('build'));
     if (publish) {
-      await log('publish_start', { target: 'cloudflare-workers', config: 'dist/server/wrangler.json' });
-      await runStage('publish', () => run(process.execPath, [join(root, 'scripts', 'publish-cloudflare.mjs')]), { target: 'cloudflare-workers' });
-      await log('publish_complete', { target: 'cloudflare-workers' });
+      await log('feed_publish_start', { target: 'cloudflare-kv' });
+      await runStage('feed_publish', () => run(process.execPath, [join(root, 'scripts', 'publish-feed-to-kv.mjs')]), { target: 'cloudflare-kv' });
+      await log('feed_publish_complete', { target: 'cloudflare-kv' });
     }
   }
   await log('complete', { touched: touchedIds.length, ambiguities: actionable.length, llmCalls, changed, built: changed && !dryRun });

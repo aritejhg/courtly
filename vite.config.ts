@@ -5,9 +5,21 @@ import { defineConfig } from 'vite';
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === 'seatbelt';
 
+const feedNamespaceId = process.env.COURTLY_FEED_KV_NAMESPACE_ID?.trim();
+const requireFeedBinding = process.env.COURTLY_REQUIRE_FEED_BINDING === '1';
+
+if (requireFeedBinding && !feedNamespaceId) {
+  throw new Error(
+    'Production builds require COURTLY_FEED_KV_NAMESPACE_ID so the live listing feed cannot be bundled accidentally.',
+  );
+}
+
 const localWorkerConfig = {
   main: 'vinext/server/fetch-handler',
   compatibility_flags: ['nodejs_compat'],
+  ...(feedNamespaceId
+    ? { kv_namespaces: [{ binding: 'COURTLY_FEED', id: feedNamespaceId }] }
+    : {}),
 };
 
 export default defineConfig(async () => {
