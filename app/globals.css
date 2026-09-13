@@ -1560,15 +1560,72 @@ a {
   top: 84px;
   width: 460px;
 }
-.drawer-close { font-size: 14px; min-height: 40px; }
-.detail-drawer .detail-title h1 { font-size: 30px; }
-.detail-drawer .detail-title > span { font-size: 16px; }
-.detail-drawer .detail-grid small,
-.detail-drawer .active-badge,
-.detail-drawer .route-label { font-size: 13px; }
-.detail-drawer .detail-grid strong { font-size: 18px; }
-.detail-drawer .detail-grid span,
-.detail-drawer .transit-heading > span:last-child { font-size: 15px; }
+@media (min-width: 801px) {
+  .detail-drawer {
+    padding: 16px 20px 18px;
+  }
+  .detail-drawer .detail-title {
+    padding: 6px 48px 14px 0;
+  }
+  .drawer-close {
+    font-size: 14px;
+    height: 32px;
+    min-height: 32px;
+    right: 14px;
+    top: 12px;
+    width: 32px;
+  }
+  .drawer-close svg { height: 14px; width: 14px; }
+  .detail-drawer .detail-title h1 {
+    font-size: 28px;
+    line-height: 1.1;
+  }
+  .detail-drawer .detail-title > span {
+    font-size: 14px;
+    margin-top: 4px;
+  }
+  .detail-drawer .detail-grid > div {
+    min-height: 72px;
+    padding-bottom: 9px;
+    padding-top: 12px;
+  }
+  .detail-drawer .detail-grid small {
+    font-size: 10px;
+    margin-bottom: 5px;
+  }
+  .detail-drawer .detail-grid strong { font-size: 16px; }
+  .detail-drawer .detail-grid span {
+    font-size: 13px;
+    margin-top: 3px;
+  }
+  .detail-drawer .detail-actions {
+    gap: 8px;
+    padding: 14px 0;
+  }
+  .detail-drawer .primary-action,
+  .detail-drawer .secondary-action {
+    font-size: 14px;
+    padding: 11px;
+  }
+  .detail-drawer .transit-section { padding-top: 14px; }
+  .detail-drawer .route-label { font-size: 11px; }
+  .detail-drawer .transit-heading > span:last-child { font-size: 13px; }
+  .detail-drawer .origin-line {
+    margin-top: 7px;
+  }
+  .detail-drawer .transit-bottom {
+    gap: 8px 10px;
+    margin-top: 8px;
+  }
+  .detail-drawer .mode-switcher button {
+    font-size: 12px;
+    padding: 8px 7px;
+  }
+  .detail-drawer .eta strong { font-size: 36px; }
+  .detail-drawer .directions,
+  .detail-drawer .route-leave strong { font-size: 12px; }
+  .detail-drawer .route-leave small { font-size: 10px; }
+}
 .build-footer {
   bottom: 10px;
   margin: 0;
