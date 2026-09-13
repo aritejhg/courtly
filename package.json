@@ -19,9 +19,7 @@
     "venues:verify": "node scripts/verify-venue-mappings.mjs",
     "ingest:telegram": "node scripts/ingest-telegram.mjs",
     "query:listings": "node scripts/query-listings.mjs",
-    "telegram:setup": "node scripts/setup-telegram-client.mjs",
-    "ingest:local": "node scripts/run-local-ingestion.mjs",
-    "ingest:local:dry": "node scripts/run-local-ingestion.mjs --dry-run --no-llm"
+    "telegram:setup": "node scripts/setup-telegram-client.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",

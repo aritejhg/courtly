@@ -1,5 +1,13 @@
 [
   {
+    "id": "manual:fernvale-cc",
+    "canonicalName": "Fernvale CC",
+    "aliases": ["Fernvale CC", "Fernvale Community Club"],
+    "source": "Repeated exact Telegram venue name",
+    "kind": "community_club",
+    "area": "Sengkang"
+  },
+  {
     "id": "manual:sbh-sims",
     "canonicalName": "SBH @ Sims",
     "aliases": ["SBH @ Sims", "SBH Sims"],
@@ -35,7 +43,7 @@
   {
     "id": "onepa:henderson-cc",
     "canonicalName": "Henderson CC",
-    "aliases": ["Henderson", "Henderson CC", "Henderson Community Club"],
+    "aliases": ["Henderson", "Henderson CC", "Henderson Community Club", "Hendersen CC"],
     "source": "People's Association / onePA",
     "sourceUrl": "https://www.onepa.gov.sg/cc/henderson-cc",
     "kind": "community_club",
@@ -286,6 +294,18 @@
     "area": "Bukit Panjang"
   },
   {
+    "id": "onepa:tengah-cc",
+    "canonicalName": "Tengah CC",
+    "aliases": ["Tengah CC", "Tengah Community Club"],
+    "source": "People's Association / OneMap",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/tengah-cc",
+    "kind": "community_club",
+    "area": "Tengah",
+    "address": "119 Plantation Crescent, Singapore 690119",
+    "lat": 1.356752427301931,
+    "lng": 103.7345000424129
+  },
+  {
     "id": "telegram:sbh-geylang",
     "canonicalName": "SBH Geylang",
     "aliases": ["SBH Geylang"],
@@ -308,5 +328,61 @@
     "source": "Repeated exact Telegram venue name",
     "kind": "community_club",
     "area": "Hougang"
+  },
+  {
+    "id": "telegram:toa-payoh-west-cc",
+    "canonicalName": "Toa Payoh West CC",
+    "aliases": ["Toa Payoh West CC"],
+    "source": "Repeated exact Telegram venue name",
+    "kind": "community_club",
+    "area": "Toa Payoh"
+  },
+  {
+    "id": "telegram:fengshan-cc",
+    "canonicalName": "Fengshan CC",
+    "aliases": ["Fengshan CC"],
+    "source": "Repeated exact Telegram venue name",
+    "kind": "community_club",
+    "area": "Bedok"
+  },
+  {
+    "id": "telegram:nee-soon-south-cc",
+    "canonicalName": "Nee Soon South CC",
+    "aliases": ["Nee Soon South CC"],
+    "source": "Repeated exact Telegram venue name",
+    "kind": "community_club",
+    "area": "Yishun"
+  },
+  {
+    "id": "telegram:thomson-cc",
+    "canonicalName": "Thomson CC",
+    "aliases": ["Thomson CC"],
+    "source": "Repeated exact Telegram venue name",
+    "kind": "community_club",
+    "area": "Thomson"
+  },
+  {
+    "id": "telegram:jurong-spring-cc",
+    "canonicalName": "Jurong Spring CC",
+    "aliases": ["Jurong Spring CC"],
+    "source": "Repeated exact Telegram venue name",
+    "kind": "community_club",
+    "area": "Jurong West"
+  },
+  {
+    "id": "telegram:shelton-college",
+    "canonicalName": "Shelton College",
+    "aliases": ["Shelton College"],
+    "source": "Repeated exact Telegram venue name",
+    "kind": "other",
+    "area": "Singapore"
+  },
+  {
+    "id": "telegram:wyse",
+    "canonicalName": "WYSE",
+    "aliases": ["WYSE"],
+    "source": "Repeated exact Telegram venue name",
+    "kind": "other",
+    "area": "Singapore"
   }
 ]

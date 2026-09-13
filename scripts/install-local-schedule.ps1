@@ -1,12 +1,9 @@
 param(
-  [switch]$Uninstall,
-  [switch]$RunNow
+  [switch]$Uninstall
 )
 
 $ErrorActionPreference = 'Stop'
 $taskName = 'Courtly SG Local Ingestion'
-$projectRoot = Split-Path -Parent $PSScriptRoot
-$runner = Join-Path $PSScriptRoot 'run-local-ingestion.mjs'
 
 if ($Uninstall) {
   Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue
@@ -14,15 +11,5 @@ if ($Uninstall) {
   exit 0
 }
 
-$node = (Get-Command node.exe -ErrorAction Stop).Source
-$action = New-ScheduledTaskAction -Execute $node -Argument "`"$runner`" --publish" -WorkingDirectory $projectRoot
-$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Hours 1)
-$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 45)
-$principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Limited
-Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Settings $settings -Principal $principal -Description 'Hourly Courtly Telegram ingestion, deterministic parsing, build, and Cloudflare publish.' -Force | Out-Null
-
-if ($RunNow) {
-  Start-ScheduledTask -TaskName $taskName
-}
-
-Get-ScheduledTask -TaskName $taskName | Select-Object TaskName, State
+Write-Output 'Local scheduled ingestion is retired. Production ingestion runs only on the ingestion host. Use -Uninstall to remove a stale task.'
+exit 2

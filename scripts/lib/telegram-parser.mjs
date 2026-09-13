@@ -54,6 +54,10 @@ export function expandedAliases(venue) {
       const withoutActiveSg = alias.replace(/\s+activesg\b/ig, '').trim();
       aliases.add(withoutActiveSg);
       aliases.add(withoutActiveSg.replace(/\s+sports? hall\b/ig, '').trim());
+      // Verified facilities with an acronym plus parenthesized site commonly
+      // appear under the acronym alone (`MOE` for `MOE (Evans) ...`).
+      const acronym = alias.match(/^([A-Z]{2,})\s*\(/i)?.[1];
+      if (acronym) aliases.add(acronym);
       // Verified venue initialisms are common in Telegram. Generate them
       // only from the canonical sport-hall name, and require at least three
       // letters so incidental short tokens cannot become venues.
@@ -77,6 +81,10 @@ export function expandedAliases(venue) {
       // `hall`, while retaining the verified school name and its location.
       aliases.add(alias.replace(/\bhigh school\b/ig, 'high').replace(/\s+hall\b/ig, '').trim());
       aliases.add(alias.replace(/\bgovernment\b/ig, 'gov').replace(/\bhigh school\b/ig, 'high').replace(/\s+hall\b/ig, '').trim());
+      // Repeated listings often use only the verified school name (`East
+      // Spring`, `Yishun Town`). Keep the alias scoped to school-hall
+      // records; collisions remain ambiguous instead of guessing.
+      aliases.add(alias.replace(/\s+(?:primary|secondary)\s+school\s+hall\b/ig, '').trim());
     }
     if (/^Our\s+/i.test(alias)) aliases.add(alias.replace(/^Our\s+/i, ''));
     if (/^Ang Mo Kio\b/i.test(alias)) aliases.add(alias.replace(/^Ang Mo Kio/i, 'AMK'));
@@ -104,8 +112,8 @@ export function expandedAliases(venue) {
 function catalogVenueMatch(text, venues, { exact = false } = {}) {
   const normalizedText = normalize(text);
   const stripListingMetadata = (line) => normalize(String(line)
-    .replace(DATE_TOKEN, ' ')
     .replace(TIME_RANGE, ' ')
+    .replace(DATE_TOKEN, ' ')
     .replace(/\$+\s*\d+(?:\.\d{1,2})?/g, ' ')
     .replace(/\b\d+(?:\.\d{1,2})?\s*(?:dollars?|bucks?)\b/ig, ' ')
     .replace(/^(?:venue|location|place)\s*[:-]?\s*/, '')
@@ -123,7 +131,11 @@ function catalogVenueMatch(text, venues, { exact = false } = {}) {
         .replace(/^(?:venue|location|place)\s*[:-]?\s*/, '')
         .replace(/[.,:;]+$/g, '')
         .trim();
-      return [normalizedLine, stripListingMetadata(line)];
+      // Telegram often adds a locality in parentheses after a verified
+      // school-hall shorthand (`Edgefield secondary (Punggol)`). The
+      // qualifier is not part of the facility name; remove only a trailing
+      // parenthesized suffix so strict catalog matching remains bounded.
+      return [normalizedLine, normalizedLine.replace(/\s*\([^)]*\)\s*$/, '').trim(), stripListingMetadata(line)];
     }).filter(Boolean),
   ]);
   const directOwners = new Map();
@@ -161,6 +173,54 @@ function catalogVenueMatch(text, venues, { exact = false } = {}) {
   return { venue: unique[0].venue, status: 'deterministic', alias: unique[0].alias };
 }
 
+const strictVenueMatchCache = new WeakMap();
+const strictVenueAliasCache = new WeakMap();
+
+function strictVenueMatchesInText(text, venues) {
+  let cache = strictVenueMatchCache.get(venues);
+  if (!cache) {
+    cache = new Map();
+    strictVenueMatchCache.set(venues, cache);
+  }
+  const cacheKey = String(text || '');
+  if (cache.has(cacheKey)) return cache.get(cacheKey);
+  const variants = String(text || '').split(/\r?\n/).flatMap((line) => [
+    line,
+    cleanVenueCandidate(line),
+    cleanVenueCandidate(line).replace(/\s*\([^)]*\)\s*$/, '').trim(),
+    // In compact rows the venue follows the time range and precedes the
+    // price (`8sep ... 4-6pm tampines hub 7`). Isolate that exact suffix.
+    line.replace(new RegExp(`^[\\s\\S]*?${TIME_RANGE.source}`, 'i'), ' ')
+      .replace(/\$+\s*\d+(?:\.\d{1,2})?/g, ' ')
+      .replace(/\b\d+(?:\.\d{1,2})?\s*(?:dollars?|bucks?)\b/ig, ' ')
+      .replace(/\b\d+(?:\.\d+)?\b/g, ' '),
+    // Keep a verified venue before a common location qualifier, such as
+    // `Woodlands Secondary School near Marsiling CC`, without fuzzy-matching
+    // arbitrary substrings inside venue names.
+    line.split(/\s+(?:near|beside|opp(?:osite)?|at)\s+/i)[0],
+  ]);
+  let aliases = strictVenueAliasCache.get(venues);
+  if (!aliases) {
+    aliases = new Map();
+    for (const venue of venues) {
+      for (const alias of expandedAliases(venue)) {
+        const owners = aliases.get(alias) || new Map();
+        owners.set(normalize(venue.canonicalName), venue);
+        aliases.set(alias, owners);
+      }
+    }
+    strictVenueAliasCache.set(venues, aliases);
+  }
+  const matches = variants.flatMap((variant) => {
+    const alias = normalize(variant);
+    const owners = aliases.get(alias);
+    if (!owners) return [];
+    return [...owners.values()].map((venue) => ({ venue, alias }));
+  });
+  cache.set(cacheKey, matches);
+  return matches;
+}
+
 const VENUE_LINE = /\b(?:cc|community\s+(?:club|centre)|sports?\s*hall|school\s*hall|pri(?:mary)?(?:\s+school)?|sec(?:ondary)?(?:\s+school)?|sh|clubhouse)\b/i;
 const VENUE_BRAND = /\b(?:sbh|seh|kff|moe|sports?\s+arina|ace\s+the\s+place)\b/i;
 const NON_VENUE_LINE = /\b(?:court\s+to|lett?ing|available|release|take\s*over|price|cost|date|time|today|tomorrow|pm\s+me|dm|whatsapp|interested|keen)\b/i;
@@ -184,6 +244,8 @@ function cleanVenueCandidate(line) {
     .replace(/\s+-\s+(?:rubber|aircon)\b.*$/i, '')
     .replace(/\s+badminton\s+court\b.*$/i, '')
     .replace(/\s+court(?:\s+\d+)?\b.*$/i, '')
+    .replace(/,\s*(?:mon(?:day)?|tue(?:s(?:day)?)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\b/ig, '')
+    .replace(/^[\s/]+/u, '')
     .replace(/[.,:;-]+$/g, '')
     .replace(/^\s*(?:today|tonight|tomorrow|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\s+/i, '')
     .replace(/\s+/g, ' ')
@@ -237,12 +299,60 @@ function provisionalVenue(candidate) {
 }
 
 export function matchVenue(text, venues) {
+  // Prefer an exact catalog alias over derived shorthand aliases. This keeps
+  // a verified direct alias such as `Yew Tee` from colliding with a derived
+  // school-hall alias for the same area.
+  const exactAliases = [...new Map(venues
+    .filter((venue) => [venue.canonicalName, ...(venue.aliases || [])]
+      .some((alias) => normalize(alias) === normalize(String(text || '').trim())))
+    .map((venue) => [normalize(venue.canonicalName), venue])).values()];
+  if (exactAliases.length === 1) {
+    return { venue: exactAliases[0], status: 'deterministic', alias: normalize(String(text || '').trim()) };
+  }
+  if (exactAliases.length > 1) {
+    return { venue: null, status: 'ambiguous', candidates: exactAliases.map((venue) => venue.canonicalName) };
+  }
   const candidates = extractVenueCandidates(text);
   if (candidates.length === 1) {
     const exact = catalogVenueMatch(candidates[0], venues, { exact: true });
     if (exact.venue) return exact;
-    return { venue: provisionalVenue(candidates[0]), status: 'extracted', alias: normalize(candidates[0]) };
   }
+  // Only scan whole lines when marker-based extraction did not resolve the
+  // venue. This keeps shorthand support strict without multiplying catalog
+  // work for ordinary, already-resolved listings.
+  if (candidates.length <= 1) {
+    const strictLineMatches = strictVenueMatchesInText(text, venues);
+    const strictLineVenues = [...new Map(strictLineMatches.map((match) => [normalize(match.venue.canonicalName), match.venue])).values()];
+    if (strictLineVenues.length === 1) {
+      return {
+        venue: strictLineVenues[0],
+        status: 'deterministic',
+        alias: strictLineMatches.find((match) => normalize(match.venue.canonicalName) === normalize(strictLineVenues[0].canonicalName))?.alias,
+      };
+    }
+    if (strictLineVenues.length > 1 && !candidates.length) {
+      // A bare locality is the established shorthand for the area's public
+      // sport hall. School-hall listings need an explicit school marker (or
+      // exact alias), so do not leave a unique sport-hall match ambiguous
+      // merely because a same-locality school hall also exists.
+      const sportHalls = strictLineVenues.filter((venue) => venue.kind === 'sport_hall');
+      const hasSchoolMarker = /\b(?:school|pri(?:mary)?|sec(?:ondary)?)\b/i.test(String(text || ''));
+      if (sportHalls.length === 1 && !hasSchoolMarker) {
+        return {
+          venue: sportHalls[0],
+          status: 'deterministic',
+          alias: strictLineMatches.find((match) => normalize(match.venue.canonicalName) === normalize(sportHalls[0].canonicalName))?.alias,
+        };
+      }
+      return {
+        venue: null,
+        status: 'ambiguous',
+        candidates: strictLineVenues.map((venue) => venue.canonicalName),
+        reason: 'venue shorthand matches multiple verified facilities; venue type or exact name is required',
+      };
+    }
+  }
+  if (candidates.length === 1) return { venue: provisionalVenue(candidates[0]), status: 'extracted', alias: normalize(candidates[0]) };
   // Multi-listing messages are split before building listings. At this stage
   // only an exact whole-text alias may resolve; never attach a coordinate to a
   // venue found as a substring of a different candidate.
@@ -250,7 +360,12 @@ export function matchVenue(text, venues) {
   const exactMatches = candidates.map((candidate) => catalogVenueMatch(candidate, venues, { exact: true }));
   const resolved = [...new Map(exactMatches.filter((match) => match.venue).map((match) => [normalize(match.venue.canonicalName), match.venue])).values()];
   if (resolved.length === 1) return { venue: resolved[0], status: 'deterministic', alias: exactMatches.find((match) => match.venue)?.alias };
-  if (resolved.length > 1) return { venue: null, status: 'ambiguous', candidates: resolved.map((venue) => venue.canonicalName) };
+  if (resolved.length > 1) return {
+    venue: null,
+    status: 'ambiguous',
+    candidates: resolved.map((venue) => venue.canonicalName),
+    reason: 'venue shorthand matches multiple verified facilities; venue type or exact name is required',
+  };
   return { venue: null, status: 'unmatched' };
 }
 
@@ -261,6 +376,17 @@ export function parsePrice(text) {
   if (sgd) return { value: Number(sgd[1]), status: 'deterministic', source: sgd[0] };
   const words = text.match(/\b(\d+(?:\.\d{1,2})?)\s*(?:dollars?|bucks?)\b/i);
   if (words) return { value: Number(words[1]), status: 'deterministic', source: words[0] };
+  // Telegram rows often put the cost as a bare trailing number (`... hub 7.4`).
+  // Only accept a one or two digit amount at the end of a line after masking
+  // dates and clock ranges, so postal codes and phone numbers stay excluded.
+  const barePrice = String(text || '').split(/\r?\n/).map((line) => line
+    .replace(TIME_RANGE, ' ')
+    .replace(DATE_TOKEN, ' ')
+    .replace(/\b\d{3,}\b/g, ' ')
+    .trim()
+    .match(/(?:^|[\s(])(\d{1,2}(?:\.\d{1,2})?)(?:\s*\([^)]*\))?\s*$/))
+    .find(Boolean);
+  if (barePrice) return { value: Number(barePrice[1]), status: 'deterministic', source: barePrice[1] };
   const looksLikePrice = /(?:\$|s\$|sgd|dollars?|bucks?|(?:price|cost)\s*(?:is|:|=))\s*\d/i.test(text);
   return { value: null, status: looksLikePrice ? 'ambiguous' : 'missing' };
 }
@@ -277,6 +403,23 @@ const DATE_TOKEN = new RegExp(`(?<![\\d.])\\b(?:today|tonight|tomorrow|mon(?:day
 // `9-10m`). Accept it only inside a clock expression.
 const TIME_RANGE = /(?<![\d.])\b((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm|m)?\s*(?:-|–|—|to)\s*((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm|m)?\b/i;
 const NUMERIC_DATE = /(?<![:\d])\b(\d{1,2})\s*(?:\/|-)\s*(\d{1,2})(?:\s*(?:\/|-)\s*(\d{2,4}))?\b/g;
+const timeSearchText = (text) => String(text || '')
+  // A sentence separator before a colon-formatted clock should not hide the
+  // leading hour (`|.10:30am to 12:30pm`). Decimal dotted times remain intact.
+  .replace(/(^|[^\d])\.(?=\d{1,2}:\d{2}(?:am|pm|m)?\b)/gi, '$1 ');
+const hasActualTimeRange = (text) => {
+  const numericDates = [...String(text || '').matchAll(NUMERIC_DATE)];
+  return [...String(text || '').matchAll(new RegExp(TIME_RANGE.source, 'ig'))].some((range) => {
+    const rangeStart = range.index ?? 0;
+    const rangeEnd = rangeStart + range[0].length;
+    return !numericDates.some((date) => {
+      if (!date[3]) return false;
+      const dateStart = date.index ?? 0;
+      const dateEnd = dateStart + date[0].length;
+      return dateStart < rangeEnd && dateEnd > rangeStart;
+    });
+  });
+};
 
 function isDateLine(value) {
   const text = String(value || '');
@@ -389,7 +532,7 @@ export function parseTime(text, date, { defaultMeridiem = null } = {}) {
   // Numeric dates such as `10-09-26` also satisfy TIME_RANGE (`10-09`).
   // Mask date tokens before scanning for a clock range so the date cannot
   // steal the match from the actual time later in the message.
-  const sourceText = String(text || '');
+  const sourceText = timeSearchText(text);
   const sourceRanges = [...sourceText.matchAll(new RegExp(TIME_RANGE.source, 'ig'))];
   const timeText = sourceText.replace(NUMERIC_DATE, (value, _day, _month, explicitYear, offset) => {
     if (explicitYear) return ' '.repeat(value.length);
@@ -424,6 +567,10 @@ export function parseTime(text, date, { defaultMeridiem = null } = {}) {
   const normalizeMeridiem = (value) => value?.toLowerCase() === 'm' ? 'pm' : value?.toLowerCase();
   let startMeridiem = normalizeMeridiem(startMeridiemValue);
   let endMeridiem = normalizeMeridiem(endMeridiemValue);
+  // Some posts combine 24-hour clocks with a redundant meridiem marker.
+  // Preserve the unambiguous 24-hour value and ignore that marker.
+  if (startMeridiem && Number(parseClock(startValue)[0]) > 12) startMeridiem = null;
+  if (endMeridiem && Number(parseClock(endValue)[0]) > 12) endMeridiem = null;
   if (!isValidClock(startValue, startMeridiem) || !isValidClock(endValue, endMeridiem)) {
     return { value: null, status: 'ambiguous', reason: 'invalid clock value' };
   }
@@ -446,6 +593,12 @@ export function parseTime(text, date, { defaultMeridiem = null } = {}) {
       status = 'ambiguous';
       reason = 'time range has no am/pm marker';
     }
+  }
+  // Do not expose a guessed clock when the range lacks a meridiem marker.
+  // Keep the ambiguity visible instead of silently creating an incorrect
+  // morning listing.
+  if (status === 'ambiguous' && reason === 'time range has no am/pm marker') {
+    return { value: null, status, reason };
   }
   const start = makeStart(startValue, startMeridiem);
   let end = makeStart(endValue, endMeridiem);
@@ -493,7 +646,7 @@ export function isPotentialCourtMessage(text, venues) {
   const wantedOnly = /\b(?:looking for|need(?:ing)?|wanted)\b/i.test(value) && !/\b(?:let(?:ting)?\s+go|court\s+to\s+swap|i\s+have|available)\b/i.test(value);
   if (wantedOnly) return false;
   const hasVenue = Boolean(matchVenue(value, venues).venue) || /\b(?:cc|community club|sports? hall|primary|secondary|pri|sec)\b/i.test(value);
-  const hasTime = TIME_RANGE.test(value) || /\b\d+(?:\.\d+)?\s*(?:hr|hrs|hour|hours)\b/i.test(value);
+  const hasTime = TIME_RANGE.test(timeSearchText(value)) || /\b\d+(?:\.\d+)?\s*(?:hr|hrs|hour|hours)\b/i.test(value);
   const hasDate = isDateLine(value);
   const hasIntent = /\b(?:let(?:ting)?\s+go|court\s+to\s+swap|court\s+available|take\s+over|at\s+cost)\b/i.test(value);
   return (hasVenue || hasIntent) && hasTime && (hasDate || hasIntent);
@@ -508,23 +661,54 @@ export function splitMessageListings(message, venues) {
   if (Array.isArray(message.listings) && message.listings.length) return message.listings.map((part) => ({ text: String(part.text || '').trim() })).filter((part) => part.text);
   const text = availabilitySection(message.text);
   const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
-  const timeIndexes = lines.flatMap((line, index) => TIME_RANGE.test(line) ? [index] : []);
+  const timeIndexes = lines.flatMap((line, index) => hasActualTimeRange(timeSearchText(line)) ? [index] : []);
   const venueIndexes = lines.flatMap((line, index) => venueOnLine(line, venues) ? [index] : []);
   if (timeIndexes.length > venueIndexes.length && timeIndexes.length > 1) {
     let carriedDateLine;
+    let carriedVenueLine;
+    const sharedVenueLine = venueIndexes.length === 1 ? lines[venueIndexes[0]] : null;
     return timeIndexes.map((timeIndex, position) => {
       const segmentStart = position ? timeIndexes[position - 1] + 1 : 0;
       const segmentEnd = position + 1 < timeIndexes.length ? timeIndexes[position + 1] - 1 : lines.length - 1;
       const nextDateIndex = lines.findIndex((line, index) => index > timeIndex && index <= segmentEnd && isDateLine(line));
-      const postTimeEnd = nextDateIndex >= 0 ? nextDateIndex - 1 : segmentEnd;
+      // If this row already has a venue before its time, a later venue before
+      // the next time starts the next listing. Preserve the alternate format
+      // where the venue is written after the time (`3pm-5pm\nDelta Sports Hall`).
+      const hasVenueBeforeTime = lines.slice(segmentStart, timeIndex).some((line) => venueOnLine(line, venues));
+      const nextVenueIndex = hasVenueBeforeTime
+        ? lines.findIndex((line, index) => index > timeIndex && index <= segmentEnd && venueOnLine(line, venues))
+        : -1;
+      const boundaryIndexes = [segmentEnd];
+      if (nextDateIndex >= 0) boundaryIndexes.push(nextDateIndex - 1);
+      if (nextVenueIndex >= 0) boundaryIndexes.push(nextVenueIndex - 1);
+      const postTimeEnd = Math.min(...boundaryIndexes);
       const selected = [
         ...lines.slice(segmentStart, timeIndex + 1),
         ...lines.slice(timeIndex + 1, postTimeEnd + 1),
       ];
       const dateBeforeTime = lines.slice(segmentStart, timeIndex + 1).findLast((line) => isDateLine(line));
       if (dateBeforeTime) carriedDateLine = dateBeforeTime;
+      const venueBeforeTime = selected.findLast((line) => venueOnLine(line, venues));
+      if (venueBeforeTime) carriedVenueLine = venueBeforeTime;
       if (carriedDateLine && !selected.some((line) => isDateLine(line))) {
         selected.unshift(carriedDateLine);
+      }
+      const hasInlineVenue = selected.some((line) => {
+        if (venueOnLine(line, venues) || extractVenueCandidates(line).length) return true;
+        if (!hasActualTimeRange(timeSearchText(line))) return false;
+        const suffix = line.replace(new RegExp(`^[\\s\\S]*?${TIME_RANGE.source}`, 'i'), ' ')
+          .replace(/\$+\s*\d+(?:\.\d{1,2})?/g, ' ')
+          .replace(/\b\d+(?:\.\d+)?\b/g, ' ');
+        return Boolean(normalize(suffix));
+      });
+      if (carriedVenueLine && !hasInlineVenue) {
+        selected.splice(carriedDateLine && selected[0] === carriedDateLine ? 1 : 0, 0, carriedVenueLine);
+      }
+      // Some posts place one venue after all repeated time rows. Apply that
+      // verified venue to each row instead of leaving the earlier rows
+      // unresolved.
+      if (sharedVenueLine && !selected.some((line) => venueOnLine(line, venues))) {
+        selected.push(sharedVenueLine);
       }
       return { text: selected.join('\n') };
     });
@@ -540,7 +724,7 @@ export function splitMessageListings(message, venues) {
     return index !== undefined && index < venueIndexes[0] ? 'before' : 'after';
   };
   const dateDirection = direction(isDateLine);
-  const timeDirection = direction((line) => TIME_RANGE.test(line));
+  const timeDirection = direction((line) => TIME_RANGE.test(timeSearchText(line)));
   const priceDirection = direction((line) => parsePrice(line).value != null);
   const directed = (anchor, previousVenue, nextVenue, predicate, preferredDirection) => {
     const start = preferredDirection === 'before' ? previousVenue + 1 : anchor;
@@ -558,7 +742,7 @@ export function splitMessageListings(message, venues) {
     const nextVenue = venueIndexes[position + 1] ?? lines.length;
     const selected = new Set([venueIndex]);
     const dateIndex = directed(venueIndex, previousVenue, nextVenue, isDateLine, dateDirection);
-    const timeIndex = directed(venueIndex, previousVenue, nextVenue, (line) => TIME_RANGE.test(line), timeDirection);
+    const timeIndex = directed(venueIndex, previousVenue, nextVenue, (line) => TIME_RANGE.test(timeSearchText(line)), timeDirection);
     const priceIndex = directed(venueIndex, previousVenue, nextVenue, (line) => parsePrice(line).value != null, priceDirection);
     for (const index of [dateIndex, timeIndex, priceIndex]) if (index !== undefined) selected.add(index);
     return { text: [...selected].sort((a, b) => a - b).map((index) => lines[index]).join('\n') };
@@ -620,7 +804,7 @@ export function buildListing(message, venues, { now = new Date(), listingText = 
   };
   const issues = [];
   if (venueMatch.status !== 'deterministic') {
-    issues.push({ field: 'venue', kind: venueMatch.status, venueId: venueMatch.venue?.id, candidates: venueMatch.candidates || [] });
+    issues.push({ field: 'venue', kind: venueMatch.status, venueId: venueMatch.venue?.id, candidates: venueMatch.candidates || [], ...(venueMatch.reason ? { reason: venueMatch.reason } : {}) });
   }
   if (date.status !== 'deterministic') issues.push({ field: 'date', kind: date.status, expectedWeekday: date.weekday, actualWeekday: date.actualWeekday });
   if (time.status !== 'deterministic') issues.push({ field: 'time', kind: time.status, reason: time.reason });
