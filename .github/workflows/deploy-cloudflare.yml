@@ -17,6 +17,9 @@ jobs:
   test-build-deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      COURTLY_FEED_KV_NAMESPACE_ID: ${{ vars.COURTLY_FEED_KV_NAMESPACE_ID }}
+      COURTLY_REQUIRE_FEED_BINDING: '1'
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -42,8 +45,6 @@ jobs:
       - name: Publish Worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          COURTLY_FEED_KV_NAMESPACE_ID: ${{ vars.COURTLY_FEED_KV_NAMESPACE_ID }}
-          COURTLY_REQUIRE_FEED_BINDING: '1'
         run: npm run publish:cloudflare
 
       - name: Verify protected production edge
