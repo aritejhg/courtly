@@ -244,6 +244,8 @@ export default function Home() {
   const [query, setQuery] = useState('');
   const [area, setArea] = useState('All areas');
   const [areaMenuOpen, setAreaMenuOpen] = useState(false);
+  const [durationFilter, setDurationFilter] = useState('');
+  const [durationMenuOpen, setDurationMenuOpen] = useState(false);
   const [dateFilter, setDateFilter] = useState('');
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [timeFrom, setTimeFrom] = useState('');
@@ -279,13 +281,28 @@ export default function Home() {
     () => getActiveListings(telegramListings, now),
     [now, telegramListings],
   );
+  const durationOptions = useMemo(() => {
+    const values = new Set(
+      activeListings
+        .map((listing) => listing.duration.trim())
+        .filter(Boolean),
+    );
+    return [...values].sort((a, b) => {
+      const aHours = Number.parseFloat(a);
+      const bHours = Number.parseFloat(b);
+      const aIsNumeric = Number.isFinite(aHours);
+      const bIsNumeric = Number.isFinite(bHours);
+      if (aIsNumeric !== bIsNumeric) return aIsNumeric ? -1 : 1;
+      return a.localeCompare(b, undefined, { numeric: true });
+    });
+  }, [activeListings]);
   const dateTimeFilteredListings = useMemo(
     () => activeListings.filter((listing) => matchesListingDateTime(listing, {
       date: dateFilter,
       startTime: timeFrom,
       endTime: timeTo,
-    })),
-    [activeListings, dateFilter, timeFrom, timeTo],
+    }) && (!durationFilter || listing.duration === durationFilter)),
+    [activeListings, dateFilter, durationFilter, timeFrom, timeTo],
   );
   const visibleCourts = useMemo(
     () =>
@@ -706,6 +723,43 @@ export default function Home() {
             </PopoverContent>
           </Popover>
         </div>
+        <div className={`select-box duration-filter${durationFilter ? ' is-active' : ''}`}>
+          <Popover open={durationMenuOpen} onOpenChange={setDurationMenuOpen}>
+            <PopoverTrigger className="filter-menu-trigger" aria-label="Filter by duration">
+              <span>{durationFilter || 'Any duration'}</span>
+              <ChevronDown size={14} />
+            </PopoverTrigger>
+            <PopoverContent className="filter-menu" align="start">
+              <button
+                aria-pressed={!durationFilter}
+                className={!durationFilter ? 'selected' : ''}
+                onClick={() => {
+                  setDurationFilter('');
+                  setDurationMenuOpen(false);
+                }}
+                type="button"
+              >
+                <span>Any duration</span>
+                {!durationFilter && <Check size={15} />}
+              </button>
+              {durationOptions.map((option) => (
+                <button
+                  aria-pressed={durationFilter === option}
+                  className={durationFilter === option ? 'selected' : ''}
+                  key={option}
+                  onClick={() => {
+                    setDurationFilter(option);
+                    setDurationMenuOpen(false);
+                  }}
+                  type="button"
+                >
+                  <span>{option}</span>
+                  {durationFilter === option && <Check size={15} />}
+                </button>
+              ))}
+            </PopoverContent>
+          </Popover>
+        </div>
         <div className={`date-filter${dateFilter ? ' is-active' : ''}`}>
           <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
             <PopoverTrigger className="date-filter-trigger" aria-label="Choose date">
@@ -821,13 +875,14 @@ export default function Home() {
             </div>
           )}
         </div>
-        {(dateFilter || timeFrom || timeTo) && (
+        {(dateFilter || timeFrom || timeTo || durationFilter) && (
           <button
             className="clear-filters"
             onClick={() => {
               setDateFilter('');
               setTimeFrom('');
               setTimeTo('');
+              setDurationFilter('');
             }}
           >
             Clear
