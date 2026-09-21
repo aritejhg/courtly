@@ -1848,7 +1848,10 @@ a {
     align-items: stretch;
     display: grid;
     gap: 6px;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.18fr);
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-areas:
+      "search search search search time time"
+      "area area duration duration date date";
     left: 12px;
     overflow: visible;
     right: 12px;
@@ -1857,16 +1860,19 @@ a {
     z-index: 1250;
   }
   .toolbar .search-box {
-    grid-column: 1 / -1;
+    grid-area: search;
     width: 100%;
   }
   .toolbar .select-box,
   .toolbar .date-filter,
   .toolbar .time-filter {
-    grid-column: auto;
     min-width: 0;
     width: 100%;
   }
+  .toolbar .area-filter { grid-area: area; }
+  .toolbar .duration-filter { grid-area: duration; }
+  .toolbar .date-filter { grid-area: date; }
+  .toolbar .time-filter { grid-area: time; }
   .toolbar .filter-menu-trigger,
   .toolbar .date-filter-trigger {
     font-size: 14px;

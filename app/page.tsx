@@ -699,7 +699,7 @@ export default function Home() {
             </button>
           )}
         </label>
-        <div className={`select-box${area !== 'All areas' ? ' is-active' : ''}`}>
+        <div className={`select-box area-filter${area !== 'All areas' ? ' is-active' : ''}`}>
           <Popover open={areaMenuOpen} onOpenChange={setAreaMenuOpen}>
             <PopoverTrigger className="filter-menu-trigger" aria-label="Filter by area">
               <span>{area}</span>
