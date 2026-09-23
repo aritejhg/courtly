@@ -341,6 +341,7 @@ async function main() {
   if (!dryRun) {
     await runStage('venue_coordinate_audit', () => run(process.execPath, [join(root, 'scripts', 'enrich-venue-coordinates.mjs')]));
     await runStage('parser', () => run(process.execPath, [join(root, 'scripts', 'ingest-telegram.mjs')]));
+    await runStage('persisted_listing_coordinate_repair', () => run(process.execPath, [join(root, 'scripts', 'repair-listing-coordinates.mjs')]));
   }
   let ambiguities = await readJson(ambiguitiesPath, []);
   const touched = new Set(touchedIds);
