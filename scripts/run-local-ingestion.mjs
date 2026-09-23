@@ -338,7 +338,10 @@ async function main() {
     if (!dryRun && result.nextState) await saveTelegramState(result.nextState);
     await log('telegram_read', { source: telegramSource, extracted: result.messages.length, touched: touchedIds.length, dryRun });
   }
-  if (!dryRun) await runStage('parser', () => run(process.execPath, [join(root, 'scripts', 'ingest-telegram.mjs')]));
+  if (!dryRun) {
+    await runStage('venue_coordinate_audit', () => run(process.execPath, [join(root, 'scripts', 'enrich-venue-coordinates.mjs')]));
+    await runStage('parser', () => run(process.execPath, [join(root, 'scripts', 'ingest-telegram.mjs')]));
+  }
   let ambiguities = await readJson(ambiguitiesPath, []);
   const touched = new Set(touchedIds);
   let actionable = ambiguities.filter((item) => touched.has(String(item.sourceTelegramMessageId)));

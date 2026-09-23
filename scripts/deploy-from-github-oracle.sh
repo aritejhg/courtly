@@ -49,6 +49,7 @@ rsync -a --delete \
   --exclude='data/telegram-listings.json' \
   --exclude='data/telegram-messages.json' \
   --exclude='data/unmatched-venue-candidates.json' \
+  --exclude='data/venue-coordinate-cache.json' \
   "$source_dir/" "$app_dir/"
 
 new_lock_hash=""

@@ -34,10 +34,11 @@ const readJson = async (path, fallback, { optional = false } = {}) => {
   }
 };
 
-const [messages, activeSgVenues, overrides, previousListings, previousUnmatched] = await Promise.all([
+const [messages, activeSgVenues, overrides, coordinateCache, previousListings, previousUnmatched] = await Promise.all([
   readJson(messagesPath, []),
   readJson(venuesPath, []),
   readJson('data/venue-overrides.json', []),
+  readJson('data/venue-coordinate-cache.json', {}, { optional: true }),
   readJson(outputPath, [], { optional: true }),
   readJson(unmatchedPath, [], { optional: true }),
 ]);
@@ -51,7 +52,10 @@ for (const [value, path] of [[messages, messagesPath], [activeSgVenues, venuesPa
     throw error;
   }
 }
-const venues = [...activeSgVenues, ...overrides];
+const venues = [...activeSgVenues, ...overrides].map((venue) => {
+  const cached = coordinateCache[venue.id];
+  return cached && (venue.lat == null || venue.lng == null) ? { ...venue, ...cached } : venue;
+});
 
 function parserFailure(message, details) {
   const error = new Error(message);

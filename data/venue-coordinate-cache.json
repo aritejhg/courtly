@@ -1,0 +1,122 @@
+{
+  "manual:sbh-sims": {
+    "lat": 1.315460529862975,
+    "lng": 103.8812548051696,
+    "address": "LORONG 23 GEYLANG",
+    "source": "OneMap search",
+    "sourceQuery": "Geylang Lorong 23",
+    "resolvedAt": "2026-09-23T07:55:40.851Z"
+  },
+  "manual:fernvale-cc": {
+    "lat": 1.391722092792314,
+    "lng": 103.877039073044,
+    "address": "21 SENGKANG WEST AVENUE FERNVALE COMMUNITY CLUB SINGAPORE 797650",
+    "source": "OneMap search",
+    "sourceQuery": "Fernvale CC",
+    "resolvedAt": "2026-09-23T07:55:40.803Z"
+  },
+  "manual:kampong-glam-cc": {
+    "lat": 1.302795227115325,
+    "lng": 103.8635978518025,
+    "address": "385 BEACH ROAD KAMPONG GLAM COMMUNITY CLUB SINGAPORE 199581",
+    "source": "OneMap search",
+    "sourceQuery": "Kampong Glam CC",
+    "resolvedAt": "2026-09-23T07:55:42.126Z"
+  },
+  "manual:potong-pasir-cc": {
+    "lat": 1.332633815456039,
+    "lng": 103.8671516737261,
+    "address": "6 POTONG PASIR AVENUE 2 POTONG PASIR COMMUNITY CLUB SINGAPORE 358361",
+    "source": "OneMap search",
+    "sourceQuery": "Potong Pasir CC",
+    "resolvedAt": "2026-09-23T07:55:43.398Z"
+  },
+  "onepa:geylang-serai-cc": {
+    "lat": 1.31649443408573,
+    "lng": 103.8969416697428,
+    "address": "1 ENGKU AMAN TURN GEYLANG SERAI COMMUNITY CLUB",
+    "source": "OneMap search",
+    "sourceQuery": "Geylang Serai CC",
+    "resolvedAt": "2026-09-23T07:55:50.269Z"
+  },
+  "telegram:radin-mas-cc": {
+    "lat": 1.275806470252735,
+    "lng": 103.8198443889957,
+    "address": "51 TELOK BLANGAH CRESCENT RADIN MAS COMMUNITY CLUB SINGAPORE 098917",
+    "source": "OneMap search",
+    "sourceQuery": "Radin Mas CC",
+    "resolvedAt": "2026-09-23T07:55:51.546Z"
+  },
+  "telegram:hong-kah-north-cc": {
+    "lat": 1.359033397249325,
+    "lng": 103.7494868198429,
+    "address": "30 BUKIT BATOK STREET 31 HONG KAH NORTH COMMUNITY CLUB SINGAPORE 659440",
+    "source": "OneMap search",
+    "sourceQuery": "Hong Kah North CC",
+    "resolvedAt": "2026-09-23T07:55:52.808Z"
+  },
+  "telegram:zhenghua-cc": {
+    "lat": 1.386776581332976,
+    "lng": 103.7715753922954,
+    "address": "1 SEGAR ROAD ZHENGHUA COMMUNITY CLUB SINGAPORE 677738",
+    "source": "OneMap search",
+    "sourceQuery": "Zhenghua CC",
+    "resolvedAt": "2026-09-23T07:55:54.077Z"
+  },
+  "telegram:hougang-cc": {
+    "lat": 1.364751243812483,
+    "lng": 103.8927279945726,
+    "address": "35 HOUGANG AVENUE 3 HOUGANG COMMUNITY CLUB SINGAPORE 538840",
+    "source": "OneMap search",
+    "sourceQuery": "Hougang CC",
+    "resolvedAt": "2026-09-23T07:55:56.712Z"
+  },
+  "telegram:toa-payoh-west-cc": {
+    "lat": 1.335221249794357,
+    "lng": 103.8451058001388,
+    "address": "200 LORONG 2 TOA PAYOH TOA PAYOH WEST COMMUNITY CLUB SINGAPORE 319642",
+    "source": "OneMap search",
+    "sourceQuery": "Toa Payoh West CC",
+    "resolvedAt": "2026-09-23T07:55:57.979Z"
+  },
+  "telegram:fengshan-cc": {
+    "lat": 1.330723342500432,
+    "lng": 103.9368154178622,
+    "address": "20 BEDOK NORTH STREET 2 FENGSHAN COMMUNITY CLUB SINGAPORE 469644",
+    "source": "OneMap search",
+    "sourceQuery": "Fengshan CC",
+    "resolvedAt": "2026-09-23T07:55:59.263Z"
+  },
+  "telegram:nee-soon-south-cc": {
+    "lat": 1.415186858620795,
+    "lng": 103.8347662265862,
+    "address": "30 YISHUN STREET 81 NEE SOON SOUTH COMMUNITY CLUB SINGAPORE 768455",
+    "source": "OneMap search",
+    "sourceQuery": "Nee Soon South CC",
+    "resolvedAt": "2026-09-23T07:56:00.537Z"
+  },
+  "telegram:thomson-cc": {
+    "lat": 1.351202992134877,
+    "lng": 103.8363139796527,
+    "address": "194 UPPER THOMSON ROAD THOMSON COMMUNITY CLUB SINGAPORE 574339",
+    "source": "OneMap search",
+    "sourceQuery": "Thomson CC",
+    "resolvedAt": "2026-09-23T07:56:00.579Z"
+  },
+  "telegram:jurong-spring-cc": {
+    "lat": 1.348330172368306,
+    "lng": 103.7181556955453,
+    "address": "8 JURONG WEST STREET 52 JURONG SPRING COMMUNITY CLUB SINGAPORE 649296",
+    "source": "OneMap search",
+    "sourceQuery": "Jurong Spring CC",
+    "resolvedAt": "2026-09-23T07:56:01.857Z"
+  },
+  "telegram:shelton-college": {
+    "lat": 1.274274940159087,
+    "lng": 103.8202577257896,
+    "address": "1 TELOK BLANGAH RISE SHELTON COLLEGE INTERNATIONAL SINGAPORE 098888",
+    "source": "OneMap search",
+    "sourceQuery": "Shelton College",
+    "resolvedAt": "2026-09-23T07:56:03.139Z"
+  }
+}
