@@ -142,7 +142,9 @@ const parserAmbiguities = [];
 let newCount = 0;
 let duplicateCount = 0;
 for (const { listing, venueMatch, issues } of results) {
-  if (issues.length) {
+  // A deleted source post cannot produce an active listing. Keep its tombstone
+  // in the feed, but do not let obsolete parser uncertainty block publishing.
+  if (listing.status !== 'deleted' && issues.length) {
     parserAmbiguities.push({
       sourceMessageId: listing.sourceMessageId,
       sourceTelegramMessageId: listing.sourceTelegramMessageId,
@@ -153,7 +155,7 @@ for (const { listing, venueMatch, issues } of results) {
       issues,
     });
   }
-  if (venueMatch.status !== 'deterministic') {
+  if (listing.status !== 'deleted' && venueMatch.status !== 'deterministic') {
     currentUnmatched.push({
       text: listing.listingText,
       sourceMessageId: listing.sourceMessageId,

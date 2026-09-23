@@ -222,6 +222,22 @@
     "lng": 103.86985
   },
   {
+    "id": "onepa:pasir-ris-east-cc",
+    "canonicalName": "Pasir Ris East CC",
+    "aliases": [
+      "Pasir Ris East CC",
+      "Pasir Ris East Community Club",
+      "Pasir Ris East Community Centre"
+    ],
+    "source": "People's Association / OneMap",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/pasir-ris-east-cc",
+    "kind": "community_club",
+    "area": "Pasir Ris",
+    "address": "1 Pasir Ris Drive 4, Singapore 519457",
+    "lat": 1.368485527501331,
+    "lng": 103.9594284394219
+  },
+  {
     "id": "onepa:siglap-cc",
     "canonicalName": "Siglap CC",
     "aliases": [
