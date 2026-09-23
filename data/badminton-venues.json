@@ -652,7 +652,8 @@
     "aliases": [
       "Elias Park Primary School Hall",
       "Elias Park Pri",
-      "Elias Park Pri Hall"
+      "Elias Park Pri Hall",
+      "Elias Park Primary, Pasir Ris"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/elias-park-primary-school-hall",
@@ -986,7 +987,9 @@
     "aliases": [
       "Jurong West Sport Hall",
       "Jurong West Sports Hall",
-      "Jurong West SPH"
+      "Jurong West SPH",
+      "JW Sport Hall Jurong west sports hall",
+      "JWSH Jurong West Sports Hall"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/jurong-west-sport-hall",
@@ -1904,6 +1907,8 @@
     "canonicalName": "Unity Secondary School Hall",
     "aliases": [
       "Unity Secondary School Hall",
+      "Unity Secondary School",
+      "Unity seconday school",
       "Unity Sec",
       "Unity Sec Hall"
     ],
@@ -2047,6 +2052,7 @@
     "canonicalName": "Yew Tee Primary School Hall",
     "aliases": [
       "Yew Tee Primary School Hall",
+      "Yew Tee Primary School",
       "Yew tee pri Sch",
       "Yew Tee Pri",
       "Yew Tee Pri Hall"

@@ -413,7 +413,8 @@
       "queenstown community centre",
       "Queenstown Community Club",
       "Queenstown Community Centre",
-      "Queenstown CC"
+      "Queenstown CC",
+      "Queenstwon CC"
     ],
     "source": "onePA",
     "sourceUrl": "https://www.onepa.gov.sg/cc/queenstown-cc",
@@ -456,7 +457,8 @@
     "id": "telegram:hong-kah-north-cc",
     "canonicalName": "Hong Kah North CC",
     "aliases": [
-      "Hong Kah North CC"
+      "Hong Kah North CC",
+      "Hong Kah CC"
     ],
     "source": "Repeated exact Telegram venue name",
     "kind": "community_club",
@@ -554,7 +556,8 @@
     "id": "telegram:fengshan-cc",
     "canonicalName": "Fengshan CC",
     "aliases": [
-      "Fengshan CC"
+      "Fengshan CC",
+      "Feng Shan CC"
     ],
     "source": "Repeated exact Telegram venue name",
     "kind": "community_club",
@@ -803,7 +806,7 @@
   {
     "id": "telegram:heartbeat-bedok-activesg",
     "canonicalName": "Heartbeat @ Bedok ActiveSG Sport Centre",
-    "aliases": ["Heartbeat @ Bedok ActiveSG Sport Centre", "Heartbeat Bedok", "Heartbeat Bedon", "heartbeat bedon"],
+    "aliases": ["Heartbeat @ Bedok ActiveSG Sport Centre", "Heartbeat Bedon", "heartbeat bedon"],
     "source": "OneMap",
     "sourceUrl": "https://www.onemap.gov.sg/",
     "kind": "sport_hall",
@@ -811,5 +814,149 @@
     "lat": 1.327041970908601,
     "lng": 103.9323940119882,
     "address": "11 Bedok North Street 1, Singapore 469662"
+  },
+  {
+    "id": "onepa:changi-simei-cc",
+    "canonicalName": "Changi Simei CC",
+    "aliases": ["Changi Simei CC", "Changi-Simei Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Simei",
+    "lat": 1.345018678331462,
+    "lng": 103.9552298035894,
+    "address": "10 Simei Street 2"
+  },
+  {
+    "id": "onepa:nee-soon-east-cc",
+    "canonicalName": "Nee Soon East CC",
+    "aliases": ["Nee Soon East CC", "Nee Soon East Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Yishun",
+    "lat": 1.430771055149032,
+    "lng": 103.8385982235699,
+    "address": "1 Yishun Avenue 9, Singapore 768893"
+  },
+  {
+    "id": "onepa:ulu-pandan-cc",
+    "canonicalName": "Ulu Pandan CC",
+    "aliases": ["Ulu Pandan CC", "Ulu Pandan Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Ghim Moh",
+    "lat": 1.312155684744461,
+    "lng": 103.7898235121832,
+    "address": "170 Ghim Moh Road"
+  },
+  {
+    "id": "onepa:kaki-bukit-cc",
+    "canonicalName": "Kaki Bukit CC",
+    "aliases": ["Kaki Bukit CC", "Kaki Bukit Community Centre", "Kaki Bukit Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Bedok North",
+    "lat": 1.333358009261465,
+    "lng": 103.9268572027348,
+    "address": "670 Bedok North Street 3, Singapore 469627"
+  },
+  {
+    "id": "onepa:nanyang-cc",
+    "canonicalName": "Nanyang CC",
+    "aliases": ["Nanyang CC", "Nanyang Community Club", "Nanyang CC 14"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Jurong West",
+    "lat": 1.342428289441089,
+    "lng": 103.6924351631345,
+    "address": "60 Jurong West Street 91, Singapore 649040"
+  },
+  {
+    "id": "onepa:bidadari-cc",
+    "canonicalName": "Bidadari CC",
+    "aliases": ["Bidadari CC", "Bidadari Community Centre"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Bidadari",
+    "lat": 1.338694192098703,
+    "lng": 103.8717501052552,
+    "address": "11 Bidadari Park Drive"
+  },
+  {
+    "id": "onepa:kebun-baru-cc",
+    "canonicalName": "Kebun Baru CC",
+    "aliases": ["Kebun Baru CC", "Kebun Baru Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Ang Mo Kio",
+    "lat": 1.373007501602539,
+    "lng": 103.8376124212941,
+    "address": "216 Ang Mo Kio Avenue 4, Singapore 569897"
+  },
+  {
+    "id": "onepa:pek-kio-cc",
+    "canonicalName": "Pek Kio CC",
+    "aliases": ["Pek Kio CC", "Pek Kio Community Centre", "Pek Kio Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Kallang",
+    "lat": 1.313058655249113,
+    "lng": 103.8513738449606,
+    "address": "21 Gloucester Road, Singapore 219458"
+  },
+  {
+    "id": "onepa:buona-vista-cc",
+    "canonicalName": "Buona Vista CC",
+    "aliases": ["Buona Vista CC", "Buona Vista Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Holland Drive",
+    "lat": 1.309229842071336,
+    "lng": 103.7926608576457,
+    "address": "36 Holland Drive"
+  },
+  {
+    "id": "onepa:toa-payoh-east-cc",
+    "canonicalName": "Toa Payoh East CC",
+    "aliases": ["Toa Payoh East CC", "Toa Payoh East Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Toa Payoh",
+    "lat": 1.336315364964432,
+    "lng": 103.8548484372016,
+    "address": "160 Lorong 6 Toa Payoh, Singapore 319380"
+  },
+  {
+    "id": "school:jurong-secondary",
+    "canonicalName": "Jurong Secondary School",
+    "aliases": ["Jurong Secondary School", "Jurong Secondary Sch 618652", "Jurong Secondary School Hall"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "school_sport_hall",
+    "area": "Jurong West",
+    "lat": 1.33002032220943,
+    "lng": 103.7239529616472,
+    "address": "31 Yuan Ching Road, Singapore 618652"
+  },
+  {
+    "id": "manual:sprout-hub-community-hall",
+    "canonicalName": "Community Hall @ Sprout Hub",
+    "aliases": ["Community Hall @ Sprout Hub", "Sprout Hub Community Hall"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "sport_hall",
+    "area": "Henderson",
+    "lat": 1.284548557471815,
+    "lng": 103.819258080571,
+    "address": "102 Henderson Road, Singapore 159562"
   }
 ]
