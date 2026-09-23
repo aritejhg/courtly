@@ -430,7 +430,8 @@
     "aliases": [
       "Geylang Serai",
       "Geylang Serai CC",
-      "Geylang Serai Community Club"
+      "Geylang Serai Community Club",
+      "Wisma Geylang Serai"
     ],
     "source": "People's Association / onePA",
     "sourceUrl": "https://www.onepa.gov.sg/cc/geylang-serai-cc",
@@ -958,5 +959,17 @@
     "lat": 1.284548557471815,
     "lng": 103.819258080571,
     "address": "102 Henderson Road, Singapore 159562"
+  },
+  {
+    "id": "safra:mount-faber",
+    "canonicalName": "SAFRA Mount Faber",
+    "aliases": ["SAFRA Mount Faber", "Mount Faber SAFRA"],
+    "source": "SAFRA / OneMap",
+    "sourceUrl": "https://www.safra.sg/terms-of-use",
+    "kind": "other",
+    "area": "Mount Faber",
+    "lat": 1.277696368610284,
+    "lng": 103.8169097187844,
+    "address": "2 Telok Blangah Way, Singapore 098803"
   }
 ]
