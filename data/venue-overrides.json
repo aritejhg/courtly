@@ -18,7 +18,10 @@
     "canonicalName": "SBH @ Sims",
     "aliases": [
       "SBH @ Sims",
-      "SBH Sims"
+      "SBH Sims",
+      "SBH VIP",
+      "SBH VIP Hall",
+      "SBH Sims VIP"
     ],
     "source": "Telegram listing",
     "kind": "other",
@@ -316,7 +319,8 @@
       "tiong bahru",
       "tiong bahru cc",
       "tb cc",
-      "tiong bahru community club"
+      "tiong bahru community club",
+      "Tiong Barhu CC"
     ],
     "source": "onePA",
     "kind": "community_club",
@@ -331,7 +335,8 @@
       "tanjong pagar",
       "tanjong pagar cc",
       "tanjong pagar community club",
-      "tg pagar cc"
+      "tg pagar cc",
+      "Tanjong Parga CC"
     ],
     "source": "onePA",
     "kind": "community_club",
@@ -562,7 +567,8 @@
     "id": "telegram:nee-soon-south-cc",
     "canonicalName": "Nee Soon South CC",
     "aliases": [
-      "Nee Soon South CC"
+      "Nee Soon South CC",
+      "Nee Soon South CC blk 845 lv 3 Sheng Siong"
     ],
     "source": "Repeated exact Telegram venue name",
     "kind": "community_club",
@@ -625,5 +631,185 @@
     "lat": 1.331865054505098,
     "lng": 103.7448816948821,
     "address": "1 Venture Avenue, Perennial Business City, Singapore 608521"
+  },
+  {
+    "id": "telegram:canberra-cc",
+    "canonicalName": "Canberra CC",
+    "aliases": ["Canberra CC", "Canberra Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Sembawang",
+    "lat": 1.445044137018635,
+    "lng": 103.8194737311238,
+    "address": "2 Sembawang Crescent, Singapore 757632"
+  },
+  {
+    "id": "school:admiralty-primary",
+    "canonicalName": "Admiralty Primary School",
+    "aliases": ["Admiralty Primary School", "Admiralty Pri School Hall", "Admilraty Pri School Hall"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "school_sport_hall",
+    "area": "Woodlands",
+    "lat": 1.442634790331114,
+    "lng": 103.800040119743,
+    "address": "11 Woodlands Circle, Singapore 738907"
+  },
+  {
+    "id": "telegram:keat-hong-cc",
+    "canonicalName": "Keat Hong CC",
+    "aliases": ["Keat Hong CC", "Keat Hong Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Choa Chu Kang",
+    "lat": 1.384095872355775,
+    "lng": 103.7449493592743,
+    "address": "2 Choa Chu Kang Loop, Singapore 689687"
+  },
+  {
+    "id": "telegram:yuhua-cc",
+    "canonicalName": "Yuhua CC",
+    "aliases": ["Yuhua CC", "Yuhua Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Jurong East",
+    "lat": 1.339958513193786,
+    "lng": 103.737115832566,
+    "address": "90 Boon Lay Way, Singapore 609958"
+  },
+  {
+    "id": "telegram:hillview-cc",
+    "canonicalName": "Hillview CC",
+    "aliases": ["Hillview CC", "Hillview Community Club", "Hillview CC near Bukit Batok"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Bukit Batok",
+    "lat": 1.361967253416799,
+    "lng": 103.7642663820927,
+    "address": "1 Hillview Rise, Singapore 667970"
+  },
+  {
+    "id": "telegram:ace-the-place-cc",
+    "canonicalName": "Ace The Place CC",
+    "aliases": ["Ace The Place CC", "Ace The Place Community Club", "Ace The Place"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Woodlands",
+    "lat": 1.427492789543658,
+    "lng": 103.7922407676256,
+    "address": "120 Woodlands Avenue 1, Singapore 739069"
+  },
+  {
+    "id": "telegram:toa-payoh-south-cc",
+    "canonicalName": "Toa Payoh South CC",
+    "aliases": ["Toa Payoh South CC", "Toa Payoh South Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Toa Payoh",
+    "lat": 1.334890374736527,
+    "lng": 103.8593789746666,
+    "address": "1999 Lorong 8 Toa Payoh, Singapore 319258"
+  },
+  {
+    "id": "telegram:marymount-cc",
+    "canonicalName": "Marymount CC",
+    "aliases": ["Marymount CC", "Marymount Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Marymount",
+    "lat": 1.36150584133083,
+    "lng": 103.841442648888,
+    "address": "191 Sin Ming Avenue, Singapore 575738"
+  },
+  {
+    "id": "telegram:bukit-panjang-cc",
+    "canonicalName": "Bukit Panjang CC",
+    "aliases": ["Bukit Panjang CC", "Bukit Panjang Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Bukit Panjang",
+    "lat": 1.376450755554642,
+    "lng": 103.7705588026539,
+    "address": "8 Pending Road, Singapore 678295"
+  },
+  {
+    "id": "telegram:toa-payoh-central-cc",
+    "canonicalName": "Toa Payoh Central CC",
+    "aliases": ["Toa Payoh Central CC", "Toa Payoh Central Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Toa Payoh",
+    "lat": 1.334558180221402,
+    "lng": 103.8504819576196,
+    "address": "93 Toa Payoh Central"
+  },
+  {
+    "id": "telegram:choa-chu-kang-cc",
+    "canonicalName": "Chua Chu Kang CC",
+    "aliases": ["Chua Chu Kang CC", "Choa Chu Kang CC", "Chua Chu Kang Community Club", "Choa Chu Kang Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Choa Chu Kang",
+    "lat": 1.381155291170583,
+    "lng": 103.751903879838,
+    "address": "35 Teck Whye Avenue, Singapore 688892"
+  },
+  {
+    "id": "telegram:senja-cashew-cc",
+    "canonicalName": "Senja-Cashew CC",
+    "aliases": ["Senja-Cashew CC", "Senja Cashew CC", "Senja-Cashew Community Club"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "community_club",
+    "area": "Bukit Panjang",
+    "lat": 1.381638133193397,
+    "lng": 103.7646762509678,
+    "address": "101 Bukit Panjang Road, Singapore 679910"
+  },
+  {
+    "id": "school:ahmad-ibrahim-secondary",
+    "canonicalName": "Ahmad Ibrahim Secondary School",
+    "aliases": ["Ahmad Ibrahim Secondary School", "Ahmad Ibrahim Sec School Hall", "Ahmad Ibrahim Sec School"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "school_sport_hall",
+    "area": "Yishun",
+    "lat": 1.436059753688065,
+    "lng": 103.8297186900766,
+    "address": "751 Yishun Avenue 7, Singapore 768928"
+  },
+  {
+    "id": "school:woodlands-secondary",
+    "canonicalName": "Woodlands Secondary School",
+    "aliases": ["Woodlands Secondary School", "Woodlands Secondary School near Marsling CC", "Woodlands Secondary near Marsiling CC"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "school_sport_hall",
+    "area": "Woodlands",
+    "lat": 1.439121223055122,
+    "lng": 103.7745864105408,
+    "address": "11 Marsiling Road, Singapore 739111"
+  },
+  {
+    "id": "telegram:heartbeat-bedok-activesg",
+    "canonicalName": "Heartbeat @ Bedok ActiveSG Sport Centre",
+    "aliases": ["Heartbeat @ Bedok ActiveSG Sport Centre", "Heartbeat Bedok", "Heartbeat Bedon", "heartbeat bedon"],
+    "source": "OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/",
+    "kind": "sport_hall",
+    "area": "Bedok",
+    "lat": 1.327041970908601,
+    "lng": 103.9323940119882,
+    "address": "11 Bedok North Street 1, Singapore 469662"
   }
 ]
