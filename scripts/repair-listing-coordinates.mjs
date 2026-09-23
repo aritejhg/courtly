@@ -13,7 +13,9 @@ export function repairListings(listings, venues) {
     for (const venue of venues) {
       for (const alias of [venue.canonicalName, ...(venue.aliases || [])]) {
         const normalizedAlias = normalize(alias);
-        if (!/\b(?:cc|community club|community centre|school|hall|sport|sports|sbh|kff)\b/.test(normalizedAlias)) continue;
+        const isVenueLike = /\b(?:cc|community club|community centre|school|hall|sport|sports|sbh|kff)\b/.test(normalizedAlias);
+        const isSpecificAlias = normalizedAlias.length >= 10 && normalizedAlias.split(' ').length >= 2;
+        if (!isVenueLike && !isSpecificAlias) continue;
         if (!normalizedText.includes(` ${normalizedAlias} `)) continue;
         const match = matchVenue(alias, venues);
         if (match.status === 'deterministic') mentions.set(match.venue.id, match.venue);
