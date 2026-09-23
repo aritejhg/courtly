@@ -25,9 +25,15 @@ const overrides = await readJson(overridesPath, []);
 const cache = await readJson(cachePath, {});
 const unresolved = [];
 let resolved = 0;
+let cachedHits = 0;
 
 for (const venue of overrides) {
   if (Number.isFinite(venue.lat) && Number.isFinite(venue.lng)) continue;
+  const cached = cache[venue.id];
+  if (Number.isFinite(cached?.lat) && Number.isFinite(cached?.lng)) {
+    cachedHits += 1;
+    continue;
+  }
   const queries = [...new Set([venue.address, venue.canonicalName, venue.canonicalName.replace(/\bCC\b/ig, 'Community Club'), `${venue.canonicalName} Singapore`].filter(Boolean))];
   let payload;
   let sourceQuery = queries[0];
@@ -72,4 +78,4 @@ for (const venue of overrides) {
 }
 
 await writeJsonAtomic(cachePath, cache);
-console.log(JSON.stringify({ checked: overrides.length, resolved, cached: Object.keys(cache).length, unresolved }));
+console.log(JSON.stringify({ checked: overrides.length, resolved, cachedHits, cached: Object.keys(cache).length, unresolved }));
