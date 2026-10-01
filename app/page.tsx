@@ -20,6 +20,7 @@ import {
   X,
 } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
+import { MrtMapControl } from '@/components/mrt-map-control';
 import {
   Popover,
   PopoverContent,
@@ -525,25 +526,33 @@ export default function Home() {
     if (!mapElement.current || mapRef.current) return;
     let cancelled = false;
     let map: LeafletMap | null = null;
+    let removeZoomListener: (() => void) | undefined;
     void import('leaflet').then(({ default: L }) => {
       if (cancelled || !mapElement.current) return;
       map = L.map(mapElement.current, {
         zoomControl: false,
         scrollWheelZoom: true,
+        zoomSnap: 0.25,
       // Keep the island visually clear of the listings rail on the left.
       // At zoom 12 this westward centre offset shifts the map content ~6.5 cm right.
       }).setView([1.3521, 103.733], 12);
+      map.attributionControl.setPrefix(false);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        attribution: '© OpenStreetMap contributors',
+        attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>',
       }).addTo(map);
-      L.control.zoom({ position: 'bottomright' }).addTo(map);
+      const mobileQuery = window.matchMedia('(max-width: 800px)');
+      const zoomControl = L.control.zoom({ position: mobileQuery.matches ? 'topleft' : 'bottomright' }).addTo(map);
+      const repositionZoom = () => zoomControl.setPosition(mobileQuery.matches ? 'topleft' : 'bottomright');
+      mobileQuery.addEventListener('change', repositionZoom);
+      removeZoomListener = () => mobileQuery.removeEventListener('change', repositionZoom);
       markerLayer.current = L.layerGroup().addTo(map);
       mapRef.current = map;
       setMapReady(true);
     });
     return () => {
       cancelled = true;
+      removeZoomListener?.();
       map?.remove();
       mapRef.current = null;
       markerLayer.current = null;
@@ -1157,6 +1166,7 @@ export default function Home() {
             className="real-map"
             aria-label="OpenStreetMap of Singapore with court locations"
           />
+          <MrtMapControl mapRef={mapRef} mapReady={mapReady} />
         </div>
       </section>
       <footer className="build-footer" aria-label="Backend build version">

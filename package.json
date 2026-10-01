@@ -17,6 +17,7 @@
     "format": "oxfmt",
     "test": "node --test",
     "test:responsive": "node scripts/responsive-check.mjs",
+    "test:mrt": "node scripts/mrt-overlay-check.mjs",
     "venues:refresh": "node scripts/fetch-badminton-venues.mjs",
     "venues:verify": "node scripts/verify-venue-mappings.mjs",
     "ingest:telegram": "node scripts/ingest-telegram.mjs",
