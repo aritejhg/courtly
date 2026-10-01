@@ -116,7 +116,9 @@ function catalogVenueMatch(text, venues, { exact = false } = {}) {
     .replace(DATE_TOKEN, ' ')
     .replace(/\$+\s*\d+(?:\.\d{1,2})?/g, ' ')
     .replace(/\b\d+(?:\.\d{1,2})?\s*(?:dollars?|bucks?)\b/ig, ' ')
+    .replace(/\b(?:at\s+cost|at\s+original\s+price|below\s+cost)\b.*$/i, ' ')
     .replace(/^(?:venue|location|place)\s*[:-]?\s*/, '')
+    .replace(/^(?:lf|looking\s+for)\s+/i, '')
     .replace(/[.,:;]+$/g, '')
     .replace(/\s+/g, ' ')
     .trim())
@@ -135,7 +137,7 @@ function catalogVenueMatch(text, venues, { exact = false } = {}) {
       // school-hall shorthand (`Edgefield secondary (Punggol)`). The
       // qualifier is not part of the facility name; remove only a trailing
       // parenthesized suffix so strict catalog matching remains bounded.
-      return [normalizedLine, normalizedLine.replace(/\s*\([^)]*\)\s*$/, '').trim(), stripListingMetadata(line)];
+      return [normalizedLine, normalize(line.replace(/\s*\([^)]*\)\s*$/, '').replace(/^(?:venue|location|place)\s*[:-]?\s*/i, '')), stripListingMetadata(line)];
     }).filter(Boolean),
   ]);
   const directOwners = new Map();
@@ -229,6 +231,8 @@ function cleanVenueCandidate(line) {
   return String(line || '')
     .normalize('NFKC')
     .replace(/^[^\p{L}\p{N}]*/u, '')
+    .replace(/^(?:lf|looking\s+for)\s+/i, '')
+    .replace(/^\(?\s*(?:mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\s*\)\s*[,:-]?\s*/i, '')
     .replace(/\bsports?hall\b/ig, (value) => value.toLowerCase().startsWith('sports') ? 'sports hall' : 'sport hall')
     // Compact Telegram shorthand often glues the venue type to the name
     // (`Kaki BukitCC`). Add the separator before candidate matching.

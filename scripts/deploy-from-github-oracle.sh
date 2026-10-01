@@ -27,6 +27,7 @@ fi
 target_commit="$(git -C "$source_dir" rev-parse origin/main)"
 current_commit="$(git -C "$source_dir" rev-parse HEAD 2>/dev/null || true)"
 deployed_commit="$(cat "$deployed_marker" 2>/dev/null || true)"
+node "$source_dir/scripts/lib/source-sync-guard.mjs" "$source_dir" "$app_dir" "$target_commit" "$deployed_commit"
 if [[ "$current_commit" == "$target_commit" && "$deployed_commit" == "$target_commit" ]]; then
   exit 0
 fi

@@ -473,7 +473,8 @@
     "canonicalName": "Zhenghua CC",
     "aliases": [
       "Zhenghua CC",
-      "Zhenghua CC (Bukit Panjang)"
+      "Zhenghua CC (Bukit Panjang)",
+      "ZHCC"
     ],
     "source": "Repeated exact Telegram venue name",
     "kind": "community_club",
@@ -783,7 +784,7 @@
   {
     "id": "school:ahmad-ibrahim-secondary",
     "canonicalName": "Ahmad Ibrahim Secondary School",
-    "aliases": ["Ahmad Ibrahim Secondary School", "Ahmad Ibrahim Sec School Hall", "Ahmad Ibrahim Sec School"],
+    "aliases": ["Ahmad Ibrahim Secondary School", "Ahmad Ibrahim Sec School Hall", "Ahmad Ibrahim Sec School", "Ahmad Ibrahim sec"],
     "source": "OneMap",
     "sourceUrl": "https://www.onemap.gov.sg/",
     "kind": "school_sport_hall",
@@ -971,5 +972,29 @@
     "lat": 1.277696368610284,
     "lng": 103.8169097187844,
     "address": "2 Telok Blangah Way, Singapore 098803"
+  },
+  {
+    "id": "onepa:macpherson-cc",
+    "canonicalName": "MacPherson CC",
+    "aliases": ["MacPherson CC", "MacPherson Community Club"],
+    "source": "People's Association / OneMap",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/macpherson-cc",
+    "kind": "community_club",
+    "area": "Macpherson",
+    "lat": 1.323473899118196,
+    "lng": 103.8846383700013,
+    "address": "400 Paya Lebar Way, Singapore 379131"
+  },
+  {
+    "id": "onepa:teck-ghee-cc",
+    "canonicalName": "Teck Ghee CC",
+    "aliases": ["Teck Ghee CC", "Teck Ghee Community Club"],
+    "source": "People's Association / OneMap",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/teck-ghee-cc",
+    "kind": "community_club",
+    "area": "Ang Mo Kio",
+    "lat": 1.363106005257572,
+    "lng": 103.8535605086277,
+    "address": "861 Ang Mo Kio Avenue 10, Singapore 569734"
   }
 ]

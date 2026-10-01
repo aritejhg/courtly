@@ -3,8 +3,7 @@
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import type { LayerGroup, Map } from 'leaflet';
 import type { MrtNetwork } from '@/lib/mrt-network';
-import { Info, TrainFront } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { TrainFront } from 'lucide-react';
 
 const STORAGE_KEY = 'courtly-mrt-overlay';
 
@@ -14,6 +13,7 @@ export function MrtMapControl({ mapRef, mapReady }: { mapRef: RefObject<Map | nu
   const [status, setStatus] = useState<'idle' | 'loading' | 'ready' | 'stale' | 'error'>('idle');
   const [lines, setLines] = useState<Array<{ code: string; name: string; color: string }>>([]);
   const layerRef = useRef<{ map: Map; layer: LayerGroup; network: MrtNetwork } | null>(null);
+  const legendReady = enabled && (status === 'ready' || status === 'stale');
 
   useEffect(() => {
     let cancelled = false;
@@ -64,6 +64,7 @@ export function MrtMapControl({ mapRef, mapReady }: { mapRef: RefObject<Map | nu
         className={`mrt-toggle${enabled ? ' is-active' : ''}`}
         aria-label="MRT overlay"
         aria-pressed={enabled}
+        aria-describedby={legendReady ? 'mrt-legend' : undefined}
         title={enabled ? 'Hide MRT overlay' : 'Show MRT overlay'}
         disabled={!mapReady || !loaded}
         onClick={() => setEnabled((value) => !value)}
@@ -72,26 +73,21 @@ export function MrtMapControl({ mapRef, mapReady }: { mapRef: RefObject<Map | nu
         <span className="mrt-toggle-label">MRT</span>
         <span className="mrt-switch" aria-hidden="true"><span /></span>
       </button>
-      {enabled && (status === 'ready' || status === 'stale') && (
-        <Popover>
-          <PopoverTrigger className="mrt-info" aria-label="MRT line colours">
-            <Info size={18} />
-          </PopoverTrigger>
-          <PopoverContent className="mrt-legend" align="end">
-            <strong>MRT lines</strong>
-            <ul>
-              {lines.map((line) => (
-                <li key={line.code}>
-                  <span className="mrt-line-badge" style={{ background: line.color }}>{line.code}</span>
-                  {line.name}
-                </li>
-              ))}
-            </ul>
-            <p>Tap a station for its name. Zoom in for labels.</p>
-            <p>{status === 'stale' ? 'Using a saved map. Refresh temporarily unavailable.' : 'Saved on this device. Refreshes once a day.'}</p>
-            <small>Indicative alignments · <a href="https://github.com/cheeaun/sgraildata" target="_blank" rel="noreferrer">SG Rail Data</a></small>
-          </PopoverContent>
-        </Popover>
+      {legendReady && (
+        <div className="mrt-legend" id="mrt-legend">
+          <strong>MRT lines</strong>
+          <ul>
+            {lines.map((line) => (
+              <li key={line.code}>
+                <span className="mrt-line-badge" style={{ background: line.color }}>{line.code}</span>
+                {line.name}
+              </li>
+            ))}
+          </ul>
+          <p>Tap a station for its name. Zoom in for labels.</p>
+          <p>{status === 'stale' ? 'Using a saved map. Refresh temporarily unavailable.' : 'Saved on this device. Refreshes once a day.'}</p>
+          <small>Indicative alignments · <a href="https://github.com/cheeaun/sgraildata" target="_blank" rel="noreferrer">SG Rail Data</a></small>
+        </div>
       )}
       <output className="mrt-status" aria-live="polite">
         {enabled && status === 'loading' ? 'Loading MRT…' : enabled && status === 'error' ? 'MRT unavailable. Toggle to retry.' : ''}

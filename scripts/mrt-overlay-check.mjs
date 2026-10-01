@@ -79,6 +79,12 @@ try {
     const result = await send('Page.captureScreenshot', { format: 'png' });
     await fs.writeFile(path.join(output, `${name}.png`), Buffer.from(result.data, 'base64'));
   }
+  async function hoverLegend() {
+    const point = await evaluate("(() => { const r = document.querySelector('.mrt-toggle').getBoundingClientRect(); return { x: r.x+r.width/2, y: r.y+r.height/2 }; })()");
+    await send('Input.dispatchMouseEvent', { type: 'mouseMoved', ...point });
+    await until(() => evaluate("getComputedStyle(document.querySelector('.mrt-legend')).display !== 'none'"), 'hover legend');
+    assert.equal(await evaluate("document.querySelector('.mrt-info') === null"), true, 'no separate info button');
+  }
   async function clickVisibleMapFeature(selector) {
     const visibleSelector = await evaluate(`(() => {
       for (const node of document.querySelectorAll(${JSON.stringify(selector)})) {
@@ -113,7 +119,7 @@ try {
     assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true, `${width}: horizontal overflow`);
     await screenshot(`mrt-${width}`);
     if (width <= 800) {
-      assert.equal(await evaluate("document.querySelector('.mrt-toggle').getBoundingClientRect().width === 44 && getComputedStyle(document.querySelector('.mrt-switch')).display === 'none' && getComputedStyle(document.querySelector('.mrt-info')).display === 'none'"), true, `${width}: mobile toggle must be icon-only`);
+      assert.equal(await evaluate("document.querySelector('.mrt-toggle').getBoundingClientRect().width === 44 && getComputedStyle(document.querySelector('.mrt-switch')).display === 'none' && !document.querySelector('.mrt-info') && getComputedStyle(document.querySelector('.mrt-legend')).display === 'none'"), true, `${width}: mobile toggle must be icon-only`);
       assert.equal(await evaluate("(() => { const mrt = document.querySelector('.mrt-toggle').getBoundingClientRect(); const zoom = document.querySelector('.leaflet-control-zoom').getBoundingClientRect(); return zoom.right < mrt.left && Math.abs(zoom.top - mrt.top) < 2 && zoom.height >= 44; })()"), true, `${width}: zoom/layer controls must fit without overlap`);
       await click('.mobile-drawer-handle');
       await pause(300);
@@ -155,10 +161,11 @@ try {
   assert.equal(await evaluate("document.querySelectorAll('.mrt-line').length"), 6, 'court selection must keep MRT layer visible');
   await click('.drawer-close');
   await pause(300);
-  await click('.mrt-info');
+  await hoverLegend();
   await screenshot('mrt-desktop-legend');
-  await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
-  await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+  await evaluate("document.activeElement.blur()");
+  await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 500, y: 400 });
+  assert.equal(await evaluate("getComputedStyle(document.querySelector('.mrt-legend')).display"), 'none', 'legend closes when pointer leaves');
   await send('Page.reload');
   await ready();
   await overlay();
@@ -193,7 +200,7 @@ try {
   await overlay();
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
   await pause(300);
-  await click('.mrt-info');
+  await hoverLegend();
   assert.equal(await evaluate("document.querySelector('.mrt-legend').textContent.includes('Using a saved map')"), true, 'offline refresh must show saved-map status');
   await screenshot('mrt-mobile-offline');
   await send('Page.reload');
