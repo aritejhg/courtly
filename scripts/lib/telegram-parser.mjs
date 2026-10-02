@@ -584,6 +584,8 @@ export function parseTime(text, date, { defaultMeridiem = null } = {}) {
   let reason;
   if (!startMeridiem && endMeridiem) {
     startMeridiem = endMeridiem;
+    // Telegram commonly writes morning-to-noon ranges as 10-12pm or 11-12pm.
+    if (endMeridiem === 'pm' && endHour === 12 && startHour < 12) startMeridiem = 'am';
     if (endMeridiem === 'pm' && startHour > endHour && startHour !== 12) startMeridiem = 'am';
     if (endMeridiem === 'am' && startHour > endHour && endHour !== 12) startMeridiem = 'pm';
   } else if (startMeridiem && !endMeridiem) {
