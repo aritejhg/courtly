@@ -272,6 +272,7 @@ export default function Home() {
   const [backendCommit, setBackendCommit] = useState('');
   const [backendStatus, setBackendStatus] = useState<BackendStatus>('checking');
   const [listingEtaById, setListingEtaById] = useState<Record<string, number>>({});
+  const [listingEtaStatus, setListingEtaStatus] = useState<'idle' | 'loading' | 'ready' | 'unavailable'>('idle');
   const [now] = useState(() => new Date());
   const courts = useMemo(() => telegramListings.map(toCourt), [telegramListings]);
   const lastUpdated = useMemo(
@@ -435,8 +436,10 @@ export default function Home() {
     async function calculateListingEtas() {
       if (!origin?.address) {
         setListingEtaById({});
+        setListingEtaStatus('idle');
         return;
       }
+      setListingEtaStatus('loading');
       try {
         const originPoint = await geocodeSavedLocation(origin.address);
         const next = Object.fromEntries(
@@ -447,9 +450,15 @@ export default function Home() {
               fallbackTransitMinutes(originPoint, { lat: court.lat!, lng: court.lng! }, 'Public transport'),
             ]),
         );
-        if (!cancelled) setListingEtaById(next);
+        if (!cancelled) {
+          setListingEtaById(next);
+          setListingEtaStatus('ready');
+        }
       } catch {
-        if (!cancelled) setListingEtaById({});
+        if (!cancelled) {
+          setListingEtaById({});
+          setListingEtaStatus('unavailable');
+        }
       }
     }
     void calculateListingEtas();
@@ -984,6 +993,15 @@ export default function Home() {
                 ? `https://t.me/${court.ownerUsername.replace(/^@/, '')}`
                 : courtMessageUrl;
               const eta = court.id === selectedCourt?.id && routePlan ? routePlan.minutes : listingEtaById[court.id];
+              const etaLabel = eta
+                ? `${eta} min`
+                : listingEtaStatus === 'idle'
+                  ? 'Add start'
+                  : listingEtaStatus === 'loading'
+                    ? 'Calculating'
+                    : listingEtaStatus === 'unavailable'
+                      ? 'Unavailable'
+                      : 'No route';
               return (
                 <article className={`listing-card ${court.id === selectedCourt?.id ? 'selected' : ''}`} key={court.id}>
                   <button className="listing-card-main" type="button" onClick={() => selectCourt(court.id)} aria-expanded={court.id === selectedCourt?.id}>
@@ -992,7 +1010,7 @@ export default function Home() {
                       <span className="listing-card-locality">({court.area})</span>
                     </span>
                     <span className="listing-card-meta"><Clock3 size={13} />{court.date} · {court.time}</span>
-                    <span className="listing-card-facts"><strong>{court.price === null ? 'Price on request' : `$${court.price.toFixed(2)} / court`}</strong><span className="listing-eta"><TrainFront size={13} />{eta ? `${eta} min` : '—'}</span></span>
+                    <span className="listing-card-facts"><strong>{court.price === null ? 'Price on request' : `$${court.price.toFixed(2)} / court`}</strong><span className="listing-eta"><TrainFront size={13} />{etaLabel}</span></span>
                   </button>
                   <div className="listing-card-actions">
                     <a href={courtMessageUrl} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} aria-label={`Open message for ${court.name}`} title="Open Telegram message"><MessageCircle size={15} /></a>
