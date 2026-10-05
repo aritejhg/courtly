@@ -238,6 +238,9 @@ function cleanVenueCandidate(line) {
     // (`Kaki BukitCC`). Add the separator before candidate matching.
     .replace(/([a-z])(?=(?:cc|sbh|sh)\b)/ig, '$1 ')
     .replace(/^[\s📍*•-]*(?:venue|location|place)\s*[:：-]?\s*/iu, '')
+    // Compact posts may introduce the venue as `an extra court at Name`.
+    // Remove only this bounded listing-intro form before strict catalog matching.
+    .replace(/^(?:hi|hello),?\s+(?:an?\s+)?(?:extra\s+)?court\s+at\s+/i, '')
     .replace(/^(?:court\s+(?:to\s+)?let(?:ting)?\s+go|let(?:ting)?\s+go(?:\s+of(?:\s+court)?)?|available\s+court|releasing?\s+at\s+cost)(?:\s+at\s+cost(?:\s+price)?)?\s*(?:at\s+)?[:：-]?\s*/i, '')
     .replace(/\s*\((?:near|beside|opp(?:osite)?|at)?[^)]*\b(?:mrt|lrt)\b[^)]*\)\s*/ig, ' ')
     .replace(/\s*\((?:premium|vip|rubber|aircon)[^)]*\)\s*/ig, ' ')
@@ -251,6 +254,7 @@ function cleanVenueCandidate(line) {
     .replace(/,\s*(?:mon(?:day)?|tue(?:s(?:day)?)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\b/ig, '')
     .replace(/^[\s/]+/u, '')
     .replace(/[.,:;-]+$/g, '')
+    .replace(/\s+(?:mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\s*$/i, '')
     .replace(/^\s*(?:today|tonight|tomorrow|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\s+/i, '')
     .replace(/\s+/g, ' ')
     .trim();

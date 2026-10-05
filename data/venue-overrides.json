@@ -274,13 +274,32 @@
     "aliases": [
       "braddell heights",
       "braddell heights cc",
-      "braddell heights community club"
+      "braddell heights community club",
+      "bradell cc"
     ],
     "source": "onePA",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/braddell-heights-cc",
     "kind": "community_club",
     "area": "Serangoon",
-    "lat": 1.34,
-    "lng": 103.862
+    "address": "50 Serangoon Avenue 2, Singapore 556129",
+    "lat": 1.351690381546186,
+    "lng": 103.870408875865
+  },
+  {
+    "id": "onepa:whampoa-cc",
+    "canonicalName": "Whampoa CC",
+    "aliases": [
+      "whampoa",
+      "whampoa cc",
+      "whampoa community club"
+    ],
+    "source": "People's Association / onePA",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/whampoa-cc",
+    "kind": "community_club",
+    "area": "Kallang",
+    "address": "300 Whampoa Drive, Singapore 327737",
+    "lat": 1.324867492965702,
+    "lng": 103.8572012109099
   },
   {
     "id": "onepa:toa-payoh-cc",
