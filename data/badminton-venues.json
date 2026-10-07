@@ -762,6 +762,20 @@
     "lng": 103.8562
   },
   {
+    "id": "manual:fernvale-village",
+    "canonicalName": "Fernvale Village",
+    "aliases": [
+      "Fernvale Village"
+    ],
+    "source": "Fernvale Village official site",
+    "sourceUrl": "https://fernvalevillage.com/",
+    "kind": "private_sport_hall",
+    "zone": "Northeast",
+    "address": "61 Fernvale Link Singapore 799956",
+    "lat": 1.396192911537063,
+    "lng": 103.8786175244272
+  },
+  {
     "id": "active-sg:frontier-primary-school-hall",
     "canonicalName": "Frontier Primary School Hall",
     "aliases": [
