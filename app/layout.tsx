@@ -9,5 +9,13 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body>{children}</body></html>;
+  return (
+    <html lang="en">
+      <body>
+        {children}
+        {/* Cloudflare Web Analytics (free, cookieless). The token is public by design. */}
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "00000000000000000000000000000000"}' />
+      </body>
+    </html>
+  );
 }
