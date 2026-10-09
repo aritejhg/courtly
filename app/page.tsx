@@ -30,6 +30,7 @@ import { getActiveListings } from '@/lib/ingestion';
 import type { CourtListing } from '@/lib/ingestion';
 import { matchesListingDateTime } from '@/lib/listing-filters';
 import { badmintonVenues, inferVenueArea, matchVenue } from '@/lib/venue-mapping';
+import { travelUnavailableMessage } from '@/lib/travel-status.mjs';
 
 type Sport = 'Badminton';
 type TransitMode = 'Public transport' | 'Drive' | 'Walk';
@@ -372,14 +373,15 @@ export default function Home() {
   useEffect(() => {
     let cancelled = false;
     async function calculateRoute() {
-      if (
-        !origin?.address ||
-        !selectedCourt?.playAt ||
-        !Number.isFinite(selectedCourt.lat) ||
-        !Number.isFinite(selectedCourt.lng)
-      ) {
+      const unavailableMessage = travelUnavailableMessage({
+        hasOrigin: Boolean(origin?.address),
+        hasPlayAt: Boolean(selectedCourt?.playAt),
+        hasDestination:
+          Number.isFinite(selectedCourt?.lat) && Number.isFinite(selectedCourt?.lng),
+      });
+      if (unavailableMessage) {
         setRoutePlan(null);
-        setRouteError('Verified coordinates unavailable for this venue');
+        setRouteError(unavailableMessage);
         return;
       }
       setRouteLoading(true);
@@ -1157,7 +1159,7 @@ export default function Home() {
               {!routePlan && !routeLoading && (
                 <div className="route-leave">
                   <strong>{routeError || 'Calculating route…'}</strong>
-                  <small>Uses saved location</small>
+                  <small>{origin?.address ? 'Uses saved location' : 'Choose a saved start location'}</small>
                 </div>
               )}
               {directionsUrl ? (
