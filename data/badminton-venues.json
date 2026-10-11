@@ -113,6 +113,22 @@
     "lng": 103.9377
   },
   {
+    "id": "active-sg:bedok-south-secondary-school-hall",
+    "canonicalName": "Bedok South Secondary School Hall",
+    "aliases": [
+      "Bedok South Secondary School Hall",
+      "Bedok South Secondary School",
+      "Bedok South Sec"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bedok-south-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "East",
+    "address": "1 Jalan Langgar Bedok Singapore 468585",
+    "lat": 1.325136551591829,
+    "lng": 103.9509891392604
+  },
+  {
     "id": "active-sg:bendemeer-primary-school-hall",
     "canonicalName": "Bendemeer Primary School Hall",
     "aliases": [
@@ -562,7 +578,8 @@
     "aliases": [
       "Delta Sport Hall",
       "Delta Sports Hall",
-      "Delta (Redhill)"
+      "Delta (Redhill)",
+      "Delta"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/delta-sport-hall",

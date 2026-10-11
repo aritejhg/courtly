@@ -219,6 +219,23 @@ function strictVenueMatchesInText(text, venues) {
     if (!owners) return [];
     return [...owners.values()].map((venue) => ({ venue, alias }));
   });
+  // Compact one-line posts sometimes place a unique, verified direct alias
+  // between date/time and price metadata (`... 3-4 pm delta $3.5 ...`).
+  // Match only catalog-owned aliases as standalone text; never use derived
+  // aliases or fuzzy substrings for this fallback.
+  const normalizedText = normalize(text);
+  for (const venue of venues) {
+    const directAliases = [venue.canonicalName, ...(venue.aliases || [])]
+      .map(normalize)
+      .filter((alias) => alias.length >= 3);
+    for (const alias of directAliases) {
+      const owners = aliases.get(alias);
+      if (venue.kind !== 'sport_hall' || alias.includes(' ') || !owners || owners.size !== 1
+        || !new RegExp(`(^| )${alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}( |$)`, 'i').test(normalizedText)
+        || !/\b(?:\d{1,2}(?::\d{2})?\s*(?:am|pm|m)?\s*(?:-|to)\s*\d{1,2}|\$\s*\d|\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\b)/i.test(normalizedText)) continue;
+      matches.push({ venue, alias });
+    }
+  }
   cache.set(cacheKey, matches);
   return matches;
 }
