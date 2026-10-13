@@ -791,7 +791,7 @@
   {
     "id": "telegram:senja-cashew-cc",
     "canonicalName": "Senja-Cashew CC",
-    "aliases": ["Senja-Cashew CC", "Senja Cashew CC", "Senja-Cashew Community Club"],
+    "aliases": ["Senja-Cashew CC", "Senja Cashew CC", "Senja-Cashew Community Club", "Senja CC"],
     "source": "OneMap",
     "sourceUrl": "https://www.onemap.gov.sg/",
     "kind": "community_club",
@@ -991,6 +991,18 @@
     "lat": 1.277696368610284,
     "lng": 103.8169097187844,
     "address": "2 Telok Blangah Way, Singapore 098803"
+  },
+  {
+    "id": "safra:toa-payoh",
+    "canonicalName": "SAFRA Toa Payoh",
+    "aliases": ["SAFRA Toa Payoh", "Safra Toa Payoh", "SAFRA Clubhouse Toa Payoh"],
+    "source": "SAFRA / OneMap",
+    "sourceUrl": "https://www.safra.sg/amenities-offerings/indoor-badminton-court",
+    "kind": "other",
+    "area": "Toa Payoh",
+    "lat": 1.329807341225412,
+    "lng": 103.8544043513386,
+    "address": "293 Lorong 6 Toa Payoh, Singapore 319387"
   },
   {
     "id": "onepa:macpherson-cc",
