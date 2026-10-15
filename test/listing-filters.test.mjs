@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { matchesListingDateTime, singaporeDateKey } from '../scripts/lib/listing-filters.mjs';
+import { matchesListingDateTime, singaporeDateKey } from '../lib/listing-filters.ts';
 
 test('uses Singapore local date keys for UTC timestamps', () => {
   assert.equal(singaporeDateKey('2026-09-09T16:30:00.000Z'), '2026-09-10');

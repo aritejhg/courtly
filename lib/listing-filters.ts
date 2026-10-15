@@ -64,9 +64,11 @@ export function matchesListingDateTime(
   const requestedEnd = clockMinutes(filter.endTime);
   if (requestedStart === null || requestedEnd === null) return false;
   const listingStart = new Date(listing.playAt).getTime();
-  const listingEnd = validTimestamp(listing.playEndAt)
-    ? new Date(listing.playEndAt).getTime()
-    : listingStart + 1;
+  // A listing without a real end (missing or equal to its start) counts as a moment, not a full day.
+  const listingEnd = Math.max(
+    validTimestamp(listing.playEndAt) ? new Date(listing.playEndAt).getTime() : listingStart,
+    listingStart + 1,
+  );
   if (!filter.date && !filter.startTime && !filter.endTime) return true;
   if (filter.date) {
     const dayStart = singaporeDayStart(filter.date);
@@ -75,17 +77,24 @@ export function matchesListingDateTime(
     if (listingEnd <= dayStart || listingStart >= dayEnd) return false;
     if (!filter.startTime && !filter.endTime) return true;
     const windowStart = dayStart + (requestedStart ?? 0) * 60 * 1000;
-    let windowEnd = dayStart + (requestedEnd ?? 24 * 60) * 60 * 1000;
-    if (requestedStart != null && requestedEnd != null && windowEnd <= windowStart) windowEnd += 24 * 60 * 60 * 1000;
-    return listingStart < windowEnd && listingEnd > windowStart;
+    // An end of 00:00 means end of day, not minute zero.
+    let windowEnd = dayStart + (requestedEnd || 24 * 60) * 60 * 1000;
+    const overnight = requestedStart != null && requestedEnd != null && windowEnd <= windowStart;
+    if (overnight) windowEnd += 24 * 60 * 60 * 1000;
+    if (listingStart < windowEnd && listingEnd > windowStart) return true;
+    // Overnight windows also cover this date's early morning (the tail of the previous night's window).
+    return overnight && listingStart < windowEnd - 24 * 60 * 60 * 1000 && listingEnd > windowStart - 24 * 60 * 60 * 1000;
   }
   const windowStart = requestedStart ?? 0;
-  const windowEnd = requestedEnd ?? 24 * 60;
+  const windowEnd = requestedEnd || 24 * 60;
   const normalizedWindowEnd = requestedStart != null && requestedEnd != null && windowEnd <= windowStart
     ? windowEnd + 24 * 60
     : windowEnd;
   const start = singaporeMinutes(listing.playAt);
-  const end = singaporeMinutes(listing.playEndAt);
-  const normalizedEnd = end <= start ? end + 24 * 60 : end;
-  return start < normalizedWindowEnd && normalizedEnd > windowStart;
+  const normalizedEnd = start + Math.max(1, Math.round((listingEnd - listingStart) / 60000));
+  if (start < normalizedWindowEnd && normalizedEnd > windowStart) return true;
+  // Midnight wrap on either side: compare the listing a day later (window crosses midnight)
+  // and a day earlier (listing crosses midnight into an early-morning window).
+  if (normalizedWindowEnd > 24 * 60 && start + 24 * 60 < normalizedWindowEnd && normalizedEnd + 24 * 60 > windowStart) return true;
+  return normalizedEnd > 24 * 60 && start - 24 * 60 < normalizedWindowEnd && normalizedEnd - 24 * 60 > windowStart;
 }

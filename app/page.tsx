@@ -29,12 +29,14 @@ import {
 import { getActiveListings } from '@/lib/ingestion';
 import type { CourtListing } from '@/lib/ingestion';
 import { matchesListingDateTime } from '@/lib/listing-filters';
+import { inRegion, matchesSearchQuery, parseSearchQuery } from '@/lib/search-query';
 import { badmintonVenues, inferVenueArea, matchVenue } from '@/lib/venue-mapping';
 import { travelUnavailableMessage } from '@/lib/travel-status.mjs';
 
 type Sport = 'Badminton';
 type TransitMode = 'Public transport' | 'Drive' | 'Walk';
 type Court = {
+  zone?: string;
   id: string;
   name: string;
   area: string;
@@ -76,30 +78,6 @@ const ORIGIN_STORAGE_KEY = 'courtly-origin-id';
 const INITIAL_LOCATIONS: SavedLocation[] = [];
 const RETIRED_LOCATION_IDS = new Set(['studio', 'work']);
 const areas = ['All areas', 'Central', 'East', 'North', 'West'];
-const areaMap: Record<string, string[]> = {
-  Central: [
-    'Clementi',
-    'River Valley',
-    'Outram',
-    'Tiong Bahru',
-    'Tanjong Pagar',
-    'Toa Payoh',
-    'Kallang',
-    'Kolam Ayer',
-    'Newton',
-  ],
-  East: ['East', 'Expo', 'Tampines', 'Pasir Ris', 'Serangoon'],
-  North: [
-    'Hougang',
-    'Punggol',
-    'Yishun',
-    'Woodlands',
-    'Sembawang',
-    'Ang Mo Kio',
-    'Sengkang',
-  ],
-  West: ['Jurong West', 'Jurong East', 'Bukit Gombak'],
-};
 const modeIcon = (mode: TransitMode) =>
   mode === 'Public transport' ? (
     <TrainFront size={14} />
@@ -131,6 +109,7 @@ function toCourt(listing: CourtListing): Court {
     id: listing.id,
     name: venue?.canonicalName ?? listing.facility,
     area,
+    zone: venue?.zone,
     sport: 'Badminton',
     date: listing.displayDate,
     day: listing.displayDay,
@@ -307,23 +286,26 @@ export default function Home() {
     }) && (!durationFilter || listing.duration === durationFilter)),
     [activeListings, dateFilter, durationFilter, timeFrom, timeTo],
   );
-  const visibleCourts = useMemo(
-    () =>
-      courts.filter((court) =>
-        dateTimeFilteredListings.some((listing) => listing.id === court.id),
-      ),
-    [courts, dateTimeFilteredListings],
+  const listingById = useMemo(
+    () => new Map(dateTimeFilteredListings.map((listing) => [listing.id, listing])),
+    [dateTimeFilteredListings],
   );
+  const visibleCourts = useMemo(
+    () => courts.filter((court) => listingById.has(court.id)),
+    [courts, listingById],
+  );
+  // Fresh clock per edit so date:today follows the Singapore day in a long-open tab.
+  const parsedQuery = useMemo(() => parseSearchQuery(query, new Date()), [query]);
   const filteredCourts = useMemo(
     () =>
       visibleCourts.filter((court) => {
-        const text = `${court.name} ${court.area} ${court.sport}`.toLowerCase();
+        const listing = listingById.get(court.id)!;
         return (
-          (!query.trim() || text.includes(query.toLowerCase().trim())) &&
-          (area === 'All areas' || areaMap[area]?.includes(court.area))
+          matchesSearchQuery({ ...listing, name: court.name, area: court.area, zone: court.zone }, parsedQuery) &&
+          (area === 'All areas' || inRegion(area, court.area, court.zone))
         );
       }),
-    [area, query, visibleCourts],
+    [area, listingById, parsedQuery, visibleCourts],
   );
   const sortedCourts = useMemo(
     () => [...filteredCourts].sort((a, b) => {
@@ -711,7 +693,8 @@ export default function Home() {
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search courts"
+            placeholder='Search, e.g. venue:"shelton" from:7pm price:<30'
+            title='Keys: venue: area: by: date: from: to: price: dur:  ·  quote multi-word values, comma or repeat for OR, prefix - to exclude'
           />
           {query && (
             <button onClick={() => setQuery('')} aria-label="Clear search">
@@ -958,6 +941,14 @@ export default function Home() {
                     ? 'Listings unavailable'
                     : `${sortedCourts.length} available courts`}
               </h2>
+              {(parsedQuery.summary.length > 0 || parsedQuery.notes.length > 0) && (
+                <p className="search-summary">
+                  {parsedQuery.summary.join(' · ')}
+                  {parsedQuery.notes.map((note) => (
+                    <span className="search-note" key={note}>{note}</span>
+                  ))}
+                </p>
+              )}
             </div>
             <Popover open={sortMenuOpen} onOpenChange={setSortMenuOpen}>
               <PopoverTrigger className="sort-menu-trigger" aria-label="Sort listings">

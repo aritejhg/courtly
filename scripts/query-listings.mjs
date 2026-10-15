@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { matchesListingDateTime } from './lib/listing-filters.mjs';
+import { matchesListingDateTime } from '../lib/listing-filters.ts';
 
 const argument = (name, fallback) => {
   const index = process.argv.indexOf(name);

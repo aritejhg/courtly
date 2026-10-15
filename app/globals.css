@@ -1217,6 +1217,17 @@ a {
   letter-spacing: .13em;
   text-transform: uppercase;
 }
+.search-summary {
+  color: #42685a;
+  font-size: 12px;
+  line-height: 1.35;
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+}
+.search-note {
+  color: #a3542b;
+  display: block;
+}
 .filter-menu-trigger,
 .sort-menu-trigger {
   align-items: center;
