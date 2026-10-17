@@ -767,14 +767,26 @@
   {
     "id": "telegram:toa-payoh-central-cc",
     "canonicalName": "Toa Payoh Central CC",
-    "aliases": ["Toa Payoh Central CC", "Toa Payoh Central Community Club"],
+    "aliases": ["Toa Payoh Central CC", "Toa Payoh Central Community Club", "TP Central CC", "TP Central Community Club"],
     "source": "OneMap",
     "sourceUrl": "https://www.onemap.gov.sg/",
     "kind": "community_club",
     "area": "Toa Payoh",
-    "lat": 1.334558180221402,
-    "lng": 103.8504819576196,
-    "address": "93 Toa Payoh Central"
+    "lat": 1.334934520548422,
+    "lng": 103.8502045427675,
+    "address": "93 Toa Payoh Central, Toa Payoh Central Community Building, Singapore 319194"
+  },
+  {
+    "id": "telegram:toa-payoh-west-cc",
+    "canonicalName": "Toa Payoh West CC",
+    "aliases": ["Toa Payoh West CC", "Toa Payoh West Community Club", "TP West CC", "TP West Community Club"],
+    "source": "OnePA/OneMap",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/toa-payoh-west-cc",
+    "kind": "community_club",
+    "area": "Toa Payoh",
+    "lat": 1.335221249794357,
+    "lng": 103.8451058001388,
+    "address": "200 Lorong 2 Toa Payoh, Toa Payoh West Community Club, Singapore 319642"
   },
   {
     "id": "telegram:choa-chu-kang-cc",
