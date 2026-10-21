@@ -450,7 +450,9 @@
       "Geylang Serai",
       "Geylang Serai CC",
       "Geylang Serai Community Club",
-      "Wisma Geylang Serai"
+      "Wisma Geylang Serai",
+      "Geylang Seral",
+      "Geylang Seral CC"
     ],
     "source": "People's Association / onePA",
     "sourceUrl": "https://www.onepa.gov.sg/cc/geylang-serai-cc",
@@ -493,7 +495,8 @@
     "aliases": [
       "Zhenghua CC",
       "Zhenghua CC (Bukit Panjang)",
-      "ZHCC"
+      "ZHCC",
+      "Zheng Hua CC"
     ],
     "source": "Repeated exact Telegram venue name",
     "kind": "community_club",
