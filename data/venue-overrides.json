@@ -962,7 +962,7 @@
   {
     "id": "onepa:toa-payoh-east-cc",
     "canonicalName": "Toa Payoh East CC",
-    "aliases": ["Toa Payoh East CC", "Toa Payoh East Community Club"],
+    "aliases": ["Toa Payoh East CC", "Toa Payoh East Community Club", "TP East CC"],
     "source": "OneMap",
     "sourceUrl": "https://www.onemap.gov.sg/",
     "kind": "community_club",
