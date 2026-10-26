@@ -113,6 +113,7 @@ function catalogVenueMatch(text, venues, { exact = false } = {}) {
   const normalizedText = normalize(text);
   const stripListingMetadata = (line) => normalize(String(line)
     .replace(TIME_RANGE, ' ')
+    .replace(SINGLE_TIME, ' ')
     .replace(DATE_TOKEN, ' ')
     .replace(/\$+\s*\d+(?:\.\d{1,2})?/g, ' ')
     .replace(/\b\d+(?:\.\d{1,2})?\s*(?:dollars?|bucks?)\b/ig, ' ')
@@ -290,6 +291,7 @@ export function extractVenueCandidates(text) {
     const separated = String(rawLine)
       .replace(DATE_TOKEN, '\n')
       .replace(TIME_RANGE, '\n')
+      .replace(SINGLE_TIME, '\n')
       .replace(/\$+\s*\d+(?:\.\d{1,2})?/g, '\n')
       .replace(/\b\d+(?:\.\d{1,2})?\s*(?:dollars?|bucks?)\b/ig, '\n');
     const fragments = separated.split(/\n/);
@@ -410,6 +412,7 @@ export function parsePrice(text) {
   // dates and clock ranges, so postal codes and phone numbers stay excluded.
   const barePrice = String(text || '').split(/\r?\n/).map((line) => line
     .replace(TIME_RANGE, ' ')
+    .replace(SINGLE_TIME, ' ')
     .replace(DATE_TOKEN, ' ')
     .replace(/\b\d{3,}\b/g, ' ')
     .trim()
@@ -431,12 +434,14 @@ const DATE_TOKEN = new RegExp(`(?<![\\d.])\\b(?:today|tonight|tomorrow|mon(?:day
 // Telegram listings sometimes abbreviate PM as a trailing `m` (for example,
 // `9-10m`). Accept it only inside a clock expression.
 const TIME_RANGE = /(?<![\d.])\b((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm|m)?\s*(?:-|–|—|to)\s*((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm|m)?\b/i;
+const SINGLE_TIME = /\b((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm)\b/i;
 const NUMERIC_DATE = /(?<![:\d])\b(\d{1,2})\s*(?:\/|-)\s*(\d{1,2})(?:\s*(?:\/|-)\s*(\d{2,4}))?\b/g;
 const timeSearchText = (text) => String(text || '')
   // A sentence separator before a colon-formatted clock should not hide the
   // leading hour (`|.10:30am to 12:30pm`). Decimal dotted times remain intact.
   .replace(/(^|[^\d])\.(?=\d{1,2}:\d{2}(?:am|pm|m)?\b)/gi, '$1 ');
-const hasActualTimeRange = (text) => {
+const hasExplicitTime = (text) => {
+  if (SINGLE_TIME.test(String(text || ''))) return true;
   const numericDates = [...String(text || '').matchAll(NUMERIC_DATE)];
   return [...String(text || '').matchAll(new RegExp(TIME_RANGE.source, 'ig'))].some((range) => {
     const rangeStart = range.index ?? 0;
@@ -587,9 +592,13 @@ export function parseTime(text, date, { defaultMeridiem = null } = {}) {
   if (!match) {
     const single = timeText.match(/\b((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm)\b/i);
     const duration = timeText.match(/\b(\d+(?:\.\d+)?)\s*(?:hr|hrs|hour|hours)\b/i);
-    if (!single || !duration) return { value: null, status: 'missing' };
+    if (!single) return { value: null, status: 'missing' };
     if (!isValidClock(single[1], single[2])) return { value: null, status: 'ambiguous', reason: 'invalid clock value' };
     const start = makeStart(single[1], single[2]);
+    if (!duration) return {
+      value: { start, end: start, display: formatTime(start), duration: 'Unknown', hours: null },
+      status: 'deterministic',
+    };
     return makeResult(start, new Date(start.getTime() + Number(duration[1]) * 3600000));
   }
   const [, startValue, startMeridiemValue, endValue, endMeridiemValue] = match;
@@ -683,7 +692,7 @@ export function isPotentialCourtMessage(text, venues) {
   const wantedOnly = /\b(?:looking for|need(?:ing)?|wanted)\b/i.test(value) && !/\b(?:let(?:ting)?\s+go|court\s+to\s+swap|i\s+have|available)\b/i.test(value);
   if (wantedOnly) return false;
   const hasVenue = Boolean(matchVenue(value, venues).venue) || /\b(?:cc|community club|sports? hall|primary|secondary|pri|sec)\b/i.test(value);
-  const hasTime = TIME_RANGE.test(timeSearchText(value)) || /\b\d+(?:\.\d+)?\s*(?:hr|hrs|hour|hours)\b/i.test(value);
+  const hasTime = TIME_RANGE.test(timeSearchText(value)) || SINGLE_TIME.test(timeSearchText(value)) || /\b\d+(?:\.\d+)?\s*(?:hr|hrs|hour|hours)\b/i.test(value);
   const hasDate = isDateLine(value);
   const hasIntent = /\b(?:let(?:ting)?\s+go|court\s+to\s+swap|court\s+available|take\s+over|at\s+cost)\b/i.test(value);
   return (hasVenue || hasIntent) && hasTime && (hasDate || hasIntent);
@@ -698,7 +707,7 @@ export function splitMessageListings(message, venues) {
   if (Array.isArray(message.listings) && message.listings.length) return message.listings.map((part) => ({ text: String(part.text || '').trim() })).filter((part) => part.text);
   const text = availabilitySection(message.text);
   const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
-  const timeIndexes = lines.flatMap((line, index) => hasActualTimeRange(timeSearchText(line)) ? [index] : []);
+  const timeIndexes = lines.flatMap((line, index) => hasExplicitTime(timeSearchText(line)) ? [index] : []);
   const venueIndexes = lines.flatMap((line, index) => venueOnLine(line, venues) ? [index] : []);
   if (timeIndexes.length > venueIndexes.length && timeIndexes.length > 1) {
     let carriedDateLine;
@@ -732,8 +741,8 @@ export function splitMessageListings(message, venues) {
       }
       const hasInlineVenue = selected.some((line) => {
         if (venueOnLine(line, venues) || extractVenueCandidates(line).length) return true;
-        if (!hasActualTimeRange(timeSearchText(line))) return false;
-        const suffix = line.replace(new RegExp(`^[\\s\\S]*?${TIME_RANGE.source}`, 'i'), ' ')
+        if (!hasExplicitTime(timeSearchText(line))) return false;
+        const suffix = line.replace(new RegExp(`^[\\s\\S]*?${TIME_RANGE.source}`, 'i'), ' ').replace(SINGLE_TIME, ' ')
           .replace(/\$+\s*\d+(?:\.\d{1,2})?/g, ' ')
           .replace(/\b\d+(?:\.\d+)?\b/g, ' ');
         return Boolean(normalize(suffix));
@@ -761,7 +770,7 @@ export function splitMessageListings(message, venues) {
     return index !== undefined && index < venueIndexes[0] ? 'before' : 'after';
   };
   const dateDirection = direction(isDateLine);
-  const timeDirection = direction((line) => TIME_RANGE.test(timeSearchText(line)));
+  const timeDirection = direction((line) => TIME_RANGE.test(timeSearchText(line)) || SINGLE_TIME.test(timeSearchText(line)));
   const priceDirection = direction((line) => parsePrice(line).value != null);
   const directed = (anchor, previousVenue, nextVenue, predicate, preferredDirection) => {
     const start = preferredDirection === 'before' ? previousVenue + 1 : anchor;
@@ -779,7 +788,7 @@ export function splitMessageListings(message, venues) {
     const nextVenue = venueIndexes[position + 1] ?? lines.length;
     const selected = new Set([venueIndex]);
     const dateIndex = directed(venueIndex, previousVenue, nextVenue, isDateLine, dateDirection);
-    const timeIndex = directed(venueIndex, previousVenue, nextVenue, (line) => TIME_RANGE.test(timeSearchText(line)), timeDirection);
+    const timeIndex = directed(venueIndex, previousVenue, nextVenue, (line) => TIME_RANGE.test(timeSearchText(line)) || SINGLE_TIME.test(timeSearchText(line)), timeDirection);
     const priceIndex = directed(venueIndex, previousVenue, nextVenue, (line) => parsePrice(line).value != null, priceDirection);
     for (const index of [dateIndex, timeIndex, priceIndex]) if (index !== undefined) selected.add(index);
     return { text: [...selected].sort((a, b) => a - b).map((index) => lines[index]).join('\n') };
