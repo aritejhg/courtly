@@ -8,6 +8,7 @@ import {
   isPotentialCourtMessage,
   splitMessageListings,
 } from './lib/telegram-parser.mjs';
+import { shouldReplaceDeletedDuplicate } from './lib/listing-dedupe.mjs';
 
 const argument = (name, fallback) => {
   const index = process.argv.indexOf(name);
@@ -171,13 +172,22 @@ for (const { listing, venueMatch, issues } of results) {
       : listing);
     continue;
   }
-  if (byFingerprint.has(fingerprint(listing))) {
-    duplicateCount += 1;
+  const listingFingerprint = fingerprint(listing);
+  const duplicate = byFingerprint.get(listingFingerprint);
+  if (duplicate) {
+    if (shouldReplaceDeletedDuplicate(duplicate, listing)) {
+      byMessage.delete(duplicate.sourceMessageId);
+      byMessage.set(listing.sourceMessageId, listing);
+      byFingerprint.set(listingFingerprint, listing);
+      newCount += 1;
+    } else {
+      duplicateCount += 1;
+    }
     continue;
   }
   newCount += 1;
   byMessage.set(listing.sourceMessageId, listing);
-  byFingerprint.set(fingerprint(listing), listing);
+  byFingerprint.set(listingFingerprint, listing);
 }
 
 // A single source message can yield multiple listings (`123:1`, `123:2`).
