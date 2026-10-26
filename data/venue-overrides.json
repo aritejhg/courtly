@@ -1,5 +1,24 @@
 [
   {
+    "id": "manual:punggol-sport-centre",
+    "canonicalName": "Punggol Sport Centre",
+    "aliases": [
+      "Punggol Sport Centre",
+      "Punggol Sports Centre",
+      "Punggol Sport Hall",
+      "Punggol Sports Hall",
+      "Punggol SH",
+      "Punngol Sports Hall"
+    ],
+    "source": "ActiveSG Punggol SC Handbook (two multi-purpose sport halls, 11 Sentul Crescent); SLA OneMap postal 828656",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/hubfs/Punggol%20SC%20Handbook%20-15-Sept-2025.pdf",
+    "kind": "sport_hall",
+    "area": "Punggol",
+    "lat": 1.408560282991146,
+    "lng": 103.906845295414,
+    "address": "11 SENTUL CRESCENT PUNGGOL SPORTS CENTRE SINGAPORE 828656"
+  },
+  {
     "id": "manual:fernvale-cc",
     "canonicalName": "Fernvale CC",
     "aliases": [

@@ -195,7 +195,8 @@ function strictVenueMatchesInText(text, venues) {
     line.replace(new RegExp(`^[\\s\\S]*?${TIME_RANGE.source}`, 'i'), ' ')
       .replace(/\$+\s*\d+(?:\.\d{1,2})?/g, ' ')
       .replace(/\b\d+(?:\.\d{1,2})?\s*(?:dollars?|bucks?)\b/ig, ' ')
-      .replace(/\b\d+(?:\.\d+)?\b/g, ' '),
+      .replace(/\b\d+(?:\.\d+)?\b/g, ' ')
+      .replace(/\s*\(\s*swap\s+prefer(?:red)?\s*\)\s*$/i, ''),
     // Keep a verified venue before a common location qualifier, such as
     // `Woodlands Secondary School near Marsiling CC`, without fuzzy-matching
     // arbitrary substrings inside venue names.
@@ -261,6 +262,9 @@ function cleanVenueCandidate(line) {
     .replace(/^(?:court\s+(?:to\s+)?let(?:ting)?\s+go|let(?:ting)?\s+go(?:\s+of(?:\s+court)?)?|available\s+court|releasing?\s+at\s+cost)(?:\s+at\s+cost(?:\s+price)?)?\s*(?:at\s+)?[:：-]?\s*/i, '')
     .replace(/\s*\((?:near|beside|opp(?:osite)?|at)?[^)]*\b(?:mrt|lrt)\b[^)]*\)\s*/ig, ' ')
     .replace(/\s*\((?:premium|vip|rubber|aircon)[^)]*\)\s*/ig, ' ')
+    // Release posts sometimes append swap preference to a venue-bearing line.
+    // It is listing intent metadata, not part of the venue name.
+    .replace(/\s*\(\s*swap\s+prefer(?:red)?\s*\)\s*$/i, '')
     .replace(/^\s*\(\d+(?:\.\d+)?\s*(?:hr|hrs|hour|hours)\)\s*/i, ' ')
     .replace(/^\s*\d+(?:\.\d+)?\s*(?:hr|hrs|hour|hours)\)\s*/i, ' ')
     .replace(/\s+s\(\d+\)/ig, ' ')
