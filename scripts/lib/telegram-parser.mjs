@@ -629,7 +629,13 @@ export function parseTime(text, date, { defaultMeridiem = null } = {}) {
   }
   const start = makeStart(startValue, startMeridiem);
   let end = makeStart(endValue, endMeridiem);
-  if (end <= start) end = new Date(end.getTime() + 12 * 3600000);
+  if (end <= start) {
+    // An explicit `12am` is midnight at the start of the following day when
+    // it closes a late-night range. Other omitted/inferred meridiem cases
+    // retain the existing 12-hour rollover behavior.
+    const rolloverHours = endMeridiem === 'am' && startMeridiem === 'pm' ? 24 : 12;
+    end = new Date(end.getTime() + rolloverHours * 3600000);
+  }
   const result = makeResult(start, end, status, reason);
   if (result.value.hours <= 0 || result.value.hours > 8) return { ...result, status: 'ambiguous', reason: 'implausible court duration' };
   return result;
