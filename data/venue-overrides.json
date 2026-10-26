@@ -1042,5 +1042,17 @@
     "lat": 1.363106005257572,
     "lng": 103.8535605086277,
     "address": "861 Ang Mo Kio Avenue 10, Singapore 569734"
+  },
+  {
+    "id": "singapore-sports-hub:ocbc-arena",
+    "canonicalName": "OCBC Arena",
+    "aliases": ["OCBC Arena", "Singapore Sports Hub", "Sports Hub"],
+    "source": "Singapore Sports Hub official fact sheet; OneMap",
+    "sourceUrl": "https://www.onemap.gov.sg/api/common/elastic/search?searchVal=397631&returnGeom=Y&getAddrDetails=Y&pageNum=1",
+    "kind": "sport_hall",
+    "area": "Kallang",
+    "lat": 1.304642569458006,
+    "lng": 103.8760996173369,
+    "address": "5 Stadium Drive, OCBC Arena, Singapore 397631"
   }
 ]
