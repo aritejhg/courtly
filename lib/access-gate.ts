@@ -49,12 +49,16 @@ function loginPage(error = false): Response {
   );
 }
 
-export async function accessGate(request: Request, secret: string | undefined): Promise<Response | null> {
-  const isWorkersHost = new URL(request.url).hostname.endsWith('.workers.dev');
+export async function accessGate(
+  request: Request,
+  secret: string | undefined,
+  { isDevelopment = false }: { isDevelopment?: boolean } = {},
+): Promise<Response | null> {
   if (!secret) {
-    return isWorkersHost
-      ? new Response('Access gate is not configured.', { status: 503, headers: { 'cache-control': 'no-store' } })
-      : null;
+    // Never decide this from the Host header: only the dev server may run ungated.
+    return isDevelopment
+      ? null
+      : new Response('Access gate is not configured.', { status: 503, headers: { 'cache-control': 'no-store' } });
   }
 
   const expectedToken = await signedToken(secret);

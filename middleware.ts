@@ -4,7 +4,9 @@ import { accessGate } from './lib/access-gate';
 
 export async function middleware(request: Request) {
   const runtimeEnv = env as unknown as Record<string, unknown>;
-  const response = await accessGate(request, runtimeEnv.COURTLY_ACCESS_CODE as string | undefined);
+  const response = await accessGate(request, runtimeEnv.COURTLY_ACCESS_CODE as string | undefined, {
+    isDevelopment: import.meta.env.DEV,
+  });
   return response ?? NextResponse.next();
 }
 
