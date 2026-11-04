@@ -14,8 +14,8 @@ Courtly is a fast comparison surface for active badminton court listings. The us
 - Header is compact and utility-led.
 - Filters form a floating toolbar above the working surface.
 - Working surface is one bounded map canvas with three possible horizontal zones:
-  1. Persistent listings rail, 360–400px wide.
-  2. Scrollable detail drawer, 400–460px wide, present only while a listing is expanded.
+  1. Persistent listings rail, 420px wide.
+  2. Scrollable detail drawer, 460px wide, present only while a listing is expanded.
   3. Map, always visible and consuming all remaining width.
 - Rail and drawer sit over the map as a joined floating island. The map itself retains rounded outer corners and uninterrupted vertical space.
 - Only the rail list and detail body scroll. No content may be clipped by a fixed panel height.
@@ -25,14 +25,14 @@ Courtly is a fast comparison surface for active badminton court listings. The us
 - Header: “Matched listings”, visible result count, and earliest-first sort note.
 - Default order: listing `playAt`, ascending. Filters reduce this same ordered list and its map pins.
 - Each collapsed row shows venue/location, play date and time, price, estimated public-transport time from the persisted selected saved location, plus icon actions for exact message and owner contact.
-- Row selection opens the detail drawer. Re-selecting the open row or using the drawer close/minimise button collapses it.
+- Row selection opens the detail drawer. Re-selecting the open row or using the drawer's close button collapses it.
 - Action icons must not also toggle the row. Give each an accessible label and tooltip/title.
-- Selected state uses a soft teal tint and a narrow accent, not a heavy border.
+- Selected state uses a soft green tint and a narrow accent, not a heavy border.
 
 ## Detail drawer
 
 - A single continuous, independently scrollable article—not stacked bordered cards or sections.
-- Sticky compact header contains listing label, active state, and minimise button.
+- Sticky compact header contains listing label, active state, and close button.
 - Long venue names wrap naturally and never push travel content below an inaccessible clipped edge.
 - Show all current listing details: venue, area/sport, date, day, time, duration, price, owner, exact message action, owner action.
 - Full travel controls remain available: origin dropdown, edit locations, transit/drive/walk modes, ETA, leave/arrive timing, source, and directions.
@@ -47,8 +47,8 @@ Courtly is a fast comparison surface for active badminton court listings. The us
 
 ## Color, type, and surfaces
 
-- Canvas: cool mist `#eef3f1`; surfaces: white; primary ink: deep blue-green `#172b2b`.
-- Accent: clear teal around `#13a389`; warm coral only for map pins or exceptional emphasis.
+- Canvas: `#f4f6f2` (`--bg`); surfaces: white (`--panel`); primary ink: `#172126` (`--ink`); muted text: `#566660` (`--muted`).
+- Accent: green `#278764` (`--green`); warm coral `#dc6658` (`--coral`) only for map pins or exceptional emphasis.
 - Borders: sparse, cool gray-green, 1px. Prefer spacing, tint, and shadow for hierarchy.
 - Corners: 14–18px outer surfaces; 10–12px controls and rows.
 - Typography: clean system sans. Body 14–16px; compact metadata 12–13px; never below 12px for user-facing information.

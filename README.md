@@ -15,7 +15,7 @@ npm ci
 npm run dev
 ```
 
-Open the URL printed by the dev server. It serves invented sample listings from `data/telegram-listings.json`. Their dates are fixed, so most may appear as past or expired. Telegram links are hidden until you configure a source.
+Open the URL printed by the dev server. It serves invented sample listings from `data/telegram-listings.json`. Most are dated 2036 and show as active; one is dated 2026 and marked `expired`. The Telegram group button and exact message links stay hidden until you configure a source. Owner contact links still appear for listings that have an owner username.
 
 ## Scripts
 
@@ -100,7 +100,7 @@ These are embedded in client JavaScript, so treat them as public.
 | `COURTLY_FEED_KV_NAMESPACE_ID` | KV namespace for the feed |
 | `COURTLY_REQUIRE_FEED_BINDING` | `1` fails the build if the namespace ID is missing |
 | `COURTLY_WORKER_NAME` | Worker name. Default `courtly-sg`. |
-| `COURTLY_BUILD_COMMIT` | Overrides the commit reported by `/api/build` |
+| `COURTLY_BUILD_COMMIT` | Overrides the commit reported by `/api/build`. Otherwise the build uses `GITHUB_SHA`, then `.courtly-source-commit`, then the git HEAD. |
 
 ### Ingestion
 
@@ -108,6 +108,7 @@ These are embedded in client JavaScript, so treat them as public.
 | --- | --- | --- |
 | `COURTLY_TELEGRAM_CHAT_ID` | required | `-100`-prefixed source chat ID |
 | `COURTLY_TELEGRAM_SOURCE_URL` | required | `https://t.me/` link to the source |
+| `COURTLY_TELEGRAM_SOURCE` | `client` | Only `client` is accepted. The runner fails on any other value. |
 | `COURTLY_RUNTIME` | unset | Must be `hermes` or the runner exits. A safety guard against accidental runs. |
 | `COURTLY_PUBLISH` | unset | `1` is the same as `--publish` |
 | `COURTLY_ENABLE_LLM_REPAIR` | unset | `1` opts in to automated repair. See [operations](docs/operations.md#automated-parser-repair). |

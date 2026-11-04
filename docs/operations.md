@@ -19,7 +19,7 @@ Each run does the following:
 1. Reads new messages, then merges them into `data/telegram-messages.json`.
 2. Audits venue coordinates through OneMap, parses messages into `data/telegram-listings.json`, and repairs persisted listing coordinates.
 3. Blocks publishing if a message touched in this run still has a parser ambiguity. The last published feed stays live.
-4. If state changed and publishing is enabled, builds and writes the feed to KV under `courtly:listings`.
+4. If state changed, builds. If publishing is enabled, writes the feed to KV under `courtly:listings`.
 
 Useful flags: `--dry-run`, `--publish`, `--force-build`, `--no-llm`, `--skip-telegram`.
 
@@ -36,7 +36,7 @@ Repair is off by default. With `COURTLY_ENABLE_LLM_REPAIR=1`, when a parser ambi
 - Message text, which anyone in the group can write, reaches the agent and its provider. The prompt marks it as untrusted, which reduces prompt injection risk but does not eliminate it.
 - The agent can change code on the ingestion host, and the sync script will then refuse to overwrite those changes until they are resolved.
 
-If used, a repair may change only deterministic parser code plus a synthetic regression fixture. It must pass the tests, and must not touch sessions, credentials, access controls, or generated data.
+If used, a repair may change only deterministic parser code, a synthetic regression fixture, and a strict alias or coordinate mapping for a verified venue. It must pass the tests, and must not touch sessions, credentials, access controls, or generated data.
 
 ## Source sync on the VM
 
