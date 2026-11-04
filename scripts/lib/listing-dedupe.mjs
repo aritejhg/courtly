@@ -81,7 +81,7 @@ export function suppressDuplicateActiveSlotReposts(results) {
       || !Number.isFinite(Date.parse(listing.playAt))
       || !Number.isFinite(Date.parse(listing.playEndAt))
       || Date.parse(listing.playEndAt) < Date.parse(listing.playAt)) return null;
-    const explicitCourt = String(listing.listingText || '').match(/\b(?:court|ct)\s*(\d+)\b/i)?.[1] || null;
+    const explicitCourt = String(listing.listingText || '').match(/\b(?:court|ct)[ \t]+(?:#|no\.?[ \t]*)?(\d{1,2})\b(?![-/:])/i)?.[1] || null;
     return JSON.stringify([
       owner,
       listing.venueId,
