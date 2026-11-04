@@ -23,7 +23,8 @@
     "canonicalName": "Fernvale CC",
     "aliases": [
       "Fernvale CC",
-      "Fernvale Community Club"
+      "Fernvale Community Club",
+      "Feenvale CC"
     ],
     "source": "Repeated exact Telegram venue name",
     "kind": "community_club",
@@ -31,6 +32,54 @@
     "lat": 1.391722092792314,
     "lng": 103.877039073044,
     "address": "21 SENGKANG WEST AVENUE FERNVALE COMMUNITY CLUB SINGAPORE 797650"
+  },
+  {
+    "id": "onepa:jurong-green-cc",
+    "canonicalName": "Jurong Green CC",
+    "aliases": ["Jurong Green CC", "Jurong Green Community Club"],
+    "source": "People's Association / OneMap",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/jurong-green-cc",
+    "kind": "community_club",
+    "area": "Jurong West",
+    "lat": 1.350547171512804,
+    "lng": 103.7253976807254,
+    "address": "6 Jurong West Avenue 1 Singapore 649520"
+  },
+  {
+    "id": "onepa:kallang-cc",
+    "canonicalName": "Kallang CC",
+    "aliases": ["Kallang CC", "Kallang Community Club"],
+    "source": "People's Association / OneMap",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/kallang-cc",
+    "kind": "community_club",
+    "area": "Kallang",
+    "lat": 1.31801131952192,
+    "lng": 103.8624012888067,
+    "address": "45 Boon Keng Road Singapore 339771"
+  },
+  {
+    "id": "onepa:kampong-ubi-cc",
+    "canonicalName": "Kampong Ubi CC",
+    "aliases": ["Kampong Ubi CC", "Kampong Ubi Community Club", "Kampong Ubi Community Centre"],
+    "source": "People's Association / OneMap",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/kampong-ubi-cc",
+    "kind": "community_club",
+    "area": "Eunos",
+    "lat": 1.317846441026898,
+    "lng": 103.9007501235604,
+    "address": "10 Jalan Ubi Kampong Ubi CC Singapore 409075"
+  },
+  {
+    "id": "onepa:paya-lebar-kovan-cc",
+    "canonicalName": "Paya Lebar Kovan CC",
+    "aliases": ["Paya Lebar Kovan CC", "Paya Lebar Kovan Community Club"],
+    "source": "People's Association / OneMap",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/paya-lebar-kovan-cc",
+    "kind": "community_club",
+    "area": "Hougang",
+    "lat": 1.35759831007159,
+    "lng": 103.8863135310425,
+    "address": "207 Hougang Street 21 Paya Lebar Kovan Community Club Singapore 530207"
   },
   {
     "id": "manual:sbh-sims",
@@ -224,10 +273,6 @@
       "singapore expo",
       "seh expo",
       "seh@expo",
-      "sbh expo",
-      "sbh@expo",
-      "SBH East",
-      "SBH East Coast @ Expo",
       "expo"
     ],
     "source": "Telegram + OneMap",
@@ -235,6 +280,27 @@
     "area": "Expo",
     "lat": 1.335,
     "lng": 103.962
+  },
+  {
+    "id": "manual:sbh-east-coast-expo",
+    "canonicalName": "SBH East Coast @ Expo",
+    "aliases": [
+      "SBH East Coast @ Expo",
+      "Singapore Badminton Hall East Coast @ Expo",
+      "SBH @ Expo",
+      "SBH Expo",
+      "Expo SBH",
+      "SBH East",
+      "sbh expo",
+      "sbh@expo"
+    ],
+    "source": "Singapore Badminton Hall / OneMap",
+    "sourceUrl": "https://singaporebadmintonhall.com/sbhexpo/",
+    "kind": "sport_hall",
+    "area": "Expo",
+    "lat": 1.331488769076099,
+    "lng": 103.9598294257355,
+    "address": "2 Changi South Avenue 1 Singapore 486149"
   },
   {
     "id": "manual:wellington-primary-school",
@@ -1032,7 +1098,7 @@
   {
     "id": "manual:sprout-hub-community-hall",
     "canonicalName": "Community Hall @ Sprout Hub",
-    "aliases": ["Community Hall @ Sprout Hub", "Sprout Hub Community Hall"],
+    "aliases": ["Community Hall @ Sprout Hub", "Sprout Hub Community Hall", "SproutHub"],
     "source": "OneMap",
     "sourceUrl": "https://www.onemap.gov.sg/",
     "kind": "sport_hall",

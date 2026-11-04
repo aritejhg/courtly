@@ -796,6 +796,7 @@ export function splitMessageListings(message, venues) {
         if (!hasExplicitTime(timeSearchText(line))) return false;
         const suffix = line.replace(new RegExp(`^[\\s\\S]*?${TIME_RANGE.source}`, 'i'), ' ').replace(SINGLE_TIME, ' ')
           .replace(/\$+\s*\d+(?:\.\d{1,2})?/g, ' ')
+          .replace(/\/\s*(?:h|hr|hrs|hour|hours)\b|\bper\s+hour\b/gi, ' ')
           .replace(/\b\d+(?:\.\d+)?\b/g, ' ');
         return Boolean(normalize(suffix));
       });

@@ -451,6 +451,7 @@
     "aliases": [
       "Choa Chu Kang Sport Hall",
       "Choa Chu Kang Sports Hall",
+      "Cho Chu Kang Sport Hall",
       "CCK Stadium",
       "CCK SH"
     ],
@@ -681,7 +682,8 @@
       "Elias Park Primary School Hall",
       "Elias Park Pri",
       "Elias Park Pri Hall",
-      "Elias Park Primary, Pasir Ris"
+      "Elias Park Primary, Pasir Ris",
+      "Elais Park Pri Sch, Pasir Ris"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/elias-park-primary-school-hall",
@@ -690,6 +692,22 @@
     "address": "11 Pasir Ris Street 52 Singapore 518866",
     "lat": 1.375057,
     "lng": 103.9453
+  },
+  {
+    "id": "active-sg:gan-eng-seng-primary-school-hall",
+    "canonicalName": "Gan Eng Seng Primary School Hall",
+    "aliases": [
+      "Gan Eng Seng Primary School Hall",
+      "Gan Eng Seng Primary",
+      "Gan Eng Seng Pri"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/gan-eng-seng-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "100 Redhill Close Singapore 158901",
+    "lat": 1.285595,
+    "lng": 103.8155
   },
   {
     "id": "active-sg:endeavour-primary-school-hall",
@@ -885,7 +903,9 @@
     "canonicalName": "Heartbeat @ Bedok ActiveSG Sport Hall",
     "aliases": [
       "Heartbeat @ Bedok ActiveSG Sport Hall",
-      "Heartbeat @ Bedok ActiveSG Sports Hall"
+      "Heartbeat @ Bedok ActiveSG Sports Hall",
+      "Bedok Heartbeat",
+      "Heartbeat Bedok"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/heartbeat-bedok-activesg-sport-hall",
@@ -933,7 +953,8 @@
     "canonicalName": "Hougang Sport Hall",
     "aliases": [
       "Hougang Sport Hall",
-      "Hougang Sports Hall"
+      "Hougang Sports Hall",
+      "Hougangsports Hall"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/hougang-sport-hall",
@@ -981,7 +1002,8 @@
     "aliases": [
       "Jiemin Primary School Hall",
       "Jiemin Pri",
-      "Jiemin Pri Hall"
+      "Jiemin Pri Hall",
+      "Jie Min Primary Sch"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/jiemin-primary-school-hall",
@@ -997,7 +1019,8 @@
     "aliases": [
       "Jing Shan Primary School Hall",
       "Jing Shan Pri",
-      "Jing Shan Pri Hall"
+      "Jing Shan Pri Hall",
+      "Jingshan Primary sch"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/jing-shan-primary-school-hall",
@@ -1197,7 +1220,8 @@
     "aliases": [
       "Meridian Primary School Hall",
       "Meridian Pri",
-      "Meridian Pri Hall"
+      "Meridian Pri Hall",
+      "Meridian Primary Sports Hall"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/meridian-primary-school-hall",
@@ -1213,7 +1237,8 @@
     "aliases": [
       "Meridian Secondary School Hall",
       "Meridian Sec",
-      "Meridian Sec Hall"
+      "Meridian Sec Hall",
+      "Meridian secondary sch"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/meridian-secondary-school-hall",
