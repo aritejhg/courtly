@@ -196,7 +196,7 @@ function strictVenueMatchesInText(text, venues) {
       .replace(/\$+\s*\d+(?:\.\d{1,2})?/g, ' ')
       .replace(/\b\d+(?:\.\d{1,2})?\s*(?:dollars?|bucks?)\b/ig, ' ')
       .replace(/\b\d+(?:\.\d+)?\b/g, ' ')
-      .replace(/\s*\(\s*swap\s+prefer(?:red)?\s*\)\s*$/i, ''),
+      .replace(/\s*\(\s*swap\s+prefer(?:s|red)?\s*\)\s*$/i, ''),
     // Keep a verified venue before a common location qualifier, such as
     // `Woodlands Secondary School near Marsiling CC`, without fuzzy-matching
     // arbitrary substrings inside venue names.
@@ -230,11 +230,13 @@ function strictVenueMatchesInText(text, venues) {
   }).map(normalize);
   const directText = directTextVariants.join(' ');
   for (const venue of venues) {
-    const directAliases = [venue.canonicalName, ...(venue.aliases || [])]
+    const explicitlyVerifiedUnmarkedAliases = new Set((venue.unmarkedAliases || []).map(normalize));
+    const directAliases = [venue.canonicalName, ...(venue.aliases || []), ...(venue.unmarkedAliases || [])]
       .map(normalize)
-      .filter((alias) => (alias.length >= 6 && alias.includes(' ')
-        && /\b(?:cc|community club|community centre|sport|sports|hall|sh|school|primary|secondary|pri|sec|girls|safra|sbh|kff|moe|active hub|arena|arina|clubhouse)\b/.test(alias))
-        || (venue.kind === 'sport_hall' && alias.length >= 3 && !alias.includes(' ')));
+      .filter((alias) => explicitlyVerifiedUnmarkedAliases.has(alias)
+        || (alias.length >= 6 && alias.includes(' ')
+          && /\b(?:cc|community club|community centre|sport|sports|hall|sh|school|primary|secondary|pri|sec|girls|safra|sbh|kff|moe|active hub|arena|arina|clubhouse)\b/.test(alias))
+        || (venue.kind === 'sport_hall' && alias.length >= 3 && !alias.includes(' ')))
     for (const alias of directAliases) {
       const owners = aliases.get(alias);
       const requiresTimeContext = venue.kind === 'sport_hall' && !alias.includes(' ');
@@ -289,7 +291,7 @@ function cleanVenueCandidate(line) {
     .replace(/\s*\((?:premium|vip|rubber|aircon)[^)]*\)\s*/ig, ' ')
     // Release posts sometimes append swap preference to a venue-bearing line.
     // It is listing intent metadata, not part of the venue name.
-    .replace(/\s*\(\s*swap\s+prefer(?:red)?\s*\)\s*$/i, '')
+    .replace(/\s*\(\s*swap\s+prefer(?:s|red)?\s*\)\s*$/i, '')
     .replace(/^\s*\(\d+(?:\.\d+)?\s*(?:hr|hrs|hour|hours)\)\s*/i, ' ')
     .replace(/^\s*\d+(?:\.\d+)?\s*(?:hr|hrs|hour|hours)\)\s*/i, ' ')
     .replace(/\s+s\(\d+\)/ig, ' ')
