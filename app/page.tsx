@@ -27,6 +27,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { getActiveListings } from '@/lib/ingestion';
+import { telegramMessageUrl, telegramOwnerUrl } from '@/lib/telegram-links';
 import type { CourtListing } from '@/lib/ingestion';
 import { matchesListingDateTime } from '@/lib/listing-filters';
 import { inRegion, matchesSearchQuery, parseSearchQuery } from '@/lib/search-query';
@@ -71,8 +72,9 @@ type RoutePlan = {
 type BackendStatus = 'checking' | 'connected' | 'unavailable';
 type SortOption = 'datetime-asc' | 'datetime-desc' | 'price-asc' | 'price-desc';
 
-const TELEGRAM_URL = 'https://t.me/your_group_invite';
-const TELEGRAM_INTERNAL_CHAT_ID = '9876543210';
+const clientEnv = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env;
+const TELEGRAM_URL = clientEnv?.VITE_COURTLY_TELEGRAM_SOURCE_URL?.trim();
+const TELEGRAM_CHAT_ID = clientEnv?.VITE_COURTLY_TELEGRAM_CHAT_ID;
 const LOCATIONS_STORAGE_KEY = 'courtly-locations';
 const ORIGIN_STORAGE_KEY = 'courtly-origin-id';
 const INITIAL_LOCATIONS: SavedLocation[] = [];
@@ -321,10 +323,8 @@ export default function Home() {
   const origin =
     locations.find((location) => location.id === originId) ?? locations[0];
   const messageId = selectedCourt?.sourceMessageId.split(':')[0];
-  const messageUrl = messageId ? `https://t.me/c/${TELEGRAM_INTERNAL_CHAT_ID}/${messageId}` : '#';
-  const ownerUrl = selectedCourt?.ownerUsername
-    ? `https://t.me/${selectedCourt.ownerUsername.replace(/^@/, '')}`
-    : messageUrl;
+  const messageUrl = telegramMessageUrl(TELEGRAM_CHAT_ID, messageId);
+  const ownerUrl = telegramOwnerUrl(selectedCourt?.ownerUsername, messageUrl);
   const hasVerifiedCoordinates = Boolean(selectedCourt) && Number.isFinite(selectedCourt?.lat) && Number.isFinite(selectedCourt?.lng);
   const directionsUrl = hasVerifiedCoordinates
     ? `https://www.google.com/maps/dir/?api=1&destination=${selectedCourt?.lat},${selectedCourt?.lng}&travelmode=${mode === 'Public transport' ? 'transit' : mode === 'Drive' ? 'driving' : 'walking'}${origin?.address ? `&origin=${encodeURIComponent(origin.address + ', Singapore')}` : ''}`
@@ -676,15 +676,17 @@ export default function Home() {
         </a>
         <div className="header-controls">
           <span className="last-updated">Updated {lastUpdated ? new Date(lastUpdated).toLocaleString('en-SG', { timeZone: 'Asia/Singapore', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }) : 'recently'}</span>
-          <a
-            className="group-link"
-            href={TELEGRAM_URL}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <MessageCircle size={15} /> Telegram group{' '}
-            <ArrowUpRight size={13} />
-          </a>
+          {TELEGRAM_URL && (
+            <a
+              className="group-link"
+              href={TELEGRAM_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <MessageCircle size={15} /> Telegram group{' '}
+              <ArrowUpRight size={13} />
+            </a>
+          )}
         </div>
       </header>
       <section className="toolbar" aria-label="Court filters">
@@ -981,10 +983,8 @@ export default function Home() {
           <div className="listing-results-list">
             {sortedCourts.length ? sortedCourts.map((court) => {
               const courtMessageId = court.sourceMessageId.split(':')[0];
-              const courtMessageUrl = `https://t.me/c/${TELEGRAM_INTERNAL_CHAT_ID}/${courtMessageId}`;
-              const courtOwnerUrl = court.ownerUsername
-                ? `https://t.me/${court.ownerUsername.replace(/^@/, '')}`
-                : courtMessageUrl;
+              const courtMessageUrl = telegramMessageUrl(TELEGRAM_CHAT_ID, courtMessageId);
+              const courtOwnerUrl = telegramOwnerUrl(court.ownerUsername, courtMessageUrl);
               const eta = court.id === selectedCourt?.id && routePlan ? routePlan.minutes : listingEtaById[court.id];
               const etaLabel = eta
                 ? `${eta} min`
@@ -1006,8 +1006,8 @@ export default function Home() {
                     <span className="listing-card-facts"><strong>{court.price === null ? 'Price on request' : `$${court.price.toFixed(2)} / court`}</strong><span className="listing-eta"><TrainFront size={13} />{etaLabel}</span></span>
                   </button>
                   <div className="listing-card-actions">
-                    <a href={courtMessageUrl} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} aria-label={`Open message for ${court.name}`} title="Open Telegram message"><MessageCircle size={15} /></a>
-                    <a href={courtOwnerUrl} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} aria-label={`Contact ${court.owner}`} title="Contact owner"><ArrowUpRight size={15} /></a>
+                    {courtMessageUrl && <a href={courtMessageUrl} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} aria-label={`Open message for ${court.name}`} title="Open Telegram message"><MessageCircle size={15} /></a>}
+                    {courtOwnerUrl && <a href={courtOwnerUrl} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} aria-label={`Contact ${court.owner}`} title="Contact owner"><ArrowUpRight size={15} /></a>}
                   </div>
                 </article>
               );
@@ -1050,22 +1050,26 @@ export default function Home() {
             </div>
           </div>
           <div className="detail-actions">
-            <a
-              className="primary-action"
-              href={messageUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <MessageCircle size={15} /> Open message
-            </a>
-            <a
-              className="secondary-action"
-              href={ownerUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Talk to owner <ArrowUpRight size={14} />
-            </a>
+            {messageUrl && (
+              <a
+                className="primary-action"
+                href={messageUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <MessageCircle size={15} /> Open message
+              </a>
+            )}
+            {ownerUrl && (
+              <a
+                className="secondary-action"
+                href={ownerUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Talk to owner <ArrowUpRight size={14} />
+              </a>
+            )}
           </div>
           <div className="transit-section">
             <div className="transit-heading">

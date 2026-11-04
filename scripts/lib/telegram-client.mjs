@@ -1,9 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-
-export const CHAT_ID = 'YOUR_TELEGRAM_CHAT_ID';
-export const SOURCE_URL = 'https://t.me/your_group_invite';
+import { getTelegramSourceUrl, requireTelegramSource } from './telegram-source-config.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const defaultConfigPath = join(root, 'work', 'telegram-client.json');
@@ -25,7 +23,7 @@ export function telegramOwner(message) {
   return fullName || sender.title || sender.username || 'Telegram member';
 }
 
-export function normalizeTelegramMessage(message) {
+export function normalizeTelegramMessage(message, sourceUrl = getTelegramSourceUrl()) {
   const text = String(message.message || '').trim();
   if (!message.id || !text) return null;
   const timestamp = message.date instanceof Date
@@ -38,7 +36,7 @@ export function normalizeTelegramMessage(message) {
     ...(message.sender?.username ? { ownerUsername: String(message.sender.username).replace(/^@/, '') } : {}),
     text,
     postedAt: timestamp.toISOString(),
-    sourceUrl: SOURCE_URL,
+    sourceUrl,
     deleted: /\b(taken|gone|claimed|deleted|no longer available)\b/i.test(text),
   };
 }
@@ -75,6 +73,7 @@ export async function readTelegramFromClient({
   historyLimit = Number(process.env.COURTLY_TELEGRAM_HISTORY_LIMIT || 5000),
   overlap = Number(process.env.COURTLY_TELEGRAM_OVERLAP || 500),
 } = {}) {
+  const { chatId, sourceUrl } = requireTelegramSource();
   const { apiId, apiHash, session } = await loadTelegramConfig(configPath);
   const { TelegramClient, sessions } = await import('teleproto');
   const client = new TelegramClient(new sessions.StringSession(session), apiId, apiHash, {
@@ -85,7 +84,7 @@ export async function readTelegramFromClient({
     if (!await client.checkAuthorization()) {
       throw new Error('Telegram session expired. Run `npm run telegram:setup` again.');
     }
-    const entity = await client.getEntity(Number(CHAT_ID));
+    const entity = await client.getEntity(Number(chatId));
     const state = await readJson(statePath);
     const lastMessageId = Number(state.lastMessageId || 0);
     const minId = lastMessageId > 0 ? Math.max(0, lastMessageId - overlap) : 0;
@@ -98,7 +97,7 @@ export async function readTelegramFromClient({
       if (!message.sender && typeof message.getSender === 'function') {
         try { await message.getSender(); } catch {}
       }
-      const normalized = normalizeTelegramMessage(message);
+      const normalized = normalizeTelegramMessage(message, sourceUrl);
       if (normalized) messages.push(normalized);
     }
     const numericIds = messages.map((message) => Number(message.messageId)).filter(Number.isFinite);

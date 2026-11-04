@@ -1,4 +1,3 @@
-const SOURCE_URL = 'https://t.me/your_group_invite';
 
 export const normalize = (value) => String(value || '')
   .normalize('NFKD')
@@ -812,7 +811,7 @@ export function buildListing(message, venues, { now = new Date(), listingText = 
     sourceMessageId: `${message.messageId}${partCount > 1 ? `:${listingIndex + 1}` : ''}`,
     sourceTelegramMessageId: String(message.messageId),
     ...(partCount > 1 ? { listingIndex: listingIndex + 1 } : {}),
-    sourceUrl: message.sourceUrl || SOURCE_URL,
+    sourceUrl: message.sourceUrl || process.env.COURTLY_TELEGRAM_SOURCE_URL || '',
     rawText: sourceRawText,
     listingText: rawText,
     sourceRawText,

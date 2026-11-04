@@ -1,6 +1,4 @@
-const CHAT_ID = 'YOUR_TELEGRAM_CHAT_ID';
-const TELEGRAM_URL = `https://web.telegram.org/a/#${CHAT_ID}`;
-const SOURCE_URL = 'https://t.me/your_group_invite';
+import { requireTelegramSource } from './telegram-source-config.mjs';
 
 async function listTargets(cdpBase) {
   const response = await fetch(`${cdpBase}/json/list`, { signal: AbortSignal.timeout(3000) });
@@ -35,7 +33,7 @@ function connectCdp(webSocketDebuggerUrl) {
   };
 }
 
-const EXTRACT_MESSAGES = `(() => {
+const extractMessages = (sourceUrl) => `(() => {
   const now = new Date();
   const weekdayIndex = { sun: 0, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6 };
   function groupDate(label) {
@@ -65,31 +63,33 @@ const EXTRACT_MESSAGES = `(() => {
     let posted = explicitTimestamp ? new Date(explicitTimestamp) : groupDate(label);
     const clock = String(timeNode?.textContent || '').trim().match(/(\\d{1,2}):(\\d{2})/);
     if (clock) posted.setHours(Number(clock[1]), Number(clock[2]), 0, 0);
-    return { messageId, owner, text, postedAt: posted.toISOString(), sourceUrl: '${SOURCE_URL}', deleted: /\\b(taken|gone|claimed|deleted|no longer available)\\b/i.test(text) };
+    return { messageId, owner, text, postedAt: posted.toISOString(), sourceUrl: ${JSON.stringify(sourceUrl)}, deleted: /\\b(taken|gone|claimed|deleted|no longer available)\\b/i.test(text) };
   }).filter((message) => message.messageId && message.text);
 })()`;
 
 export async function readTelegramFromChrome({
   cdpBase = process.env.COURTLY_CHROME_CDP_URL || 'http://127.0.0.1:9222',
 } = {}) {
+  const { chatId, sourceUrl } = requireTelegramSource();
+  const telegramUrl = `https://web.telegram.org/a/#${chatId}`;
   let targets;
   try {
     targets = await listTargets(cdpBase);
   } catch {
     throw new Error('Chrome is not exposing the existing tab to local CDP. Open the existing Telegram tab in a Chrome session started with --remote-debugging-port=9222.');
   }
-  let target = targets.find((item) => item.type === 'page' && item.url?.includes(`web.telegram.org/a/#${CHAT_ID}`))
+  let target = targets.find((item) => item.type === 'page' && item.url?.includes(`web.telegram.org/a/#${chatId}`))
     || targets.find((item) => item.type === 'page' && item.url?.includes('web.telegram.org'));
   if (!target?.webSocketDebuggerUrl) throw new Error('The existing Chrome window has no Telegram Web tab. Open the existing group tab, then retry.');
   const cdp = connectCdp(target.webSocketDebuggerUrl);
   try {
-    if (!target.url?.includes(`#${CHAT_ID}`)) {
+    if (!target.url?.includes(`#${chatId}`)) {
       await cdp.send('Page.enable');
-      await cdp.send('Page.navigate', { url: TELEGRAM_URL });
+      await cdp.send('Page.navigate', { url: telegramUrl });
       await new Promise((resolve) => setTimeout(resolve, 2500));
     }
     await cdp.send('Runtime.enable');
-    const result = await cdp.send('Runtime.evaluate', { expression: EXTRACT_MESSAGES, returnByValue: true, awaitPromise: true });
+    const result = await cdp.send('Runtime.evaluate', { expression: extractMessages(sourceUrl), returnByValue: true, awaitPromise: true });
     const messages = result?.result?.value || [];
     if (!messages.length) throw new Error('Telegram Web is open but no chat messages are readable. Sign in once in the Courtly Chrome profile and open the group.');
     return messages;

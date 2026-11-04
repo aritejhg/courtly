@@ -2,6 +2,7 @@ import { access, readFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { assertNotSampleFeed } from './lib/sample-data.mjs';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const feedPath = join(root, 'data', 'telegram-listings.json');
@@ -28,6 +29,8 @@ if (
 ) {
   throw new Error('The listing feed is empty or malformed; refusing to publish it.');
 }
+
+assertNotSampleFeed(feed);
 
 await access(wranglerPath);
 await access(feedPath);

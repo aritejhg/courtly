@@ -106,7 +106,7 @@ export function ingestTelegramMessage(message: TelegramMessage, now = new Date()
     status: message.deleted ? 'deleted' : new Date(playAt).getTime() > now.getTime() ? 'active' : 'expired',
     deletedAt: message.deleted ? now.toISOString() : undefined,
     sourceMessageId: id,
-    sourceUrl: message.sourceUrl ?? 'https://t.me/your_group_invite',
+    sourceUrl: message.sourceUrl ?? '',
     rawText,
     displayDate: isoDate ? new Date(isoDate).toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Date unknown',
     displayDay: isoDate ? new Date(isoDate).toLocaleDateString('en-SG', { weekday: 'long' }) : 'Day unknown',

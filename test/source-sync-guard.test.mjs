@@ -30,6 +30,11 @@ test('source sync preserves unpublished repairs and permits clean source plus ru
     await writeFile(path.join(app, 'data', 'telegram-listings.json'), '[{"live":true}]\n');
     await writeFile(path.join(source, 'data', 'telegram-listings.json'), '[{"runtime":true}]\n');
     await assertSourceSyncSafe(source, app, baseline, baseline);
+    // Generated state exists only in the app: untracked upstream, and never a sync blocker.
+    for (const file of ['parser-ambiguities', 'unmatched-venue-candidates', 'ambiguity-review-history']) {
+      await writeFile(path.join(app, 'data', `${file}.json`), '[]\n');
+    }
+    await assertSourceSyncSafe(source, app, baseline, baseline);
 
     await writeFile(path.join(source, 'scripts', 'parser.mjs'), 'export const alias = "unpublished";\n');
     await assert.rejects(assertSourceSyncSafe(source, app, baseline, baseline), /uncommitted source edits/);
