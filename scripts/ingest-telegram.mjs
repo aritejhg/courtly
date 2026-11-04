@@ -8,7 +8,7 @@ import {
   isPotentialCourtMessage,
   splitMessageListings,
 } from './lib/telegram-parser.mjs';
-import { shouldReplaceDeletedDuplicate } from './lib/listing-dedupe.mjs';
+import { shouldReplaceDeletedDuplicate, suppressIncompleteSameSlotReposts } from './lib/listing-dedupe.mjs';
 
 const argument = (name, fallback) => {
   const index = process.argv.indexOf(name);
@@ -96,7 +96,7 @@ function validateParsedResult({ listing, venueMatch }) {
 const listingMessages = messages.filter((message) =>
   !isIgnoredSwapMessage(message.text)
   && (message.deleted || isPotentialCourtMessage(message.text, venues) || Array.isArray(message.listings)));
-const results = listingMessages.flatMap((message) => {
+const parsedResults = listingMessages.flatMap((message) => {
   const parts = splitMessageListings(message, venues);
   const venueMentions = countVenueMentions(message.text, venues);
   return parts.map((part, index) => {
@@ -120,6 +120,7 @@ const results = listingMessages.flatMap((message) => {
     return { message, ...parsed };
   });
 });
+const results = suppressIncompleteSameSlotReposts(parsedResults);
 
 const validationFailures = results.map(validateParsedResult).filter(Boolean);
 if (validationFailures.length) {
