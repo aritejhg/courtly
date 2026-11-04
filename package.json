@@ -52,7 +52,7 @@
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.2.1",
     "@vitejs/plugin-rsc": "0.5.38",
-    "oxfmt": "0.61.0",
+    "oxfmt": "0.76.0",
     "oxlint": "1.76.0",
     "oxlint-tsgolint": "7.0.2001",
     "tailwindcss": "4.2.1",
@@ -63,5 +63,15 @@
   "type": "module",
   "overrides": {
     "fflate": "0.8.3"
+  },
+  "description": "Find and filter Singapore badminton court swaps shared on Telegram, with travel times from your saved places.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aritejhg/courtly.git"
+  },
+  "homepage": "https://github.com/aritejhg/courtly#readme",
+  "bugs": {
+    "url": "https://github.com/aritejhg/courtly/issues"
   }
 }
