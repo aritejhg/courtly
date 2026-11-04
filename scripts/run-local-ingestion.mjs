@@ -3,7 +3,7 @@ import { spawn } from 'node:child_process';
 import { mkdir, open, readFile, readdir, rename, stat, unlink, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { readTelegramFromChrome } from './lib/chrome-telegram.mjs';
+import { resolveLlmRepairConfig } from './lib/llm-repair-config.mjs';
 import { findDeletedMessageIds, readTelegramFromClient, saveTelegramState } from './lib/telegram-client.mjs';
 import { isPotentialCourtMessage } from './lib/telegram-parser.mjs';
 
@@ -22,10 +22,9 @@ const reviewHistoryPath = join(root, 'data', 'ambiguity-review-history.json');
 const dryRun = process.argv.includes('--dry-run');
 const forceBuild = process.argv.includes('--force-build');
 const publish = process.argv.includes('--publish') || process.env.COURTLY_PUBLISH === '1';
-const skipChrome = process.argv.includes('--skip-chrome');
-const skipTelegram = process.argv.includes('--skip-telegram') || skipChrome;
+const skipTelegram = process.argv.includes('--skip-telegram');
 const telegramSource = String(process.env.COURTLY_TELEGRAM_SOURCE || 'client').toLowerCase();
-const disableLlm = process.argv.includes('--no-llm') || process.env.COURTLY_DISABLE_LLM === '1';
+const { enabled: llmRepairEnabled, model: repairModel } = resolveLlmRepairConfig();
 const repairCommand = String(process.env.COURTLY_REPAIR_COMMAND || 'codex').toLowerCase();
 const configuredMaxLlmRepairs = Number(process.env.COURTLY_MAX_LLM_REPAIRS || 2);
 const maxLlmRepairs = Number.isFinite(configuredMaxLlmRepairs) ? Math.max(0, configuredMaxLlmRepairs) : 2;
@@ -298,7 +297,7 @@ This is an unattended repair run. Make safe in-scope workspace edits without ask
       await run(repair, [
         '--ask-for-approval', 'never',
         '--cd', root,
-        '--model', 'gpt-5.6-luna',
+        '--model', repairModel,
         '--config', 'model_reasoning_effort="low"',
         'exec',
         '--sandbox', 'workspace-write',
@@ -331,10 +330,8 @@ async function main() {
   const allVenues = [...venues, ...overrides];
   let touchedIds = [];
   if (!skipTelegram) {
-    if (!['client', 'chrome'].includes(telegramSource)) throw new Error('COURTLY_TELEGRAM_SOURCE must be `client` or `chrome`.');
-    const result = await runStage('telegram_read', () => telegramSource === 'chrome'
-      ? readTelegramFromChrome().then((messages) => ({ messages, reconcileRange: null }))
-      : readTelegramFromClient(), { source: telegramSource });
+    if (telegramSource !== 'client') throw new Error('COURTLY_TELEGRAM_SOURCE must be `client`.');
+    const result = await runStage('telegram_read', () => readTelegramFromClient(), { source: telegramSource });
     touchedIds = await mergeMessages(result.messages, allVenues, { reconcileRange: result.reconcileRange });
     if (!dryRun && result.nextState) await saveTelegramState(result.nextState);
     await log('telegram_read', { source: telegramSource, extracted: result.messages.length, touched: touchedIds.length, dryRun });
@@ -349,7 +346,7 @@ async function main() {
   let actionable = ambiguities.filter((item) => touched.has(String(item.sourceTelegramMessageId)));
   const history = await readJson(reviewHistoryPath, {});
   let llmCalls = 0;
-  if (actionable.length && !disableLlm) {
+  if (actionable.length && llmRepairEnabled) {
     const skippedFingerprints = new Set();
     while (llmCalls < maxLlmRepairs) {
       ambiguities = await readJson(ambiguitiesPath, []);
@@ -399,7 +396,7 @@ async function main() {
     }
   }
   await log('complete', { touched: touchedIds.length, ambiguities: actionable.length, llmCalls, changed, built: changed && !dryRun });
-  if (actionable.length && !disableLlm) process.exitCode = 2;
+  if (actionable.length && llmRepairEnabled) process.exitCode = 2;
 }
 
 try {
