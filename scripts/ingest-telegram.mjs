@@ -3,12 +3,16 @@ import { resolve } from 'node:path';
 import {
   buildListing,
   countVenueMentions,
-  fingerprint,
   isIgnoredSwapMessage,
   isPotentialCourtMessage,
   splitMessageListings,
 } from './lib/telegram-parser.mjs';
-import { shouldReplaceDeletedDuplicate, suppressIncompleteSameSlotReposts } from './lib/listing-dedupe.mjs';
+import {
+  dedupeListings,
+  listingDeduplicationKey,
+  shouldReplaceDuplicate,
+  suppressIncompleteSameSlotReposts,
+} from './lib/listing-dedupe.mjs';
 
 const argument = (name, fallback) => {
   const index = process.argv.indexOf(name);
@@ -130,7 +134,7 @@ if (validationFailures.length) {
   });
 }
 
-const byMessage = new Map(previousListings.map((listing) => [listing.sourceMessageId, listing]));
+const byMessage = new Map(dedupeListings(previousListings).map((listing) => [listing.sourceMessageId, listing]));
 const currentSourceIds = new Set(results.map(({ listing }) => listing.sourceMessageId));
 const knownMessageIds = new Set(messages.map((message) => String(message.messageId)));
 for (const [sourceMessageId, listing] of byMessage) {
@@ -138,7 +142,15 @@ for (const [sourceMessageId, listing] of byMessage) {
   if (knownMessageIds.has(String(parentId)) && !currentSourceIds.has(sourceMessageId)) byMessage.delete(sourceMessageId);
 }
 
-const byFingerprint = new Map(previousListings.map((listing) => [fingerprint(listing), listing]));
+for (const { listing } of results) {
+  const previous = byMessage.get(listing.sourceMessageId);
+  if (!previous) continue;
+  byMessage.set(listing.sourceMessageId, listing.status === 'deleted' && previous.deletedAt
+    ? { ...listing, deletedAt: previous.deletedAt }
+    : listing);
+}
+
+const byFingerprint = new Map([...byMessage.values()].map((listing) => [listingDeduplicationKey(listing), listing]));
 const currentUnmatched = [];
 const parserAmbiguities = [];
 let newCount = 0;
@@ -167,16 +179,12 @@ for (const { listing, venueMatch, issues } of results) {
     });
   }
   if (byMessage.has(listing.sourceMessageId)) {
-    const previous = byMessage.get(listing.sourceMessageId);
-    byMessage.set(listing.sourceMessageId, listing.status === 'deleted' && previous?.deletedAt
-      ? { ...listing, deletedAt: previous.deletedAt }
-      : listing);
     continue;
   }
-  const listingFingerprint = fingerprint(listing);
+  const listingFingerprint = listingDeduplicationKey(listing);
   const duplicate = byFingerprint.get(listingFingerprint);
   if (duplicate) {
-    if (shouldReplaceDeletedDuplicate(duplicate, listing)) {
+    if (shouldReplaceDuplicate(duplicate, listing)) {
       byMessage.delete(duplicate.sourceMessageId);
       byMessage.set(listing.sourceMessageId, listing);
       byFingerprint.set(listingFingerprint, listing);
@@ -207,7 +215,7 @@ const retainedUnmatched = previousUnmatched.filter((item) => {
 });
 const dedupedUnmatched = [...new Map([...retainedUnmatched, ...currentUnmatched]
   .map((item) => [`${item.sourceMessageId}:${item.text}`, item])).values()];
-const nextListings = [...byMessage.values()].sort((a, b) => new Date(a.playAt) - new Date(b.playAt));
+const nextListings = dedupeListings([...byMessage.values()]).sort((a, b) => new Date(a.playAt) - new Date(b.playAt));
 const deletedCount = nextListings.filter((listing) => listing.status === 'deleted').length;
 const expiredCount = nextListings.filter((listing) => listing.status === 'expired').length;
 const activeCount = nextListings.filter((listing) => listing.status === 'active' && new Date(listing.playAt) > now).length;

@@ -1,5 +1,35 @@
-export function shouldReplaceDeletedDuplicate(existing, candidate) {
-  return existing?.status === 'deleted' && candidate?.status !== 'deleted';
+import { fingerprint } from './telegram-parser.mjs';
+
+export function listingDeduplicationKey(listing) {
+  return JSON.stringify([
+    fingerprint(listing),
+    listing?.venueId ?? null,
+    listing?.playAt ?? null,
+    listing?.playEndAt ?? null,
+    listing?.price ?? null,
+  ]);
+}
+
+export function shouldReplaceDuplicate(existing, candidate) {
+  const rank = { deleted: 0, expired: 1, active: 2 };
+  const existingRank = rank[existing?.status] ?? 0;
+  const candidateRank = rank[candidate?.status] ?? 0;
+  if (existingRank !== candidateRank) return candidateRank > existingRank;
+
+  const existingPostedAt = Date.parse(existing?.postedAt || '');
+  const candidatePostedAt = Date.parse(candidate?.postedAt || '');
+  return Number.isFinite(candidatePostedAt)
+    && (!Number.isFinite(existingPostedAt) || candidatePostedAt > existingPostedAt);
+}
+
+export function dedupeListings(listings) {
+  const byFingerprint = new Map();
+  for (const listing of listings) {
+    const key = listingDeduplicationKey(listing);
+    const existing = byFingerprint.get(key);
+    if (!existing || shouldReplaceDuplicate(existing, listing)) byFingerprint.set(key, listing);
+  }
+  return [...byFingerprint.values()];
 }
 
 export function suppressIncompleteSameSlotReposts(results) {
