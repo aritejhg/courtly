@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Example source sync for a VM that runs ingestion. It pulls main with a read-only
+# deploy key and copies the source into the app directory, preserving .env, work/,
+# and runtime data. The defaults below suit the maintainer's VM: override each one
+# through the environment. See docs/operations.md.
+
 repository="${COURTLY_GITHUB_REPOSITORY:-aritejhg/courtly}"
 source_dir="${COURTLY_GITHUB_SOURCE_DIR:-/opt/courtly/source}"
 app_dir="${COURTLY_APP_DIR:-/opt/courtly/app}"
