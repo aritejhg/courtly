@@ -266,6 +266,11 @@ const NON_VENUE_LINE = /\b(?:court\s+to|lett?ing|available|release|take\s*over|p
 function cleanVenueCandidate(line) {
   return String(line || '')
     .normalize('NFKC')
+    // Telegram exports can repeat a copied venue fragment, sometimes with
+    // the last word duplicated without a space (`ClubClub`). Collapse only
+    // exact adjacent repeats before strict catalog matching.
+    .replace(/\b([\p{L}]{3,})\1\b/gu, '$1')
+    .replace(/\b((?:[\p{L}\p{N}]+\s+){1,5}[\p{L}\p{N}]+)\s+\1\b/giu, '$1')
     .replace(/^[^\p{L}\p{N}]*/u, '')
     .replace(/^(?:lf|looking\s+for)\s+/i, '')
     .replace(/^\(?\s*(?:mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\s*\)\s*[,:-]?\s*/i, '')
