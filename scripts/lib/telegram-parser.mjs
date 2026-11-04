@@ -110,7 +110,7 @@ export function expandedAliases(venue) {
 }
 
 function catalogVenueMatch(text, venues, { exact = false } = {}) {
-  const normalizedText = normalize(text);
+  const normalizedText = normalize(String(text).replace(/(\d(?:\.\d+)?\s*(?:am|pm))(?=[A-Za-z])/gi, '$1 '));
   const stripListingMetadata = (line) => normalize(String(line)
     .replace(TIME_RANGE, ' ')
     .replace(SINGLE_TIME, ' ')
@@ -308,7 +308,7 @@ export function extractVenueCandidates(text) {
     // Dates, times and prices are reliable separators in compact one-line
     // listings. Splitting on them isolates the venue without venue-specific
     // message exceptions.
-    const separated = String(rawLine)
+    const separated = timeSearchText(rawLine)
       .replace(DATE_TOKEN, '\n')
       .replace(TIME_RANGE, '\n')
       .replace(SINGLE_TIME, '\n')
@@ -458,6 +458,8 @@ const TIME_RANGE = /(?<![\d.])\b((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(a
 const SINGLE_TIME = /\b((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm|noon|midnight)\b/i;
 const NUMERIC_DATE = /(?<![:\d])\b(\d{1,2})\s*(?:\/|-)\s*(\d{1,2})(?:\s*(?:\/|-)\s*(\d{2,4}))?\b/g;
 const timeSearchText = (text) => String(text || '')
+  // Split a clock marker from an immediately attached venue name.
+  .replace(/(\d(?:\.\d+)?\s*(?:am|pm))(?=[A-Za-z])/gi, '$1 ')
   // A sentence separator before a colon-formatted clock should not hide the
   // leading hour (`|.10:30am to 12:30pm`). Decimal dotted times remain intact.
   .replace(/(^|[^\d])\.(?=\d{1,2}:\d{2}(?:am|pm|m)?\b)/gi, '$1 ');
