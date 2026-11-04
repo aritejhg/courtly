@@ -464,7 +464,8 @@
     "aliases": [
       "Christ Church Secondary School Hall",
       "Christ Church Sec",
-      "Christ Church Sec Hall"
+      "Christ Church Sec Hall",
+      "Christchurch Sec"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/christ-church-secondary-school-hall",
@@ -511,7 +512,8 @@
     "aliases": [
       "Clementi Town Secondary School Hall",
       "Clementi Town Sec",
-      "Clementi Town Sec Hall"
+      "Clementi Town Sec Hall",
+      "Clememti Town Secondary School"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/clementi-town-secondary-school-hall",
@@ -704,7 +706,8 @@
     "id": "active-sg:eunoia-junior-college-hall",
     "canonicalName": "Eunoia Junior College Hall",
     "aliases": [
-      "Eunoia Junior College Hall"
+      "Eunoia Junior College Hall",
+      "Eunonia Junnior College Hall"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/eunoia-junior-college-hall",
@@ -1383,7 +1386,8 @@
       "OTH",
       "OTH Our Tampines Hub",
       "Tampines Hub",
-      "Tamp Hub"
+      "Tamp Hub",
+      "One Tampines Hub"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/our-tampines-hub-community-auditorium",
@@ -1931,7 +1935,8 @@
     "aliases": [
       "Teck Ghee Primary School Hall",
       "Teck Ghee Pri",
-      "Teck Ghee Pri Hall"
+      "Teck Ghee Pri Hall",
+      "Tech Ghee Primary School Hall"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/teck-ghee-primary-school-hall",

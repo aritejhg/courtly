@@ -252,6 +252,9 @@ function cleanVenueCandidate(line) {
     .replace(/^[^\p{L}\p{N}]*/u, '')
     .replace(/^(?:lf|looking\s+for)\s+/i, '')
     .replace(/^\(?\s*(?:mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\s*\)\s*[,:-]?\s*/i, '')
+    .replace(/^\d{1,2}(?:st|nd|rd|th)?\s+(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b[, ]*/i, '')
+    .replace(/^\d+[a-z]?[).:-]\s*/i, '')
+    .replace(/^court\s+(?=[^\n]*\b(?:school|primary|secondary|pri|sec)\b)/i, '')
     .replace(/\bsports?hall\b/ig, (value) => value.toLowerCase().startsWith('sports') ? 'sports hall' : 'sport hall')
     // Compact Telegram shorthand often glues the venue type to the name
     // (`Kaki BukitCC`). Add the separator before candidate matching.
@@ -294,7 +297,8 @@ export function extractVenueCandidates(text) {
       .replace(SINGLE_TIME, '\n')
       .replace(/\$+\s*\d+(?:\.\d{1,2})?/g, '\n')
       .replace(/\b\d+(?:\.\d{1,2})?\s*(?:dollars?|bucks?)\b/ig, '\n');
-    const fragments = separated.split(/\n/);
+    const withDurationSeparators = separated.replace(/\b\d+(?:\.\d+)?\s*(?:hrs?|hours?)\b/ig, '\n');
+    const fragments = withDurationSeparators.split(/\n/);
     const branded = String(rawLine).match(/\b(?:(?:sbh|kff)\s+[@a-z][a-z-]*|moe|oth)\b/ig) || [];
     for (const fragment of [...fragments, ...branded]) {
       const line = cleanVenueCandidate(fragment);
@@ -419,7 +423,7 @@ export function parsePrice(text) {
     .match(/(?:^|[\s(])(\d{1,2}(?:\.\d{1,2})?)(?:\s*\([^)]*\))?\s*$/))
     .find(Boolean);
   if (barePrice) return { value: Number(barePrice[1]), status: 'deterministic', source: barePrice[1] };
-  const looksLikePrice = /(?:\$|s\$|sgd|dollars?|bucks?|(?:price|cost)\s*(?:is|:|=))\s*\d/i.test(text);
+  const looksLikePrice = /(?:\$|s\$|sgd|dollars?|bucks?|(?:price|cost)[ \t]*(?:is|:|=))[ \t]*\d/i.test(text);
   return { value: null, status: looksLikePrice ? 'ambiguous' : 'missing' };
 }
 
