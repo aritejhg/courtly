@@ -255,7 +255,7 @@ async function invokeCodexRepair(ambiguity, history) {
   let repair;
   const prompt = `A deterministic Courtly Telegram parser found a genuinely unknown case in ${itemPath}.
 
-Work only in this repository. Start by reading PROJECT_CONTEXT.md, then the ambiguity file, parser, existing fixtures, and generated outputs. This is an unattended repair on the private ingestion VM. The parent ingestion process will build and publish only after you finish successfully; do not deploy manually.
+Work only in this repository. Start by reading docs/operations.md, then the ambiguity file, parser, existing fixtures, and generated outputs. This is an unattended repair on the private ingestion VM. The parent ingestion process will build and publish only after you finish successfully; do not deploy manually.
 
 Courtly only reads the configured Telegram source chat. Preserve that scope. Never read, print, alter, or copy secrets, Telegram sessions, Cloudflare tokens, access-gate code, systemd files, or anything under work/ except the supplied ambiguity JSON. Do not send Telegram messages, change hosting, or broaden access.
 
