@@ -1,3 +1,5 @@
+import { isListingFeed } from './listing-feed-validation.mjs';
+
 export const FEED_KEY = 'courtly:listings';
 
 type FeedStore = { get(key: string, type: 'json'): Promise<unknown> };
@@ -8,19 +10,6 @@ type FeedOptions = {
   loadSample: () => Promise<unknown[]>;
 };
 type FeedResult = { status: number; body: Record<string, unknown> };
-
-function isListingFeed(value: unknown): value is unknown[] {
-  return Array.isArray(value) && value.every((item) => {
-    if (!item || typeof item !== 'object') return false;
-    const listing = item as Record<string, unknown>;
-    return (
-      typeof listing.id === 'string' &&
-      typeof listing.playAt === 'string' &&
-      typeof listing.status === 'string' &&
-      typeof listing.sourceMessageId === 'string'
-    );
-  });
-}
 
 /**
  * Sample listings are invented, so they are served only by the dev server. A

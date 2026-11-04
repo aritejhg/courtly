@@ -3,6 +3,7 @@ import { join, resolve } from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { assertNotSampleFeed } from './lib/sample-data.mjs';
+import { assertPublishableFeed } from '../lib/listing-feed-validation.mjs';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const feedPath = join(root, 'data', 'telegram-listings.json');
@@ -22,14 +23,7 @@ try {
   throw new Error('The listing feed is not valid JSON; refusing to publish it.');
 }
 
-if (
-  !Array.isArray(feed) ||
-  feed.length === 0 ||
-  !feed.every((listing) => listing && typeof listing === 'object' && typeof listing.id === 'string')
-) {
-  throw new Error('The listing feed is empty or malformed; refusing to publish it.');
-}
-
+assertPublishableFeed(feed);
 assertNotSampleFeed(feed);
 
 await access(wranglerPath);
