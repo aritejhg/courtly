@@ -20,7 +20,7 @@ test('ingestion refuses to run without a configured Telegram source', () => {
       && /COURTLY_TELEGRAM_SOURCE_URL/.test(error.message),
   );
   assert.throws(
-    () => requireTelegramSource({ env: { COURTLY_TELEGRAM_CHAT_ID: '123', COURTLY_TELEGRAM_SOURCE_URL: 'https://t.me/your_group_invite' }, ...noEnvFile }),
+    () => requireTelegramSource({ env: { COURTLY_TELEGRAM_CHAT_ID: '123', COURTLY_TELEGRAM_SOURCE_URL: 'https://t.me/+example' }, ...noEnvFile }),
     /COURTLY_TELEGRAM_CHAT_ID must be/,
   );
   assert.equal(getTelegramSourceUrl({ env: {}, ...noEnvFile }), '');
@@ -33,7 +33,7 @@ test('ingestion config rejects the reserved sample URL in any disguise', () => {
       (error) => error.code === 'TELEGRAM_SOURCE_NOT_CONFIGURED' && /reserved sample URL/.test(error.message),
     );
   }
-  const near = 'https://t.me/your_group_invite';
+  const near = 'https://t.me/+example2';
   assert.equal(requireTelegramSource({ env: { COURTLY_TELEGRAM_CHAT_ID: '-1001', COURTLY_TELEGRAM_SOURCE_URL: near }, ...noEnvFile }).sourceUrl, near);
 });
 
@@ -41,8 +41,8 @@ test('Telegram source resolves from the environment before the VM .env file', as
   const dir = await mkdtemp(path.join(os.tmpdir(), 'courtly-env-'));
   const envFile = path.join(dir, '.env');
   try {
-    await writeFile(envFile, '# comment\nOTHER=1\nexport COURTLY_TELEGRAM_CHAT_ID="-1001"\nCOURTLY_TELEGRAM_SOURCE_URL=https://t.me/your_group_invite\n');
-    assert.deepEqual(requireTelegramSource({ env: {}, envFile }), { chatId: '-1001', sourceUrl: 'https://t.me/your_group_invite' });
+    await writeFile(envFile, '# comment\nOTHER=1\nexport COURTLY_TELEGRAM_CHAT_ID="-1001"\nCOURTLY_TELEGRAM_SOURCE_URL=https://t.me/+invented-source\n');
+    assert.deepEqual(requireTelegramSource({ env: {}, envFile }), { chatId: '-1001', sourceUrl: 'https://t.me/+invented-source' });
     assert.equal(requireTelegramSource({ env: { COURTLY_TELEGRAM_CHAT_ID: '-1002' }, envFile }).chatId, '-1002');
   } finally {
     await rm(dir, { recursive: true, force: true });
@@ -93,8 +93,8 @@ test('a valid KV feed is served as live data', async () => {
 });
 
 test('feed publishing refuses sample listings', () => {
-  assert.throws(() => assertNotSampleFeed([{ sourceUrl: 'https://t.me/your_group_invite' }, { sourceUrl: SAMPLE_SOURCE_URL }]), /1 sample listing/);
-  assert.doesNotThrow(() => assertNotSampleFeed([{ sourceUrl: 'https://t.me/your_group_invite' }]));
+  assert.throws(() => assertNotSampleFeed([{ sourceUrl: 'https://t.me/+real' }, { sourceUrl: SAMPLE_SOURCE_URL }]), /1 sample listing/);
+  assert.doesNotThrow(() => assertNotSampleFeed([{ sourceUrl: 'https://t.me/+real' }]));
 });
 
 test('source sync never copies checked-in listing data over runtime data', async () => {

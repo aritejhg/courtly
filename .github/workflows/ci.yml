@@ -43,9 +43,9 @@ jobs:
 
       - name: Build with synthetic Telegram values
         env:
-          VITE_COURTLY_TELEGRAM_SOURCE_URL: https://t.me/your_group_invite
+          VITE_COURTLY_TELEGRAM_SOURCE_URL: https://t.me/+ci-synthetic-invite-marker
           VITE_COURTLY_TELEGRAM_CHAT_ID: '-1009876543210123'
-          COURTLY_TELEGRAM_SOURCE_URL: https://t.me/your_group_invite
+          COURTLY_TELEGRAM_SOURCE_URL: https://t.me/+ci-synthetic-invite-marker
           COURTLY_TELEGRAM_CHAT_ID: '-1009876543210123'
         run: npm run build
 

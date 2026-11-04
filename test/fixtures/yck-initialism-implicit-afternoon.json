@@ -1,0 +1,20 @@
+{
+  "sourceMessageId": "73252",
+  "sourceTelegramMessageId": "73252",
+  "postedAt": "2026-09-03T04:17:23.000Z",
+  "owner": "Uma Pillai",
+  "text": "Extra court\n\n17-Sep (Thursday )\nYCK 3-4 $4.2",
+  "rawText": "Extra court\n\n17-Sep (Thursday )\nYCK 3-4 $4.2",
+  "issues": [
+    {
+      "field": "venue",
+      "kind": "unmatched",
+      "candidates": []
+    },
+    {
+      "field": "time",
+      "kind": "ambiguous",
+      "reason": "time range has no am/pm marker"
+    }
+  ]
+}

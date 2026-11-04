@@ -93,7 +93,7 @@ Keep the backup and the old checkout until a full run has succeeded. Then remove
 
 ## Runtime data
 
-- Never commit real `data/telegram-*.json` content. In this repository those files hold invented samples, marked by the source URL `https://t.me/your_group_invite`. Ingestion config rejects that URL, so real records cannot inherit it.
+- Never commit real `data/telegram-*.json` content. In this repository those files hold invented samples, marked by the source URL `https://t.me/+example`. Ingestion config rejects that URL, so real records cannot inherit it.
 - `data/parser-ambiguities.json`, `data/unmatched-venue-candidates.json`, and `data/ambiguity-review-history.json` are git-ignored runtime state, and can contain message text.
 - Verified venues live in `data/badminton-venues.json` and `data/venue-overrides.json`. Unmatched venues are recorded for review. Never attach coordinates to an unverified venue.
 

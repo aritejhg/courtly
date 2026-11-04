@@ -1,6 +1,6 @@
 // Checked-in data/telegram-*.json files are invented sample data for development
 // and CI. Every record carries this source URL so it can never pass as a live feed.
-export const SAMPLE_SOURCE_URL = 'https://t.me/your_group_invite';
+export const SAMPLE_SOURCE_URL = 'https://t.me/+example';
 
 // The exact records in the checked-in sample files. test/sample-data-init.test.mjs
 // fails if these drift from the files, so a sample change cannot go unnoticed.

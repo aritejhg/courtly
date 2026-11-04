@@ -16,14 +16,14 @@ const listing = {
   postedAt: '2029-12-01T00:00:00.000Z',
   status: 'active',
   sourceMessageId: '1',
-  sourceUrl: 'https://t.me/your_group_invite',
+  sourceUrl: 'https://t.me/+invented',
   rawText: 'Court at Example Hall',
   displayDate: '1 Jan 2030',
   displayDay: 'Tuesday',
   displayTime: '8:00 am',
   duration: '1 hour',
   price: 10,
-  owner: 'Sample Owner',
+  owner: 'Alex',
 };
 const loadSample = async () => [];
 

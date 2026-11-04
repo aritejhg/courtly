@@ -1,0 +1,15 @@
+{
+  "sourceMessageId": "73336",
+  "sourceTelegramMessageId": "73336",
+  "postedAt": "2026-09-05T15:17:23.000Z",
+  "owner": "Chris Ong",
+  "text": "Extra court\n\n8 sept\nBukit panjang gov high\n8-10am $12.6\n10-11am  $6.30\n\nPing me",
+  "rawText": "Extra court\n\n8 sept\nBukit panjang gov high\n8-10am $12.6\n10-11am  $6.30\n\nPing me",
+  "issues": [
+    {
+      "field": "venue",
+      "kind": "unmatched",
+      "candidates": []
+    }
+  ]
+}

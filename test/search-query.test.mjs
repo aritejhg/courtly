@@ -10,8 +10,8 @@ const listing = (overrides = {}) => ({
   name: 'Shelton College',
   facility: 'Shelton college',
   area: 'Bukit Merah',
-  owner: 'Sample Owner',
-  ownerUsername: 'sample_user' ,
+  owner: 'fakeowner',
+  ownerUsername: '@fake_handle',
   price: 24,
   duration: '2 hours',
   playAt: '2026-10-10T11:00:00.000Z', // Sat 7pm SGT
@@ -239,8 +239,8 @@ test('review round 2 (Sol): free text ANDs, spaced comma lists, curly apostrophe
   assert.equal(matches('venue:"Shelton College", "Tampines Hub"'), true);
   assert.deepEqual(parse('area:east, west shelton').area.include, ['east', 'west']);
   assert.deepEqual(parse('area:east, west shelton').terms.include, ['shelton']);
-  assert.equal(matches('by:"Fakeco’s Games"', { owner: 'Sample Owner' }), true);
-  assert.equal(matches("by:fakeco's", { owner: 'Sample Owner' }), true);
+  assert.equal(matches('by:"Fakeco’s Games"', { owner: 'Fakeco’s Games' }), true);
+  assert.equal(matches("by:fakeco's", { owner: 'Fakeco’s Games' }), true);
   assert.equal(matches('price:7.404,7.40', { price: 7.4 }), true);
   const overnight = { playAt: '2026-10-10T15:30:00.000Z', playEndAt: '2026-10-10T17:00:00.000Z' }; // 23:30-01:00 SGT
   assert.equal(matches('to:2am', overnight), true);

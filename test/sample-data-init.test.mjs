@@ -10,7 +10,7 @@ const checkedIn = async (name) => JSON.parse(await readFile(new URL(`../data/${n
 const sampleMessages = await checkedIn('telegram-messages.json');
 const sampleListings = await checkedIn('telegram-listings.json');
 const sample = (id) => ({ messageId: id, id, sourceUrl: SAMPLE_SOURCE_URL });
-const live = (id) => ({ messageId: id, id, sourceUrl: 'https://t.me/your_group_invite' });
+const live = (id) => ({ messageId: id, id, sourceUrl: 'https://t.me/+invented-live' });
 
 async function withFiles(messages, listings, run) {
   const dir = await mkdtemp(path.join(os.tmpdir(), 'courtly-init-'));
@@ -41,7 +41,7 @@ test('a fresh install has its sample messages and listings emptied', async () =>
 });
 
 test('live data is never touched', async () => {
-  const relabel = (records, index) => records.map((record, at) => (at === index ? { ...record, sourceUrl: 'https://t.me/your_group_invite' } : record));
+  const relabel = (records, index) => records.map((record, at) => (at === index ? { ...record, sourceUrl: 'https://t.me/+invented-live' } : record));
   const cases = [
     [[live('1')], [live('a')]],
     // Real records that inherited the sample URL through bad configuration.

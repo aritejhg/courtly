@@ -113,7 +113,7 @@ export function ingestTelegramMessage(message: TelegramMessage, now = new Date()
     displayTime: isoDate ? new Date(isoDate).toLocaleTimeString('en-SG', { hour: 'numeric', minute: '2-digit' }) : 'Time unknown',
     duration: 'Unknown',
     price: null,
-    owner: 'Sample Owner',
+    owner: 'Telegram member',
     ...(venueMatch.venue?.lat != null && venueMatch.venue?.lng != null
       ? { lat: venueMatch.venue.lat, lng: venueMatch.venue.lng }
       : {}),

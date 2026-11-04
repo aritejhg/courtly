@@ -17,11 +17,11 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 
 test('the Telegram config is private and never cached', async () => {
   const response = telegramConfigResponse({
-    COURTLY_TELEGRAM_SOURCE_URL: ' https://t.me/your_group_invite ',
+    COURTLY_TELEGRAM_SOURCE_URL: ' https://t.me/+synthetic-invite ',
     COURTLY_TELEGRAM_CHAT_ID: ' -1009999 ',
   });
   assert.equal(response.headers.get('cache-control'), 'private, no-store');
-  assert.deepEqual(await response.json(), { sourceUrl: 'https://t.me/your_group_invite', chatId: '-1009999' });
+  assert.deepEqual(await response.json(), { sourceUrl: 'https://t.me/+synthetic-invite', chatId: '-1009999' });
 });
 
 test('Telegram links stay hidden when unset or malformed', () => {
@@ -39,7 +39,7 @@ async function serve(request) {
 
 test('the Telegram config endpoint is behind the gate', async () => {
   const secret = 'test-only-access-code';
-  const sourceUrl = 'https://t.me/your_group_invite';
+  const sourceUrl = 'https://t.me/+synthetic-invite';
   Object.assign(workerEnv, {
     COURTLY_ACCESS_CODE: secret,
     COURTLY_TELEGRAM_SOURCE_URL: sourceUrl,
