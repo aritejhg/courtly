@@ -6,6 +6,7 @@
       "Punggol Sport Centre",
       "Punggol Sports Centre",
       "Punggol Sport Hall",
+      "Punggol Indoor Sports Hall",
       "Punggol Sports Hall",
       "Punggol SH",
       "Punngol Sports Hall"
@@ -720,9 +721,14 @@
     "id": "telegram:thomson-cc",
     "canonicalName": "Thomson CC",
     "aliases": [
-      "Thomson CC"
+      "Thomson CC",
+      "Thomson night"
     ],
-    "source": "Repeated exact Telegram venue name",
+    "unmarkedAliases": [
+      "Thomson night"
+    ],
+    "source": "Repeated same-owner Thomson night / Thomson CC listings; OnePA confirms badminton at Thomson CC MPH",
+    "sourceUrl": "https://www.onepa.gov.sg/courses/badminton-for-kids-c027251460",
     "kind": "community_club",
     "area": "Thomson",
     "lat": 1.351202992134877,
