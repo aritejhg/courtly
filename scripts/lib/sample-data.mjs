@@ -27,9 +27,13 @@ export const isSampleListing = (listing) => listing?.sourceUrl === SAMPLE_SOURCE
 export const isReservedSampleUrl = (url) =>
   String(url).trim().replace(/[?#].*$/, '').replace(/\/+$/, '').toLowerCase() === SAMPLE_SOURCE_URL.toLowerCase();
 
-const isExactSampleSet = (records, idField, expectedIds) =>
-  records.every(isSampleListing)
-  && JSON.stringify(records.map((record) => record?.[idField]).sort()) === JSON.stringify([...expectedIds].sort());
+const isExactSampleSet = (records, idField, expectedIds) => {
+  const ids = new Set(records.map((record) => record?.[idField]));
+  return records.every(isSampleListing)
+    && records.length === expectedIds.length
+    && ids.size === expectedIds.length
+    && expectedIds.every((id) => ids.has(id));
+};
 
 export function assertNotSampleFeed(feed) {
   const count = feed.filter(isSampleListing).length;
