@@ -64,3 +64,57 @@ export function suppressIncompleteSameSlotReposts(results) {
     return !key || slotPrices.get(key)?.size !== 1;
   });
 }
+
+export function suppressDuplicateActiveSlotReposts(results) {
+  const slots = new Map();
+  const keyFor = ({ listing, venueMatch }) => {
+    const owner = String(listing?.owner || '').trim().toLowerCase();
+    if (venueMatch?.status !== 'deterministic'
+      || listing?.status !== 'active'
+      || listing?.deletedAt
+      || !owner
+      || !listing?.venueId
+      || !Number.isFinite(listing?.lat)
+      || !Number.isFinite(listing?.lng)
+      || !listing?.playAt
+      || !listing?.playEndAt
+      || !Number.isFinite(Date.parse(listing.playAt))
+      || !Number.isFinite(Date.parse(listing.playEndAt))
+      || Date.parse(listing.playEndAt) < Date.parse(listing.playAt)) return null;
+    const explicitCourt = String(listing.listingText || '').match(/\b(?:court|ct)\s*(\d+)\b/i)?.[1] || null;
+    return JSON.stringify([
+      owner,
+      listing.venueId,
+      listing.lat,
+      listing.lng,
+      listing.playAt,
+      listing.playEndAt,
+      listing.sport,
+      explicitCourt,
+    ]);
+  };
+  const parentIdFor = ({ listing }) => String(listing.sourceTelegramMessageId || listing.sourceMessageId || '').split(':', 1)[0];
+
+  results.forEach((result, index) => {
+    const key = keyFor(result);
+    if (!key) return;
+    const parentId = parentIdFor(result);
+    const slot = slots.get(key) || { parents: new Set(), latest: null };
+    slot.parents.add(parentId);
+    const postedAt = Date.parse(result.listing.postedAt || '');
+    const latestPostedAt = slot.latest ? Date.parse(slot.latest.result.listing.postedAt || '') : Number.NEGATIVE_INFINITY;
+    if (!slot.latest || (Number.isFinite(postedAt) && (!Number.isFinite(latestPostedAt) || postedAt >= latestPostedAt))) {
+      slot.latest = { index, parentId, result };
+    }
+    slots.set(key, slot);
+  });
+
+  const winnerBySlot = new Map([...slots]
+    .filter(([, slot]) => slot.parents.size > 1)
+    .map(([key, slot]) => [key, slot.latest.parentId]));
+  return results.filter((result) => {
+    const key = keyFor(result);
+    const winner = key && winnerBySlot.get(key);
+    return !winner || parentIdFor(result) === winner;
+  });
+}

@@ -11,6 +11,7 @@ import {
   dedupeListings,
   listingDeduplicationKey,
   shouldReplaceDuplicate,
+  suppressDuplicateActiveSlotReposts,
   suppressIncompleteSameSlotReposts,
 } from './lib/listing-dedupe.mjs';
 
@@ -124,7 +125,7 @@ const parsedResults = listingMessages.flatMap((message) => {
     return { message, ...parsed };
   });
 });
-const results = suppressIncompleteSameSlotReposts(parsedResults);
+const results = suppressDuplicateActiveSlotReposts(suppressIncompleteSameSlotReposts(parsedResults));
 
 const validationFailures = results.map(validateParsedResult).filter(Boolean);
 if (validationFailures.length) {
