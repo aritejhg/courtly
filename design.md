@@ -68,9 +68,3 @@ Courtly is a fast comparison surface for active badminton court listings. The us
 - Exact Telegram message links and owner fallback behavior remain intact.
 - Verify long venue names, rail scrolling, detail scrolling, earliest-play-time order, direct actions, filtered pin count, persisted location after reload, directions URL, desktop, and narrow viewport.
 
-## Saved references
-
-- `public/design-references/current-courtly.png` — current layout and clipping problem.
-- `public/design-references/vim-map-list.png` — visual restraint, dense persistent rail, stateful selection.
-- `public/design-references/google-maps-detail.png` — list + popout detail + map layering.
-- `public/design-references/map-floating-island.png` — floating island over a large map.
