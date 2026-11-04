@@ -97,7 +97,6 @@ function addDays(key: string, days: number) {
 
 // Year accepts any digit count so a half-typed or mistyped year ("31 feb 202") is consumed and reported, not left as free text.
 const DAY_MONTH = /^(\d{1,2})(?:st|nd|rd|th)?\s*([a-z]{3,})\.?(?:,?\s*(\d+))?$/;
-const MONTH_DAY = /^([a-z]{3,})\.?\s*(\d{1,2})(?:st|nd|rd|th)?(?:,?\s*(\d+))?$/;
 // Parsing needs a separator before the year so "oct 2026" is not read as 20 Oct '26.
 const MONTH_DAY_STRICT = /^([a-z]{3,})\.?\s*(\d{1,2})(?:st|nd|rd|th)?(?:(?:,\s*|\s+)(\d+))?$/;
 const monthOf = (word: string) => MONTHS.findIndex((name) => name.startsWith(word)) + 1;

@@ -366,8 +366,8 @@ export default function Home() {
         setRouteError(unavailableMessage);
         return;
       }
-      // travelUnavailableMessage already rejects a missing court; this narrows the type.
-      if (!selectedCourt) return;
+      // travelUnavailableMessage already rejects these; this narrows the type.
+      if (!selectedCourt?.playAt) return;
       setRouteLoading(true);
       setRoutePlan(null);
       setRouteError('');
