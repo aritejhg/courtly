@@ -454,8 +454,8 @@ const MONTH_TOKEN = 'jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:
 const DATE_TOKEN = new RegExp(`(?<![\\d.])\\b(?:today|tonight|tomorrow|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?|\\d{1,2}(?:st|nd|rd|th)?(?:\\s*(?:/|-)\\s*\\d{1,2}|\\s*-?\\s*(?:${MONTH_TOKEN}))|${MONTH_TOKEN}\\s+\\d{1,2}(?:st|nd|rd|th)?)\\b`, 'i');
 // Telegram listings sometimes abbreviate PM as a trailing `m` (for example,
 // `9-10m`). Accept it only inside a clock expression.
-const TIME_RANGE = /(?<![\d.])\b((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm|m)?\s*(?:-|–|—|to)\s*((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm|m)?\b/i;
-const SINGLE_TIME = /\b((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm)\b/i;
+const TIME_RANGE = /(?<![\d.])\b((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm|noon|midnight|m)?\s*(?:-|–|—|to)\s*((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm|noon|midnight|m)?\b/i;
+const SINGLE_TIME = /\b((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm|noon|midnight)\b/i;
 const NUMERIC_DATE = /(?<![:\d])\b(\d{1,2})\s*(?:\/|-)\s*(\d{1,2})(?:\s*(?:\/|-)\s*(\d{2,4}))?\b/g;
 const timeSearchText = (text) => String(text || '')
   // A sentence separator before a colon-formatted clock should not hide the
@@ -597,8 +597,22 @@ function to24(hour, meridiem) {
   return value;
 }
 
+function normalizeMeridiem(value) {
+  const meridiem = value?.toLowerCase();
+  if (meridiem === 'm' || meridiem === 'noon') return 'pm';
+  if (meridiem === 'midnight') return 'am';
+  return meridiem;
+}
+
+function isValidClockMarker(value, markerValue, meridiem = normalizeMeridiem(markerValue)) {
+  const marker = markerValue?.toLowerCase();
+  return (!['noon', 'midnight'].includes(marker) || Number(parseClock(value)[0]) === 12)
+    && isValidClock(value, meridiem);
+}
+
 export function parseTime(text, date, { defaultMeridiem = null } = {}) {
   if (!date) return { value: null, status: 'missing' };
+  defaultMeridiem = normalizeMeridiem(defaultMeridiem);
   // Numeric dates such as `10-09-26` also satisfy TIME_RANGE (`10-09`).
   // Mask date tokens before scanning for a clock range so the date cannot
   // steal the match from the actual time later in the message.
@@ -626,11 +640,12 @@ export function parseTime(text, date, { defaultMeridiem = null } = {}) {
     return { value: { start, end, display: `${formatTime(start)}–${formatTime(end)}`, duration: `${hours} ${hours === 1 ? 'hour' : 'hours'}`, hours }, status, reason };
   };
   if (!match) {
-    const single = timeText.match(/\b((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm)\b/i);
+    const single = timeText.match(SINGLE_TIME);
     const duration = timeText.match(/\b(\d+(?:\.\d+)?)\s*(?:hr|hrs|hour|hours)\b/i);
     if (!single) return { value: null, status: 'missing' };
-    if (!isValidClock(single[1], single[2])) return { value: null, status: 'ambiguous', reason: 'invalid clock value' };
-    const start = makeStart(single[1], single[2]);
+    const singleMeridiem = normalizeMeridiem(single[2]);
+    if (!isValidClockMarker(single[1], single[2], singleMeridiem)) return { value: null, status: 'ambiguous', reason: 'invalid clock value' };
+    const start = makeStart(single[1], singleMeridiem);
     if (!duration) return {
       value: { start, end: start, display: formatTime(start), duration: 'Unknown', hours: null },
       status: 'deterministic',
@@ -638,14 +653,14 @@ export function parseTime(text, date, { defaultMeridiem = null } = {}) {
     return makeResult(start, new Date(start.getTime() + Number(duration[1]) * 3600000));
   }
   const [, startValue, startMeridiemValue, endValue, endMeridiemValue] = match;
-  const normalizeMeridiem = (value) => value?.toLowerCase() === 'm' ? 'pm' : value?.toLowerCase();
   let startMeridiem = normalizeMeridiem(startMeridiemValue);
   let endMeridiem = normalizeMeridiem(endMeridiemValue);
   // Some posts combine 24-hour clocks with a redundant meridiem marker.
   // Preserve the unambiguous 24-hour value and ignore that marker.
   if (startMeridiem && Number(parseClock(startValue)[0]) > 12) startMeridiem = null;
   if (endMeridiem && Number(parseClock(endValue)[0]) > 12) endMeridiem = null;
-  if (!isValidClock(startValue, startMeridiem) || !isValidClock(endValue, endMeridiem)) {
+  if (!isValidClockMarker(startValue, startMeridiemValue, startMeridiem)
+    || !isValidClockMarker(endValue, endMeridiemValue, endMeridiem)) {
     return { value: null, status: 'ambiguous', reason: 'invalid clock value' };
   }
   const [startHour] = parseClock(startValue);
@@ -842,7 +857,7 @@ export function buildListing(message, venues, { now = new Date(), listingText = 
   const localRange = preferredTimeRange(rawText);
   const sourceRanges = [...sourceRawText.matchAll(new RegExp(TIME_RANGE.source, 'ig'))];
   const sourceMeridiems = [...new Set(sourceRanges.flatMap((match) => [match[2], match[4]])
-    .filter(Boolean).map((value) => value.toLowerCase() === 'm' ? 'pm' : value.toLowerCase()))];
+    .filter(Boolean).map(normalizeMeridiem))];
   const startHour = localRange ? parseClock(localRange[1])[0] : null;
   const contextualMeridiem = sourceMeridiems.length === 1 ? sourceMeridiems[0]
     : venueMatch.venue && startHour != null && startHour <= 6 ? 'pm' : null;
