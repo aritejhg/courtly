@@ -15,6 +15,8 @@ concurrency:
 
 jobs:
   test-build-deploy:
+    # Forks: change this to your repository to enable production deploys.
+    if: github.repository == 'aritejhg/courtly'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -22,10 +24,12 @@ jobs:
       COURTLY_REQUIRE_FEED_BINDING: '1'
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Use Node.js 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
           cache: npm
@@ -53,6 +57,13 @@ jobs:
 
       - name: Verify protected production edge
         shell: bash
+        env:
+          # Repository variable holding the Worker's URL. The check is skipped if unset.
+          PRODUCTION_URL: ${{ vars.COURTLY_PRODUCTION_URL }}
         run: |
-          status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' https://courtly.example.workers.dev/)"
+          if [ -z "$PRODUCTION_URL" ]; then
+            echo "::warning::COURTLY_PRODUCTION_URL is not set; skipping the production edge check."
+            exit 0
+          fi
+          status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "$PRODUCTION_URL")"
           test "$status" = "401"
