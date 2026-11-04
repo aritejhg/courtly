@@ -75,6 +75,12 @@ test('accepts the nullable and optional fields ingestion legitimately emits', ()
   assert.doesNotThrow(() => assertPublishableFeed([emitted]));
 });
 
+test('accepts preserved listings whose essential time window is incomplete', () => {
+  const incomplete = { ...listing, status: 'incomplete' };
+  assert.equal(isValidListing(incomplete), true);
+  assert.doesNotThrow(() => assertPublishableFeed([incomplete]));
+});
+
 test('accepts every record in the checked-in feed, as publisher and reader', async () => {
   const feed = JSON.parse(await readFile(new URL('../data/telegram-listings.json', import.meta.url), 'utf8'));
   assert.ok(feed.length > 0);

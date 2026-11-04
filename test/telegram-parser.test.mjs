@@ -1493,6 +1493,28 @@ test('derives listing status from a fixed clock, boundary and deletion signals',
   assert.equal(taken.deletedAt, '2026-11-14T00:00:00.000Z');
 });
 
+test('keeps future listings with no usable end time out of the active feed', () => {
+  const now = new Date('2026-11-14T00:00:00.000Z');
+  const build = (messageId, text) => buildListing(
+    { messageId, postedAt: '2026-11-01T00:00:00.000Z', text },
+    venues,
+    { now },
+  ).listing;
+
+  const singleTime = build('synthetic-single-time', 'Spare court 15 Nov 10am Yishun Sport Hall $10');
+  assert.equal(singleTime.status, 'incomplete');
+  assert.equal(singleTime.playEndAt, singleTime.playAt);
+  assert.equal(singleTime.duration, 'Unknown');
+
+  const missingTime = build('synthetic-missing-time', 'Spare court 15 Nov Yishun Sport Hall $10');
+  assert.equal(missingTime.status, 'incomplete');
+  assert.equal(missingTime.displayTime, 'Time unknown');
+
+  const explicitDuration = build('synthetic-explicit-duration', 'Spare court 15 Nov 10am for 2 hours Yishun Sport Hall $10');
+  assert.equal(explicitDuration.status, 'active');
+  assert.equal(Date.parse(explicitDuration.playEndAt) - Date.parse(explicitDuration.playAt), 2 * 60 * 60 * 1000);
+});
+
 test('rolls a month-day date that already passed into the next year, unless the year is explicit', () => {
   const postedAt = '2026-12-30T04:00:00.000Z';
   const rolled = parseDate('Spare court 2 Jan 8pm', postedAt);

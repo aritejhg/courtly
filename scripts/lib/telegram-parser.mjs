@@ -879,6 +879,9 @@ export function buildListing(message, venues, { now = new Date(), listingText = 
   const price = parsePrice(rawText);
   const playAt = time.value?.start || date.value;
   const isDeleted = Boolean(message.deleted || /\b(taken|gone|claimed|deleted|no longer available)\b/i.test(rawText));
+  const hasCompleteTimeRange = Boolean(time.value?.start && time.value?.end && time.value.end > time.value.start);
+  const status = isDeleted ? 'deleted' : !playAt || playAt <= now ? 'expired'
+    : hasCompleteTimeRange ? 'active' : 'incomplete';
   const listing = {
     id: `tg-${message.messageId}${partCount > 1 ? `-${listingIndex + 1}` : ''}-${slugify(venueMatch.venue?.canonicalName || 'unmatched')}`,
     facility: venueMatch.venue?.canonicalName || 'Unmatched venue',
@@ -887,7 +890,7 @@ export function buildListing(message, venues, { now = new Date(), listingText = 
     playAt: playAt?.toISOString() || new Date(0).toISOString(),
     playEndAt: time.value?.end?.toISOString() || playAt?.toISOString() || new Date(0).toISOString(),
     postedAt,
-    status: isDeleted ? 'deleted' : playAt && playAt > now ? 'active' : 'expired',
+    status,
     ...(isDeleted ? { deletedAt: now.toISOString() } : {}),
     sourceMessageId: `${message.messageId}${partCount > 1 ? `:${listingIndex + 1}` : ''}`,
     sourceTelegramMessageId: String(message.messageId),
