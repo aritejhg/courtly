@@ -458,7 +458,8 @@
     "aliases": [
       "woodlands",
       "woodlands cc",
-      "woodlands community club"
+      "woodlands community club",
+      "woodland cc"
     ],
     "source": "onePA",
     "kind": "community_club",
@@ -899,7 +900,7 @@
   {
     "id": "onepa:changi-simei-cc",
     "canonicalName": "Changi Simei CC",
-    "aliases": ["Changi Simei CC", "Changi-Simei Community Club"],
+    "aliases": ["Changi Simei CC", "Changi-Simei Community Club", "Changi Semei CC", "Change Simei CC"],
     "source": "OneMap",
     "sourceUrl": "https://www.onemap.gov.sg/",
     "kind": "community_club",
@@ -1101,3 +1102,4 @@
     "address": "5 Stadium Drive, OCBC Arena, Singapore 397631"
   }
 ]
+

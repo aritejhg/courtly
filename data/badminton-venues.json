@@ -21,7 +21,9 @@
     "aliases": [
       "Anchor Green Primary School Hall",
       "Anchor Green Pri",
-      "Anchor Green Pri Hall"
+      "Anchor Green Pri Hall",
+      "Anchorgreen Primary School",
+      "Anchorgreen Primary"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/anchor-green-primary-school-hall",
@@ -164,7 +166,8 @@
     "id": "active-sg:bishan-clubhouse",
     "canonicalName": "Bishan Clubhouse",
     "aliases": [
-      "Bishan Clubhouse"
+      "Bishan Clubhouse",
+      "Bishan club house"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bishan-clubhouse",
@@ -597,6 +600,7 @@
     "canonicalName": "Deyi Secondary School Hall",
     "aliases": [
       "Deyi Secondary School Hall",
+      "Deyi Secondary Sport Hall",
       "Deyi Sec",
       "Deyi Sec Hall"
     ],
@@ -1159,7 +1163,8 @@
     "aliases": [
       "Marsiling Secondary School Hall",
       "Marsiling Sec",
-      "Marsiling Sec Hall"
+      "Marsiling Sec Hall",
+      "Marsling 2ndry school"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/marsiling-secondary-school-hall",
@@ -1516,7 +1521,8 @@
     "id": "active-sg:poi-ching-school-hall",
     "canonicalName": "Poi Ching School Hall",
     "aliases": [
-      "Poi Ching School Hall"
+      "Poi Ching School Hall",
+      "PoiChing School Hall"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/poi-ching-school-hall",
@@ -1857,7 +1863,7 @@
     "sourceUrl": "https://smasharena.sg/location",
     "kind": "sport_hall",
     "zone": "West",
-    "address": "511 Upper Jurong Road, D’Arena Country Club, Block B, Level 2, Singapore 638366",
+    "address": "511 Upper Jurong Road, Dâ€™Arena Country Club, Block B, Level 2, Singapore 638366",
     "lat": 1.329425336,
     "lng": 103.682841561
   },
@@ -1921,7 +1927,8 @@
     "aliases": [
       "Swiss Cottage Secondary School Hall",
       "Swiss Cottage Sec",
-      "Swiss Cottage Sec Hall"
+      "Swiss Cottage Sec Hall",
+      "Swiss Cottage Sport Hall"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/swiss-cottage-secondary-school-hall",
@@ -1938,7 +1945,8 @@
       "Teck Ghee Primary School Hall",
       "Teck Ghee Pri",
       "Teck Ghee Pri Hall",
-      "Tech Ghee Primary School Hall"
+      "Tech Ghee Primary School Hall",
+      "Tech Ghee Primary Sport Hall"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/teck-ghee-primary-school-hall",
@@ -2259,3 +2267,4 @@
     "lng": 103.8698
   }
 ]
+
