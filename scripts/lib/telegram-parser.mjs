@@ -221,20 +221,37 @@ function strictVenueMatchesInText(text, venues) {
     if (!owners) return [];
     return [...owners.values()].map((venue) => ({ venue, alias }));
   });
-  // Compact one-line posts sometimes place a unique, verified direct alias
-  // between date/time and price metadata (`... 3-4 pm delta $3.5 ...`).
-  // Match only catalog-owned aliases as standalone text; never use derived
-  // aliases or fuzzy substrings for this fallback.
-  const normalizedText = normalize(text);
+  // Compact one-line posts often put release copy, a short venue name, date,
+  // and price together. Match only a unique, catalog-owned direct alias in
+  // the line's venue-bearing text. Ignore parenthesized locality notes and
+  // location qualifiers such as "near Marsiling CC".
+  const directTextVariants = String(text || '').split(/\r?\n/).flatMap((line) => {
+    const primary = line.split(/\s+(?:near|beside|opp(?:osite)?)\s+/i)[0];
+    return [primary, cleanVenueCandidate(primary), primary.replace(/\s*\([^)]*\)/g, ' ')];
+  }).map(normalize);
+  const directText = directTextVariants.join(' ');
   for (const venue of venues) {
     const directAliases = [venue.canonicalName, ...(venue.aliases || [])]
       .map(normalize)
-      .filter((alias) => alias.length >= 3);
+      .filter((alias) => (alias.length >= 6 && alias.includes(' ')
+        && /\b(?:cc|community club|community centre|sport|sports|hall|sh|school|primary|secondary|pri|sec|girls|safra|sbh|kff|moe|active hub|arena|arina|clubhouse)\b/.test(alias))
+        || (venue.kind === 'sport_hall' && alias.length >= 3 && !alias.includes(' ')));
     for (const alias of directAliases) {
       const owners = aliases.get(alias);
-      if (venue.kind !== 'sport_hall' || alias.includes(' ') || !owners || owners.size !== 1
-        || !new RegExp(`(^| )${alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}( |$)`, 'i').test(normalizedText)
-        || !/\b(?:\d{1,2}(?::\d{2})?\s*(?:am|pm|m)?\s*(?:-|to)\s*\d{1,2}|\$\s*\d|\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\b)/i.test(normalizedText)) continue;
+      const requiresTimeContext = venue.kind === 'sport_hall' && !alias.includes(' ');
+      const hasTimeContext = /\b(?:\d{1,2}(?::\d{2})?\s*(?:am|pm|m)?\s*(?:-|to)\s*\d{1,2}|\$\s*\d|\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\b)/i.test(directText);
+      const escapedAlias = alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const exactMention = directTextVariants.some((variant) => {
+        const match = new RegExp(`(^| )${escapedAlias}( |$)`, 'i').exec(variant);
+        if (!match) return false;
+        const start = match.index + match[1].length;
+        const end = start + alias.length;
+        const before = variant.slice(0, start).trim();
+        const after = variant.slice(end).trim();
+        return !/\b(?:unknown|unverified|different|another)\s*$/i.test(before)
+          && !/^(?:annex|extension|branch|campus)\b/i.test(after);
+      });
+      if (!owners || owners.size !== 1 || !exactMention || (requiresTimeContext && !hasTimeContext)) continue;
       matches.push({ venue, alias });
     }
   }
