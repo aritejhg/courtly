@@ -48,6 +48,9 @@ test('live data is never touched', async () => {
     [[sample('5551')], [sample('tg-5551-real-hall')]],
     [[...sampleMessages, sample('5551')], sampleListings],
     [sampleMessages, [...sampleListings, sample('tg-5551-real-hall')]],
+    // The same number of marked records, with one unknown ID.
+    [[{ ...sampleMessages[0], messageId: '5551' }, ...sampleMessages.slice(1)], sampleListings],
+    [sampleMessages, [{ ...sampleListings[0], id: 'tg-5551-real-hall' }, ...sampleListings.slice(1)]],
     // Part of the sample set, or a repeated sample record in place of one.
     [sampleMessages.slice(1), sampleListings],
     [sampleMessages, sampleListings.slice(1)],
