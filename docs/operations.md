@@ -40,6 +40,17 @@ Repair is off by default. With `COURTLY_ENABLE_LLM_REPAIR=1`, when a parser ambi
 
 If used, a repair may change only deterministic parser code, a synthetic regression fixture, and a strict alias or coordinate mapping for a verified venue. It must pass the tests, and must not touch sessions, credentials, access controls, or generated data.
 
+## Worker secrets
+
+The Worker reads `COURTLY_ACCESS_CODE`, `COURTLY_TELEGRAM_SOURCE_URL`, and `COURTLY_TELEGRAM_CHAT_ID` at runtime. They are not in the Wrangler config, the build, or the deploy workflow. `wrangler deploy` keeps them, so set each one once, and again only to change it:
+
+```sh
+npx wrangler secret put COURTLY_TELEGRAM_SOURCE_URL --name <worker-name>
+npx wrangler secret put COURTLY_TELEGRAM_CHAT_ID --name <worker-name>
+```
+
+Each command prompts for the value and takes effect without a rebuild. Delete any GitHub Actions secrets or `VITE_`-prefixed build variables that held these values. The ingestion host still reads the same names from its own `.env`.
+
 ## Source sync on the VM
 
 `scripts/deploy-from-github-oracle.sh` is an example that keeps a VM on the latest `main`, and `ops/courtly-ingest.service.d/github-deploy.conf` runs it before each ingestion. Its paths have generic example defaults under `/opt/courtly`. Set each one for your host in `Environment=` lines of the drop-in, before a sync can deliver a new script. The drop-in's `ExecStartPre` path must match too:
@@ -86,7 +97,7 @@ Keep the backup and the old checkout until a full run has succeeded.
 | Listings are stale | Check the ingestion timer, logs in `work/production-ingestion.jsonl`, and any `publish_blocked` events. |
 | Code on the site is stale | Confirm the commit is on `main` and the deploy workflow passed. `/api/build` returns the deployed commit. |
 | Deploy says no `workers.dev` subdomain exists | Register one under Workers & Pages in Cloudflare, then retry. |
-| No Telegram links in the UI | The `VITE_COURTLY_TELEGRAM_*` values were absent at build time. Set them and rebuild. |
+| No Telegram links in the UI | The Worker has no `COURTLY_TELEGRAM_SOURCE_URL` or `COURTLY_TELEGRAM_CHAT_ID` secret, or the source URL is not an `https://t.me/` link. Set them with `wrangler secret put`. No rebuild is needed. |
 
 ## UI behaviour to preserve
 
@@ -94,7 +105,7 @@ Keep the backup and the old checkout until a full run has succeeded.
 
 - Saved locations are device-local: `localStorage` keys `courtly-locations` and `courtly-origin-id`. Load them in an effect, and do not write defaults until hydration completes, or startup can overwrite them.
 - Never hardcode a home address, postal code, or other user origin.
-- The Telegram source is configuration, never source code. Exact message links use `https://t.me/c/<chat-id-without-100-prefix>/<message-id>`. With no browser values, links are hidden.
+- The Telegram source is configuration, never source code. Exact message links use `https://t.me/c/<chat-id-without-100-prefix>/<message-id>`. The browser gets these values only from the gated `/api/telegram-config`, and links are hidden without them. Never expose them through a `VITE_` variable: static client assets bypass the access gate.
 - An owner action links to `https://t.me/<username>` only when `ownerUsername` exists. Otherwise it links to the message and must not imply a direct message.
 
 ### Product

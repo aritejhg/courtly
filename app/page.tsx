@@ -28,6 +28,8 @@ import {
 } from '@/components/ui/popover';
 import { getActiveListings } from '@/lib/ingestion';
 import { telegramMessageUrl, telegramOwnerUrl } from '@/lib/telegram-links';
+import { EMPTY_TELEGRAM_CONFIG } from '@/lib/telegram-config';
+import type { TelegramConfig } from '@/lib/telegram-config';
 import type { CourtListing } from '@/lib/ingestion';
 import { matchesListingDateTime } from '@/lib/listing-filters';
 import { inRegion, matchesSearchQuery, parseSearchQuery } from '@/lib/search-query';
@@ -72,9 +74,6 @@ type RoutePlan = {
 type BackendStatus = 'checking' | 'connected' | 'unavailable';
 type SortOption = 'datetime-asc' | 'datetime-desc' | 'price-asc' | 'price-desc';
 
-const clientEnv = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env;
-const TELEGRAM_URL = clientEnv?.VITE_COURTLY_TELEGRAM_SOURCE_URL?.trim();
-const TELEGRAM_CHAT_ID = clientEnv?.VITE_COURTLY_TELEGRAM_CHAT_ID;
 const LOCATIONS_STORAGE_KEY = 'courtly-locations';
 const ORIGIN_STORAGE_KEY = 'courtly-origin-id';
 const INITIAL_LOCATIONS: SavedLocation[] = [];
@@ -253,6 +252,7 @@ export default function Home() {
   const [listingFeedStatus, setListingFeedStatus] = useState<'loading' | 'ready' | 'unavailable'>('loading');
   const [backendCommit, setBackendCommit] = useState('');
   const [backendStatus, setBackendStatus] = useState<BackendStatus>('checking');
+  const [telegramConfig, setTelegramConfig] = useState<TelegramConfig>(EMPTY_TELEGRAM_CONFIG);
   const [listingEtaById, setListingEtaById] = useState<Record<string, number>>({});
   const [listingEtaStatus, setListingEtaStatus] = useState<'idle' | 'loading' | 'ready' | 'unavailable'>('idle');
   const [now] = useState(() => new Date());
@@ -323,12 +323,27 @@ export default function Home() {
   const origin =
     locations.find((location) => location.id === originId) ?? locations[0];
   const messageId = selectedCourt?.sourceMessageId.split(':')[0];
-  const messageUrl = telegramMessageUrl(TELEGRAM_CHAT_ID, messageId);
+  const messageUrl = telegramMessageUrl(telegramConfig.chatId ?? undefined, messageId);
   const ownerUrl = telegramOwnerUrl(selectedCourt?.ownerUsername, messageUrl);
   const hasVerifiedCoordinates = Boolean(selectedCourt) && Number.isFinite(selectedCourt?.lat) && Number.isFinite(selectedCourt?.lng);
   const directionsUrl = hasVerifiedCoordinates
     ? `https://www.google.com/maps/dir/?api=1&destination=${selectedCourt?.lat},${selectedCourt?.lng}&travelmode=${mode === 'Public transport' ? 'transit' : mode === 'Drive' ? 'driving' : 'walking'}${origin?.address ? `&origin=${encodeURIComponent(origin.address + ', Singapore')}` : ''}`
     : null;
+
+  useEffect(() => {
+    let cancelled = false;
+    // Served only behind the access gate. On any failure the links stay hidden.
+    void fetch('/api/telegram-config', { cache: 'no-store' })
+      .then((response) => (response.ok ? (response.json() as Promise<Partial<TelegramConfig>>) : null))
+      .then((payload) => {
+        if (cancelled || !payload) return;
+        setTelegramConfig({ sourceUrl: payload.sourceUrl ?? null, chatId: payload.chatId ?? null });
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -680,10 +695,10 @@ export default function Home() {
         </a>
         <div className="header-controls">
           <span className="last-updated">Updated {lastUpdated ? new Date(lastUpdated).toLocaleString('en-SG', { timeZone: 'Asia/Singapore', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }) : 'recently'}</span>
-          {TELEGRAM_URL && (
+          {telegramConfig.sourceUrl && (
             <a
               className="group-link"
-              href={TELEGRAM_URL}
+              href={telegramConfig.sourceUrl}
               target="_blank"
               rel="noreferrer"
             >
@@ -989,7 +1004,7 @@ export default function Home() {
           <div className="listing-results-list">
             {sortedCourts.length ? sortedCourts.map((court) => {
               const courtMessageId = court.sourceMessageId.split(':')[0];
-              const courtMessageUrl = telegramMessageUrl(TELEGRAM_CHAT_ID, courtMessageId);
+              const courtMessageUrl = telegramMessageUrl(telegramConfig.chatId ?? undefined, courtMessageId);
               const courtOwnerUrl = telegramOwnerUrl(court.ownerUsername, courtMessageUrl);
               const eta = court.id === selectedCourt?.id && routePlan ? routePlan.minutes : listingEtaById[court.id];
               const etaLabel = eta

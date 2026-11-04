@@ -80,8 +80,6 @@ These are embedded in client JavaScript, so treat them as public.
 
 | Variable | Purpose |
 | --- | --- |
-| `VITE_COURTLY_TELEGRAM_SOURCE_URL` | Invite link for the Telegram group button |
-| `VITE_COURTLY_TELEGRAM_CHAT_ID` | Chat ID for exact message links |
 | `VITE_ONEMAP_TOKEN` | OneMap token for public transport routing. Not set by the deploy workflow. |
 | `VITE_CLOUDFLARE_ANALYTICS_TOKEN` | Cloudflare Web Analytics token. If unset, the beacon is not loaded. |
 
@@ -90,6 +88,8 @@ These are embedded in client JavaScript, so treat them as public.
 | Name | Purpose |
 | --- | --- |
 | `COURTLY_ACCESS_CODE` | Secret access code. If unset, a built Worker returns 503 on every host. The dev server runs without it. |
+| `COURTLY_TELEGRAM_SOURCE_URL` | Secret. Invite link for the Telegram group button, served only by the gated `/api/telegram-config`. If unset, the button is hidden. |
+| `COURTLY_TELEGRAM_CHAT_ID` | Secret. Chat ID for exact message links, served the same way. If unset, message links are hidden. |
 | `COURTLY_FEED` | KV binding, created from `COURTLY_FEED_KV_NAMESPACE_ID` at build time |
 
 ### Build and deploy
@@ -177,6 +177,15 @@ Keep real data out of git. `data/telegram-messages.json` and `data/telegram-list
    npx wrangler secret put COURTLY_ACCESS_CODE --name <worker-name>
    ```
 
+   Optionally, set the Telegram links. Without them, the group button and message links are hidden. Each command prompts for the value, so it stays out of your shell history and logs. Secrets persist across deploys, and the deploy workflow never sets them.
+
+   ```sh
+   npx wrangler secret put COURTLY_TELEGRAM_SOURCE_URL --name <worker-name>
+   npx wrangler secret put COURTLY_TELEGRAM_CHAT_ID --name <worker-name>
+   ```
+
+   If you set these as GitHub secrets or `VITE_`-prefixed build variables before, remove them. Anything in a build-time client bundle is public, even behind the access gate.
+
 4. Publish a real feed from your ingestion host with `npm run publish:feed`, or use `--publish` on the runner. See [docs/operations.md](docs/operations.md).
 
 ### GitHub Actions
@@ -188,8 +197,6 @@ Keep real data out of git. `data/telegram-messages.json` and `data/telegram-list
 | Secret | `CLOUDFLARE_API_TOKEN` | Yes | Worker deploy |
 | Variable | `COURTLY_FEED_KV_NAMESPACE_ID` | Yes | Feed binding |
 | Variable | `COURTLY_PRODUCTION_URL` | No | Worker URL, which must return 401 to anonymous requests. If unset, the check is skipped with a warning. |
-| Secret | `COURTLY_TELEGRAM_SOURCE_URL` | No | Without it, the group button is hidden |
-| Secret | `COURTLY_TELEGRAM_CHAT_ID` | No | Without it, message links are hidden |
 | Variable | `VITE_CLOUDFLARE_ANALYTICS_TOKEN` | No | Without it, the analytics beacon is not loaded |
 
 ## Responsible use

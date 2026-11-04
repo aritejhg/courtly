@@ -45,9 +45,8 @@ jobs:
 
       - name: Build production app
         env:
-          # Secrets, not vars: Actions masks them in logs, which are public on a public repo.
-          VITE_COURTLY_TELEGRAM_SOURCE_URL: ${{ secrets.COURTLY_TELEGRAM_SOURCE_URL }}
-          VITE_COURTLY_TELEGRAM_CHAT_ID: ${{ secrets.COURTLY_TELEGRAM_CHAT_ID }}
+          # Telegram values are runtime Worker secrets and must not be build inputs.
+          # Set them once with `wrangler secret put`. See docs/operations.md.
           VITE_CLOUDFLARE_ANALYTICS_TOKEN: ${{ vars.VITE_CLOUDFLARE_ANALYTICS_TOKEN }}
         run: npm run build
 

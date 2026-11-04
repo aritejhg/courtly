@@ -41,5 +41,16 @@ jobs:
       - name: Test
         run: npm test
 
-      - name: Build
+      - name: Build with synthetic Telegram values
+        env:
+          VITE_COURTLY_TELEGRAM_SOURCE_URL: https://t.me/your_group_invite
+          VITE_COURTLY_TELEGRAM_CHAT_ID: '-1009876543210123'
+          COURTLY_TELEGRAM_SOURCE_URL: https://t.me/your_group_invite
+          COURTLY_TELEGRAM_CHAT_ID: '-1009876543210123'
         run: npm run build
+
+      - name: Check Telegram values stay out of the build
+        env:
+          COURTLY_MARKER_SOURCE_URL: ci-synthetic-invite-marker
+          COURTLY_MARKER_CHAT_ID: '9876543210123'
+        run: node scripts/check-client-bundle.mjs
