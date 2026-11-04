@@ -73,8 +73,9 @@ test('an empty, invalid, or failing KV feed never falls back to sample listings'
 });
 
 test('a valid KV feed is served as live data', async () => {
-  const listings = [{ id: 'a', playAt: '2030-01-01T00:00:00.000Z', status: 'active', sourceMessageId: '1' }];
-  const result = await resolveListingFeed({ store: { get: async () => listings }, isDevelopment: false, loadSample });
+  const listings = JSON.parse(await readFile(new URL('../data/telegram-listings.json', import.meta.url), 'utf8'));
+  const store = { get: async (key) => (key === 'courtly:listings' ? listings : null) };
+  const result = await resolveListingFeed({ store, isDevelopment: false, loadSample });
   assert.equal(result.status, 200);
   assert.equal(result.body.source, 'cloudflare-kv');
   assert.deepEqual(result.body.listings, listings);

@@ -1,6 +1,6 @@
-import { isListingFeed } from './listing-feed-validation.mjs';
+import { FEED_KEY, isListingFeed } from './listing-feed-validation.mjs';
 
-export const FEED_KEY = 'courtly:listings';
+export { FEED_KEY };
 
 type FeedStore = { get(key: string, type: 'json'): Promise<unknown> };
 type FeedOptions = {

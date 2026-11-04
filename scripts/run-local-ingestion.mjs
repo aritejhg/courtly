@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { resolveLlmRepairConfig } from './lib/llm-repair-config.mjs';
 import { findDeletedMessageIds, readTelegramFromClient, saveTelegramState } from './lib/telegram-client.mjs';
 import { isPotentialCourtMessage } from './lib/telegram-parser.mjs';
+import { initializeSampleData } from './lib/sample-data.mjs';
 
 if (process.env.COURTLY_RUNTIME !== 'hermes') {
   console.error('Production ingestion runs only on the ingestion host.');
@@ -329,6 +330,15 @@ async function main() {
   ]);
   const allVenues = [...venues, ...overrides];
   let touchedIds = [];
+  if (!dryRun) {
+    const initialized = await initializeSampleData({
+      messagesPath,
+      listingsPath: join(root, 'data', 'telegram-listings.json'),
+      readFile,
+      writeJson: writeJsonAtomic,
+    });
+    if (initialized.initialized) await log('sample_data_initialized', { removed: initialized.removed });
+  }
   if (!skipTelegram) {
     if (telegramSource !== 'client') throw new Error('COURTLY_TELEGRAM_SOURCE must be `client`.');
     const result = await runStage('telegram_read', () => readTelegramFromClient(), { source: telegramSource });

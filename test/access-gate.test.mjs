@@ -116,3 +116,45 @@ test('old constant tokens no longer authenticate', async () => {
   const old = createHmac('sha256', gateSecret).update('courtly-access-v1').digest('hex');
   assert.equal((await withCookie(`courtly_access=${old}`)).status, 401);
 });
+
+test('the token is an HMAC of the version and expiry under the configured secret', async () => {
+  const issuedAt = 1_800_000_000_000;
+  const cookie = await loginCookieAt(issuedAt);
+  const [expiry, signature] = decodeURIComponent(cookie.split('=')[1]).split('.');
+  assert.equal(Number(expiry), Math.floor(issuedAt / 1000) + MAX_AGE_SECONDS);
+  const sign = (key, at) => createHmac('sha256', key).update(`courtly-access-v2:${at}`).digest('hex');
+  assert.equal(signature, sign(gateSecret, expiry));
+
+  // Issued under one secret, rejected under another.
+  const otherSecret = 'another-test-only-access-code';
+  const other = await accessGate(new Request(gateUrl, { headers: { cookie } }), otherSecret, { now: issuedAt });
+  assert.equal(other.status, 401);
+
+  // A token built independently with the right key is accepted; with the wrong key it is not.
+  const forgedWith = (key) => `courtly_access=${expiry}.${sign(key, expiry)}`;
+  assert.equal(await withCookie(forgedWith(gateSecret), issuedAt), null);
+  assert.equal((await withCookie(forgedWith(otherSecret), issuedAt)).status, 401);
+  assert.equal((await withCookie(forgedWith(''), issuedAt)).status, 401);
+});
+
+test('the session cookie is HttpOnly, Secure, SameSite=Lax and site-wide', async () => {
+  const login = await accessGate(new Request(gateUrl, {
+    method: 'POST',
+    body: new URLSearchParams({ code: gateSecret }),
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+  }), gateSecret);
+  const [pair, ...attributes] = login.headers.get('set-cookie').split(';').map((part) => part.trim());
+  assert.match(pair, /^courtly_access=[^=s]+$/);
+  const flags = new Set();
+  const values = new Map();
+  for (const attribute of attributes) {
+    const [name, value] = attribute.split('=');
+    if (value === undefined) flags.add(name.toLowerCase());
+    else values.set(name.toLowerCase(), value);
+  }
+  assert.ok(flags.has('httponly'));
+  assert.ok(flags.has('secure'));
+  assert.equal(values.get('samesite'), 'Lax');
+  assert.equal(values.get('path'), '/');
+  assert.equal(values.get('max-age'), String(MAX_AGE_SECONDS));
+});

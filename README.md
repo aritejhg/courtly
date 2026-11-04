@@ -153,6 +153,8 @@ Read [Responsible use](#responsible-use) first. Do these steps on the host that 
 
 Keep real data out of git. `data/telegram-messages.json` and `data/telegram-listings.json` are tracked sample files, so `git status` will show them as changed on an ingestion host. Do not commit them.
 
+On the first real run (not a dry run), ingestion empties those two files if every record in them is a marked sample (source URL `https://t.me/your_group_invite`), so samples never reach the live feed. If either file holds any other record, nothing is changed.
+
 ## Deployment
 
 1. Create a KV namespace:
