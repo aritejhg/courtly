@@ -75,16 +75,25 @@ The guard's ancestor check blocks a checkout whose history was rewritten, and an
 2. Back up the app directory, including `.env`, `work/`, and runtime data under `data/`.
 3. In the old checkout, save local commits and uncommitted edits as patches. Compare the app directory with the old checkout, and save any edits made only there. Reapply these repairs through the new repository, then wait for them to reach `main`.
 4. Set the variables above and the `ExecStartPre` path in the drop-in, then reload systemd.
-5. Move the old checkout aside and clone the new `main` to `COURTLY_GITHUB_SOURCE_DIR`.
-6. Copy the new source into the app directory with the same `rsync` options and excludes as the sync script, so `.env`, `work/`, and runtime data stay in place. Run `npm ci` there.
-7. Write the new commit SHA to `.courtly-source-commit` in the app directory. This only records the baseline you just copied.
-8. Run the sync script once, confirm it exits cleanly, then start the timer.
+5. Replace the deploy key, because the old key belongs to the old repository:
+   1. Generate a new key on the VM as the service user: `ssh-keygen -t ed25519 -N '' -C courtly-deploy -f <new-key-path>`.
+   2. Add `<new-key-path>.pub` as a deploy key on the replacement repository, with write access left off.
+   3. Keep the private key on the VM, readable only by the service user (`chmod 600`), and set `COURTLY_GITHUB_KEY` to its path in the drop-in. Reload systemd again.
+   4. Verify access with the same SSH options as the sync script. This must print the new `main` SHA. Do not continue, or restart ingestion, until it does:
+      ```sh
+      GIT_SSH_COMMAND="ssh -i <new-key-path> -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=<known-hosts-path>" \
+        git ls-remote git@github.com:<owner>/<name>.git refs/heads/main
+      ```
+6. Move the old checkout aside and clone the new `main` to `COURTLY_GITHUB_SOURCE_DIR`, using the new key.
+7. Copy the new source into the app directory with the same `rsync` options and excludes as the sync script, so `.env`, `work/`, and runtime data stay in place. Run `npm ci` there.
+8. Write the new commit SHA to `.courtly-source-commit` in the app directory. This only records the baseline you just copied.
+9. Run the sync script once, confirm it exits cleanly, then start the timer.
 
-Keep the backup and the old checkout until a full run has succeeded.
+Keep the backup and the old checkout until a full run has succeeded. Then remove the old deploy key from the old repository and the VM.
 
 ## Runtime data
 
-- Never commit real `data/telegram-*.json` content. In this repository those files hold invented samples, marked by the source URL `https://t.me/your_group_invite`.
+- Never commit real `data/telegram-*.json` content. In this repository those files hold invented samples, marked by the source URL `https://t.me/your_group_invite`. Ingestion config rejects that URL, so real records cannot inherit it.
 - `data/parser-ambiguities.json`, `data/unmatched-venue-candidates.json`, and `data/ambiguity-review-history.json` are git-ignored runtime state, and can contain message text.
 - Verified venues live in `data/badminton-venues.json` and `data/venue-overrides.json`. Unmatched venues are recorded for review. Never attach coordinates to an unverified venue.
 

@@ -26,6 +26,17 @@ test('ingestion refuses to run without a configured Telegram source', () => {
   assert.equal(getTelegramSourceUrl({ env: {}, ...noEnvFile }), '');
 });
 
+test('ingestion config rejects the reserved sample URL in any disguise', () => {
+  for (const url of [SAMPLE_SOURCE_URL, `${SAMPLE_SOURCE_URL}/`, `${SAMPLE_SOURCE_URL}?x=1`, `${SAMPLE_SOURCE_URL}#x`, SAMPLE_SOURCE_URL.toUpperCase().replace('HTTPS://T.ME', 'https://t.me')]) {
+    assert.throws(
+      () => requireTelegramSource({ env: { COURTLY_TELEGRAM_CHAT_ID: '-1001', COURTLY_TELEGRAM_SOURCE_URL: url }, ...noEnvFile }),
+      (error) => error.code === 'TELEGRAM_SOURCE_NOT_CONFIGURED' && /reserved sample URL/.test(error.message),
+    );
+  }
+  const near = 'https://t.me/your_group_invite';
+  assert.equal(requireTelegramSource({ env: { COURTLY_TELEGRAM_CHAT_ID: '-1001', COURTLY_TELEGRAM_SOURCE_URL: near }, ...noEnvFile }).sourceUrl, near);
+});
+
 test('Telegram source resolves from the environment before the VM .env file', async () => {
   const dir = await mkdtemp(path.join(os.tmpdir(), 'courtly-env-'));
   const envFile = path.join(dir, '.env');

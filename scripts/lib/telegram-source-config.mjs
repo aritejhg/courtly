@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { isReservedSampleUrl } from './sample-data.mjs';
 
 const defaultEnvFile = join(resolve(dirname(fileURLToPath(import.meta.url)), '..', '..'), '.env');
 
@@ -36,6 +37,7 @@ export function requireTelegramSource(options) {
   const problems = [];
   if (!/^-100\d+$/.test(chatId)) problems.push('COURTLY_TELEGRAM_CHAT_ID must be a -100-prefixed Telegram chat ID');
   if (!/^https:\/\/t\.me\/\S+$/.test(sourceUrl)) problems.push('COURTLY_TELEGRAM_SOURCE_URL must be an https://t.me/ link');
+  else if (isReservedSampleUrl(sourceUrl)) problems.push('COURTLY_TELEGRAM_SOURCE_URL is the reserved sample URL; use the real source link');
   if (problems.length) {
     const error = new Error(`Telegram source is not configured: ${problems.join('; ')}. Set them in the environment or .env.`);
     error.name = 'TelegramSourceConfigError';
