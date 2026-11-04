@@ -87,7 +87,7 @@ test('area: region names expand, other values are substrings', () => {
 test('by: matches owner or username, with or without @', () => {
   assert.equal(matches('by:fakeowner'), true);
   assert.equal(matches('by:@fake_handle'), true);
-  assert.equal(matches('by:sample_user', { ownerUsername: undefined }), false);
+  assert.equal(matches('by:fake_handle', { ownerUsername: undefined }), false);
 });
 
 test('clock parsing', () => {
@@ -478,6 +478,6 @@ test('review round 13 (Sol): invalid listed time keeps the valid one, phrases do
   assert.equal(matches('-from:7pm,25'), false);
   assert.equal(matches('venue:"college shelton"'), false);
   assert.equal(matches('-venue:"college shelton"'), true);
-  assert.equal(matches('by:"fakeowner sample_user"'), false);
-  assert.equal(matches('by:sample_user'), true);
+  assert.equal(matches('by:"fakeowner fake_handle"'), false);
+  assert.equal(matches('by:fake_handle'), true);
 });
