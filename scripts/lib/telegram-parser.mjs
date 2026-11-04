@@ -254,7 +254,6 @@ function cleanVenueCandidate(line) {
     .replace(/^\(?\s*(?:mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\s*\)\s*[,:-]?\s*/i, '')
     .replace(/^\d{1,2}(?:st|nd|rd|th)?\s+(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b[, ]*/i, '')
     .replace(/^\d+[a-z]?[).:-]\s*/i, '')
-    .replace(/^court\s+(?=[^\n]*\b(?:school|primary|secondary|pri|sec)\b)/i, '')
     .replace(/\bsports?hall\b/ig, (value) => value.toLowerCase().startsWith('sports') ? 'sports hall' : 'sport hall')
     // Compact Telegram shorthand often glues the venue type to the name
     // (`Kaki BukitCC`). Add the separator before candidate matching.
@@ -264,6 +263,7 @@ function cleanVenueCandidate(line) {
     // Remove only this bounded listing-intro form before strict catalog matching.
     .replace(/^(?:hi|hello),?\s+(?:an?\s+)?(?:extra\s+)?court\s+at\s+/i, '')
     .replace(/^(?:court\s+(?:to\s+)?let(?:ting)?\s+go|let(?:ting)?\s+go(?:\s+of(?:\s+court)?)?|available\s+court|releasing?\s+at\s+cost)(?:\s+at\s+cost(?:\s+price)?)?\s*(?:at\s+)?[:：-]?\s*/i, '')
+    .replace(/^court\s+(.+)$/i, (value, rest) => /\b(?:school|primary|secondary|pri|sec)\b/i.test(rest) ? rest : value)
     .replace(/\s*\((?:near|beside|opp(?:osite)?|at)?[^)]*\b(?:mrt|lrt)\b[^)]*\)\s*/ig, ' ')
     .replace(/\s*\((?:premium|vip|rubber|aircon)[^)]*\)\s*/ig, ' ')
     // Release posts sometimes append swap preference to a venue-bearing line.
@@ -434,7 +434,7 @@ export function inferArea(text, venue) {
 }
 
 const MONTH_TOKEN = 'jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?';
-const DATE_TOKEN = new RegExp(`(?<![\\d.])\\b(?:today|tonight|tomorrow|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?|\\d{1,2}(?:st|nd|rd|th)?(?:\\s*(?:/|-)\\s*\\d{1,2}|\\s*-?\\s*(?:${MONTH_TOKEN})))\\b`, 'i');
+const DATE_TOKEN = new RegExp(`(?<![\\d.])\\b(?:today|tonight|tomorrow|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?|\\d{1,2}(?:st|nd|rd|th)?(?:\\s*(?:/|-)\\s*\\d{1,2}|\\s*-?\\s*(?:${MONTH_TOKEN}))|${MONTH_TOKEN}\\s+\\d{1,2}(?:st|nd|rd|th)?)\\b`, 'i');
 // Telegram listings sometimes abbreviate PM as a trailing `m` (for example,
 // `9-10m`). Accept it only inside a clock expression.
 const TIME_RANGE = /(?<![\d.])\b((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm|m)?\s*(?:-|–|—|to)\s*((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm|m)?\b/i;
@@ -444,18 +444,31 @@ const timeSearchText = (text) => String(text || '')
   // A sentence separator before a colon-formatted clock should not hide the
   // leading hour (`|.10:30am to 12:30pm`). Decimal dotted times remain intact.
   .replace(/(^|[^\d])\.(?=\d{1,2}:\d{2}(?:am|pm|m)?\b)/gi, '$1 ');
+const isExplicitClockRange = (range) => Boolean(range[2] || range[4] || /[:.]/.test(`${range[1]}${range[3]}`));
+const preferredTimeRange = (text) => {
+  const ranges = [...String(text || '').matchAll(new RegExp(TIME_RANGE.source, 'ig'))];
+  return ranges.find(isExplicitClockRange) || ranges[0] || null;
+};
 const hasExplicitTime = (text) => {
   if (SINGLE_TIME.test(String(text || ''))) return true;
   const numericDates = [...String(text || '').matchAll(NUMERIC_DATE)];
   return [...String(text || '').matchAll(new RegExp(TIME_RANGE.source, 'ig'))].some((range) => {
     const rangeStart = range.index ?? 0;
     const rangeEnd = rangeStart + range[0].length;
-    return !numericDates.some((date) => {
+    const overlapsNumericDate = numericDates.some((date) => {
       if (!date[3]) return false;
       const dateStart = date.index ?? 0;
       const dateEnd = dateStart + date[0].length;
       return dateStart < rangeEnd && dateEnd > rangeStart;
     });
+    if (overlapsNumericDate) return false;
+    if (isExplicitClockRange(range)) return true;
+    const start = range.index ?? 0;
+    const end = start + range[0].length;
+    const prefix = String(text || '').slice(0, start);
+    const suffix = String(text || '').slice(end);
+    const insideParentheses = prefix.lastIndexOf('(') > prefix.lastIndexOf(')') && suffix.indexOf(')') >= 0;
+    return !insideParentheses;
   });
 };
 
@@ -505,7 +518,9 @@ export function parseDate(text, postedAt) {
     });
     return !overlapsTimeRange || hasExplicitClockRangeElsewhere;
   });
-  const named = text.match(/\b(\d{1,2})(?:st|nd|rd|th)?\s*-?\s*(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\b/i);
+  const dayFirst = text.match(/\b(\d{1,2})(?:st|nd|rd|th)?\s*-?\s*(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\b/i);
+  const monthFirst = text.match(/\b(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+(\d{1,2})(?:st|nd|rd|th)?\b/i);
+  const named = dayFirst || (monthFirst && [monthFirst[0], monthFirst[2], monthFirst[1]]);
   const weekdayMatch = text.match(/\b(mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\b/i);
   let date;
   if (named) {
@@ -582,7 +597,7 @@ export function parseTime(text, date, { defaultMeridiem = null } = {}) {
     });
     return hasExplicitClockRangeElsewhere ? ' '.repeat(value.length) : value;
   });
-  const match = timeText.match(TIME_RANGE);
+  const match = preferredTimeRange(timeText);
   const parts = singaporeParts(date);
   const formatTime = (value) => value.toLocaleTimeString('en-SG', { timeZone: 'Asia/Singapore', hour: 'numeric', minute: '2-digit' });
   const makeStart = (value, meridiem) => {
@@ -666,9 +681,10 @@ function availabilitySection(text) {
     const end = need && need.index > have.index ? need.index : value.length;
     value = value.slice(have.index + have[0].length, end).trim();
   }
-  const wanted = value.search(/\b(?:looking for|need(?:ing)?|wanted)\b/i);
+  const wanted = value.search(/\b(?:want(?:ing)?|looking for|need(?:ing)?|wanted)\b\s*:?/i);
   const available = value.search(/\b(?:court\s+to\s+let\s+go|letting\s+go|let\s+go|available\s+court)\b/i);
   if (wanted >= 0 && available > wanted) value = value.slice(available).trim();
+  else if (wanted >= 0 && available >= 0 && wanted > available) value = value.slice(0, wanted).trim();
   const swapFooter = value.search(/\b(?:will\s+)?prioriti[sz]e\b[^\n]*\b(?:swap|exchange)\b/i);
   if (swapFooter >= 0) value = value.slice(0, swapFooter).trim();
   return value;
@@ -693,7 +709,7 @@ function venueOnLine(line, venues) {
 export function isPotentialCourtMessage(text, venues) {
   if (isIgnoredSwapMessage(text)) return false;
   const value = availabilitySection(text);
-  const wantedOnly = /\b(?:looking for|need(?:ing)?|wanted)\b/i.test(value) && !/\b(?:let(?:ting)?\s+go|court\s+to\s+swap|i\s+have|available)\b/i.test(value);
+  const wantedOnly = /\b(?:want(?:ing)?|looking for|need(?:ing)?|wanted)\b\s*:?/i.test(value) && !/\b(?:let(?:ting)?\s+go|court\s+to\s+swap|i\s+have|available)\b/i.test(value);
   if (wantedOnly) return false;
   const hasVenue = Boolean(matchVenue(value, venues).venue) || /\b(?:cc|community club|sports? hall|primary|secondary|pri|sec)\b/i.test(value);
   const hasTime = TIME_RANGE.test(timeSearchText(value)) || SINGLE_TIME.test(timeSearchText(value)) || /\b\d+(?:\.\d+)?\s*(?:hr|hrs|hour|hours)\b/i.test(value);
@@ -774,7 +790,7 @@ export function splitMessageListings(message, venues) {
     return index !== undefined && index < venueIndexes[0] ? 'before' : 'after';
   };
   const dateDirection = direction(isDateLine);
-  const timeDirection = direction((line) => TIME_RANGE.test(timeSearchText(line)) || SINGLE_TIME.test(timeSearchText(line)));
+  const timeDirection = direction((line) => hasExplicitTime(timeSearchText(line)));
   const priceDirection = direction((line) => parsePrice(line).value != null);
   const directed = (anchor, previousVenue, nextVenue, predicate, preferredDirection) => {
     const start = preferredDirection === 'before' ? previousVenue + 1 : anchor;
@@ -792,7 +808,7 @@ export function splitMessageListings(message, venues) {
     const nextVenue = venueIndexes[position + 1] ?? lines.length;
     const selected = new Set([venueIndex]);
     const dateIndex = directed(venueIndex, previousVenue, nextVenue, isDateLine, dateDirection);
-    const timeIndex = directed(venueIndex, previousVenue, nextVenue, (line) => TIME_RANGE.test(timeSearchText(line)) || SINGLE_TIME.test(timeSearchText(line)), timeDirection);
+    const timeIndex = directed(venueIndex, previousVenue, nextVenue, (line) => hasExplicitTime(timeSearchText(line)), timeDirection);
     const priceIndex = directed(venueIndex, previousVenue, nextVenue, (line) => parsePrice(line).value != null, priceDirection);
     for (const index of [dateIndex, timeIndex, priceIndex]) if (index !== undefined) selected.add(index);
     return { text: [...selected].sort((a, b) => a - b).map((index) => lines[index]).join('\n') };
@@ -806,7 +822,7 @@ export function buildListing(message, venues, { now = new Date(), listingText = 
   const rawText = String(listingText || '').trim();
   const venueMatch = matchVenue(rawText, venues);
   const date = parseDate(rawText, postedAt);
-  const localRange = rawText.match(TIME_RANGE);
+  const localRange = preferredTimeRange(rawText);
   const sourceRanges = [...sourceRawText.matchAll(new RegExp(TIME_RANGE.source, 'ig'))];
   const sourceMeridiems = [...new Set(sourceRanges.flatMap((match) => [match[2], match[4]])
     .filter(Boolean).map((value) => value.toLowerCase() === 'm' ? 'pm' : value.toLowerCase()))];

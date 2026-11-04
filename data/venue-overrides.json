@@ -94,6 +94,18 @@
     "lng": 103.8824289266939
   },
   {
+    "id": "onepa:tanglin-cc",
+    "canonicalName": "Tanglin CC",
+    "aliases": ["Tanglin CC", "Tanglin Community Club"],
+    "source": "People's Association / OneMap",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/tanglin-cc",
+    "kind": "community_club",
+    "area": "Tanglin",
+    "lat": 1.323406523887087,
+    "lng": 103.8269051200673,
+    "address": "245 Whitley Road Singapore 297829"
+  },
+  {
     "id": "onepa:joo-chiat-cc",
     "canonicalName": "Joo Chiat Community Club",
     "aliases": ["Joo Chiat Community Club", "Joo Chiat CC"],
