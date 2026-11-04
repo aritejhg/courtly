@@ -366,6 +366,8 @@ export default function Home() {
         setRouteError(unavailableMessage);
         return;
       }
+      // travelUnavailableMessage already rejects a missing court; this narrows the type.
+      if (!selectedCourt) return;
       setRouteLoading(true);
       setRoutePlan(null);
       setRouteError('');
@@ -492,6 +494,8 @@ export default function Home() {
             Boolean(location.address.trim()),
         );
         if (valid.length) {
+          // localStorage is browser-only, so it must be read after hydration.
+          // oxlint-disable-next-line react/react-compiler
           setLocations(valid);
           const storedOriginId = localStorage.getItem(ORIGIN_STORAGE_KEY);
           setOriginId(
@@ -846,7 +850,7 @@ export default function Home() {
             aria-label="End time"
           />
           {timeMenuOpen && (
-            <div className="time-menu" role="listbox" aria-label={`Choose ${activeTimeField === 'from' ? 'start' : 'end'} time`}>
+            <section className="time-menu" aria-label={`Choose ${activeTimeField === 'from' ? 'start' : 'end'} time`}>
               <div className="time-menu-heading">{activeTimeField === 'from' ? 'Start time' : 'End time'}</div>
               <div className="time-menu-options">
                 {Array.from({ length: 48 }, (_, index) => {
@@ -856,7 +860,7 @@ export default function Home() {
                   const selected = activeTimeField === 'from' ? timeFrom === value : timeTo === value;
                   return (
                     <button
-                      aria-selected={selected}
+                      aria-pressed={selected}
                       className={selected ? 'selected' : ''}
                       key={value}
                       type="button"
@@ -877,7 +881,7 @@ export default function Home() {
                   );
                 })}
               </div>
-            </div>
+            </section>
           )}
         </div>
         {(dateFilter || timeFrom || timeTo || durationFilter) && (
@@ -918,6 +922,8 @@ export default function Home() {
           >
             <span aria-hidden="true" />
           </button>
+          {/* Pointer shortcut only: the drawer handle button above is the keyboard control. */}
+          {/* oxlint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
           <div
             className="listing-rail-heading mobile-drawer-gesture-zone"
             onClick={(event) => {
