@@ -3,11 +3,17 @@ import { resolve } from 'node:path';
 import {
   buildListing,
   countVenueMentions,
-  fingerprint,
   isIgnoredSwapMessage,
   isPotentialCourtMessage,
   splitMessageListings,
 } from './lib/telegram-parser.mjs';
+import {
+  dedupeListings,
+  listingDeduplicationKey,
+  shouldReplaceDuplicate,
+  suppressDuplicateActiveSlotReposts,
+  suppressIncompleteSameSlotReposts,
+} from './lib/listing-dedupe.mjs';
 
 const argument = (name, fallback) => {
   const index = process.argv.indexOf(name);
@@ -95,7 +101,7 @@ function validateParsedResult({ listing, venueMatch }) {
 const listingMessages = messages.filter((message) =>
   !isIgnoredSwapMessage(message.text)
   && (message.deleted || isPotentialCourtMessage(message.text, venues) || Array.isArray(message.listings)));
-const results = listingMessages.flatMap((message) => {
+const parsedResults = listingMessages.flatMap((message) => {
   const parts = splitMessageListings(message, venues);
   const venueMentions = countVenueMentions(message.text, venues);
   return parts.map((part, index) => {
@@ -119,6 +125,7 @@ const results = listingMessages.flatMap((message) => {
     return { message, ...parsed };
   });
 });
+const results = suppressDuplicateActiveSlotReposts(suppressIncompleteSameSlotReposts(parsedResults));
 
 const validationFailures = results.map(validateParsedResult).filter(Boolean);
 if (validationFailures.length) {
@@ -128,7 +135,7 @@ if (validationFailures.length) {
   });
 }
 
-const byMessage = new Map(previousListings.map((listing) => [listing.sourceMessageId, listing]));
+const byMessage = new Map(dedupeListings(previousListings).map((listing) => [listing.sourceMessageId, listing]));
 const currentSourceIds = new Set(results.map(({ listing }) => listing.sourceMessageId));
 const knownMessageIds = new Set(messages.map((message) => String(message.messageId)));
 for (const [sourceMessageId, listing] of byMessage) {
@@ -136,7 +143,15 @@ for (const [sourceMessageId, listing] of byMessage) {
   if (knownMessageIds.has(String(parentId)) && !currentSourceIds.has(sourceMessageId)) byMessage.delete(sourceMessageId);
 }
 
-const byFingerprint = new Map(previousListings.map((listing) => [fingerprint(listing), listing]));
+for (const { listing } of results) {
+  const previous = byMessage.get(listing.sourceMessageId);
+  if (!previous) continue;
+  byMessage.set(listing.sourceMessageId, listing.status === 'deleted' && previous.deletedAt
+    ? { ...listing, deletedAt: previous.deletedAt }
+    : listing);
+}
+
+const byFingerprint = new Map([...byMessage.values()].map((listing) => [listingDeduplicationKey(listing), listing]));
 const currentUnmatched = [];
 const parserAmbiguities = [];
 let newCount = 0;
@@ -165,19 +180,24 @@ for (const { listing, venueMatch, issues } of results) {
     });
   }
   if (byMessage.has(listing.sourceMessageId)) {
-    const previous = byMessage.get(listing.sourceMessageId);
-    byMessage.set(listing.sourceMessageId, listing.status === 'deleted' && previous?.deletedAt
-      ? { ...listing, deletedAt: previous.deletedAt }
-      : listing);
     continue;
   }
-  if (byFingerprint.has(fingerprint(listing))) {
-    duplicateCount += 1;
+  const listingFingerprint = listingDeduplicationKey(listing);
+  const duplicate = byFingerprint.get(listingFingerprint);
+  if (duplicate) {
+    if (shouldReplaceDuplicate(duplicate, listing)) {
+      byMessage.delete(duplicate.sourceMessageId);
+      byMessage.set(listing.sourceMessageId, listing);
+      byFingerprint.set(listingFingerprint, listing);
+      newCount += 1;
+    } else {
+      duplicateCount += 1;
+    }
     continue;
   }
   newCount += 1;
   byMessage.set(listing.sourceMessageId, listing);
-  byFingerprint.set(fingerprint(listing), listing);
+  byFingerprint.set(listingFingerprint, listing);
 }
 
 // A single source message can yield multiple listings (`123:1`, `123:2`).
@@ -196,7 +216,7 @@ const retainedUnmatched = previousUnmatched.filter((item) => {
 });
 const dedupedUnmatched = [...new Map([...retainedUnmatched, ...currentUnmatched]
   .map((item) => [`${item.sourceMessageId}:${item.text}`, item])).values()];
-const nextListings = [...byMessage.values()].sort((a, b) => new Date(a.playAt) - new Date(b.playAt));
+const nextListings = dedupeListings([...byMessage.values()]).sort((a, b) => new Date(a.playAt) - new Date(b.playAt));
 const deletedCount = nextListings.filter((listing) => listing.status === 'deleted').length;
 const expiredCount = nextListings.filter((listing) => listing.status === 'expired').length;
 const activeCount = nextListings.filter((listing) => listing.status === 'active' && new Date(listing.playAt) > now).length;

@@ -21,7 +21,9 @@
     "aliases": [
       "Anchor Green Primary School Hall",
       "Anchor Green Pri",
-      "Anchor Green Pri Hall"
+      "Anchor Green Pri Hall",
+      "Anchorgreen Primary School",
+      "Anchorgreen Primary"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/anchor-green-primary-school-hall",
@@ -164,7 +166,8 @@
     "id": "active-sg:bishan-clubhouse",
     "canonicalName": "Bishan Clubhouse",
     "aliases": [
-      "Bishan Clubhouse"
+      "Bishan Clubhouse",
+      "Bishan club house"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/bishan-clubhouse",
@@ -448,7 +451,9 @@
     "aliases": [
       "Choa Chu Kang Sport Hall",
       "Choa Chu Kang Sports Hall",
-      "CCK Stadium"
+      "Cho Chu Kang Sport Hall",
+      "CCK Stadium",
+      "CCK SH"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/choa-chu-kang-sport-hall",
@@ -464,7 +469,8 @@
     "aliases": [
       "Christ Church Secondary School Hall",
       "Christ Church Sec",
-      "Christ Church Sec Hall"
+      "Christ Church Sec Hall",
+      "Christchurch Sec"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/christ-church-secondary-school-hall",
@@ -511,7 +517,8 @@
     "aliases": [
       "Clementi Town Secondary School Hall",
       "Clementi Town Sec",
-      "Clementi Town Sec Hall"
+      "Clementi Town Sec Hall",
+      "Clememti Town Secondary School"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/clementi-town-secondary-school-hall",
@@ -544,6 +551,7 @@
       "Crescent Girls' School Hall",
       "Crescent Girls' School",
       "Crescent Girls School",
+      "Crescent Girls (Redhill)",
       "Crescent Girl School",
       "Crescent girl's school",
       "Crescnt Girls"
@@ -594,6 +602,7 @@
     "canonicalName": "Deyi Secondary School Hall",
     "aliases": [
       "Deyi Secondary School Hall",
+      "Deyi Secondary Sport Hall",
       "Deyi Sec",
       "Deyi Sec Hall"
     ],
@@ -674,7 +683,8 @@
       "Elias Park Primary School Hall",
       "Elias Park Pri",
       "Elias Park Pri Hall",
-      "Elias Park Primary, Pasir Ris"
+      "Elias Park Primary, Pasir Ris",
+      "Elais Park Pri Sch, Pasir Ris"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/elias-park-primary-school-hall",
@@ -683,6 +693,22 @@
     "address": "11 Pasir Ris Street 52 Singapore 518866",
     "lat": 1.375057,
     "lng": 103.9453
+  },
+  {
+    "id": "active-sg:gan-eng-seng-primary-school-hall",
+    "canonicalName": "Gan Eng Seng Primary School Hall",
+    "aliases": [
+      "Gan Eng Seng Primary School Hall",
+      "Gan Eng Seng Primary",
+      "Gan Eng Seng Pri"
+    ],
+    "source": "ActiveSG",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/gan-eng-seng-primary-school-hall",
+    "kind": "school_sport_hall",
+    "zone": "Central",
+    "address": "100 Redhill Close Singapore 158901",
+    "lat": 1.285595,
+    "lng": 103.8155
   },
   {
     "id": "active-sg:endeavour-primary-school-hall",
@@ -704,7 +730,8 @@
     "id": "active-sg:eunoia-junior-college-hall",
     "canonicalName": "Eunoia Junior College Hall",
     "aliases": [
-      "Eunoia Junior College Hall"
+      "Eunoia Junior College Hall",
+      "Eunonia Junnior College Hall"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/eunoia-junior-college-hall",
@@ -877,7 +904,9 @@
     "canonicalName": "Heartbeat @ Bedok ActiveSG Sport Hall",
     "aliases": [
       "Heartbeat @ Bedok ActiveSG Sport Hall",
-      "Heartbeat @ Bedok ActiveSG Sports Hall"
+      "Heartbeat @ Bedok ActiveSG Sports Hall",
+      "Bedok Heartbeat",
+      "Heartbeat Bedok"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/heartbeat-bedok-activesg-sport-hall",
@@ -925,7 +954,8 @@
     "canonicalName": "Hougang Sport Hall",
     "aliases": [
       "Hougang Sport Hall",
-      "Hougang Sports Hall"
+      "Hougang Sports Hall",
+      "Hougangsports Hall"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/hougang-sport-hall",
@@ -973,7 +1003,8 @@
     "aliases": [
       "Jiemin Primary School Hall",
       "Jiemin Pri",
-      "Jiemin Pri Hall"
+      "Jiemin Pri Hall",
+      "Jie Min Primary Sch"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/jiemin-primary-school-hall",
@@ -989,7 +1020,8 @@
     "aliases": [
       "Jing Shan Primary School Hall",
       "Jing Shan Pri",
-      "Jing Shan Pri Hall"
+      "Jing Shan Pri Hall",
+      "Jingshan Primary sch"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/jing-shan-primary-school-hall",
@@ -1155,7 +1187,8 @@
     "aliases": [
       "Marsiling Secondary School Hall",
       "Marsiling Sec",
-      "Marsiling Sec Hall"
+      "Marsiling Sec Hall",
+      "Marsling 2ndry school"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/marsiling-secondary-school-hall",
@@ -1170,6 +1203,7 @@
     "canonicalName": "Mayflower Secondary School Hall",
     "aliases": [
       "Mayflower Secondary School Hall",
+      "Mayflower Secondary School",
       "Mayflower Sec",
       "Mayflower Sec Hall"
     ],
@@ -1187,7 +1221,8 @@
     "aliases": [
       "Meridian Primary School Hall",
       "Meridian Pri",
-      "Meridian Pri Hall"
+      "Meridian Pri Hall",
+      "Meridian Primary Sports Hall"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/meridian-primary-school-hall",
@@ -1203,7 +1238,8 @@
     "aliases": [
       "Meridian Secondary School Hall",
       "Meridian Sec",
-      "Meridian Sec Hall"
+      "Meridian Sec Hall",
+      "Meridian secondary sch"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/meridian-secondary-school-hall",
@@ -1383,7 +1419,8 @@
       "OTH",
       "OTH Our Tampines Hub",
       "Tampines Hub",
-      "Tamp Hub"
+      "Tamp Hub",
+      "One Tampines Hub"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/our-tampines-hub-community-auditorium",
@@ -1510,7 +1547,8 @@
     "id": "active-sg:poi-ching-school-hall",
     "canonicalName": "Poi Ching School Hall",
     "aliases": [
-      "Poi Ching School Hall"
+      "Poi Ching School Hall",
+      "PoiChing School Hall"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/poi-ching-school-hall",
@@ -1840,6 +1878,22 @@
     "lng": 103.7215
   },
   {
+    "id": "smash-arena:smash-arena-joo-koon",
+    "canonicalName": "Smash Arena",
+    "aliases": [
+      "Smash Arena",
+      "Smash Arena (Jookoon)",
+      "Smash Arena Joo Koon"
+    ],
+    "source": "Smash Arena",
+    "sourceUrl": "https://smasharena.sg/location",
+    "kind": "sport_hall",
+    "zone": "West",
+    "address": "511 Upper Jurong Road, D’Arena Country Club, Block B, Level 2, Singapore 638366",
+    "lat": 1.329425336,
+    "lng": 103.682841561
+  },
+  {
     "id": "active-sg:south-view-primary-school-hall",
     "canonicalName": "South View Primary School Hall",
     "aliases": [
@@ -1899,7 +1953,8 @@
     "aliases": [
       "Swiss Cottage Secondary School Hall",
       "Swiss Cottage Sec",
-      "Swiss Cottage Sec Hall"
+      "Swiss Cottage Sec Hall",
+      "Swiss Cottage Sport Hall"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/swiss-cottage-secondary-school-hall",
@@ -1915,7 +1970,9 @@
     "aliases": [
       "Teck Ghee Primary School Hall",
       "Teck Ghee Pri",
-      "Teck Ghee Pri Hall"
+      "Teck Ghee Pri Hall",
+      "Tech Ghee Primary School Hall",
+      "Tech Ghee Primary Sport Hall"
     ],
     "source": "ActiveSG",
     "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/teck-ghee-primary-school-hall",
@@ -2044,6 +2101,7 @@
     "canonicalName": "Woodlands Secondary School Hall",
     "aliases": [
       "Woodlands Secondary School Hall",
+      "Woodlands Sec School Hall",
       "Woodlands Sec",
       "Woodlands Sec Hall"
     ],
