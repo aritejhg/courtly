@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { createHmac } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 
 const { accessGate } = await import('../lib/access-gate.ts');
@@ -60,4 +61,58 @@ test('requires code and accepts a signed cookie after login', async () => {
 
   const allowed = await accessGate(new Request(url, { headers: { cookie: cookie.split(';', 1)[0] } }), secret);
   assert.equal(allowed, null);
+});
+
+const MAX_AGE_SECONDS = 2592000;
+const gateUrl = 'https://courts.example.com/';
+const gateSecret = 'test-only-access-code';
+
+async function loginCookieAt(now) {
+  const login = await accessGate(new Request(gateUrl, {
+    method: 'POST',
+    body: new URLSearchParams({ code: gateSecret }),
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+  }), gateSecret, { now });
+  assert.equal(login.status, 303);
+  const header = login.headers.get('set-cookie');
+  assert.match(header, new RegExp(`Max-Age=${MAX_AGE_SECONDS}`));
+  return header.split(';', 1)[0];
+}
+const withCookie = (cookie, now) => accessGate(new Request(gateUrl, { headers: { cookie } }), gateSecret, { now });
+
+test('malformed cookie encoding is an ordinary unauthenticated response', async () => {
+  for (const cookie of ['courtly_access=%E0%A4%A', 'courtly_access=%', 'other=1; courtly_access=%zz']) {
+    const result = await withCookie(cookie);
+    assert.equal(result.status, 401, cookie);
+  }
+  const login = await accessGate(new Request(gateUrl, {
+    method: 'POST',
+    body: new URLSearchParams({ code: gateSecret }),
+    headers: { 'content-type': 'application/x-www-form-urlencoded', cookie: 'courtly_access=%' },
+  }), gateSecret);
+  assert.equal(login.status, 303);
+});
+
+test('a token expires server-side at the cookie Max-Age', async () => {
+  const issuedAt = 1_800_000_000_000;
+  const cookie = await loginCookieAt(issuedAt);
+  assert.equal(await withCookie(cookie, issuedAt + (MAX_AGE_SECONDS - 1) * 1000), null);
+  assert.equal((await withCookie(cookie, issuedAt + MAX_AGE_SECONDS * 1000)).status, 401);
+});
+
+test('a tampered expiry or signature is rejected', async () => {
+  const issuedAt = 1_800_000_000_000;
+  const cookie = await loginCookieAt(issuedAt);
+  const [name, value] = cookie.split('=');
+  const [expiry, signature] = decodeURIComponent(value).split('.');
+  const extended = `${name}=${Number(expiry) + 1}.${signature}`;
+  assert.equal((await withCookie(extended, issuedAt)).status, 401);
+  const flipped = `${name}=${expiry}.${signature[0] === '0' ? '1' : '0'}${signature.slice(1)}`;
+  assert.equal((await withCookie(flipped, issuedAt)).status, 401);
+  assert.equal((await withCookie(`${name}=${signature}`, issuedAt)).status, 401);
+});
+
+test('old constant tokens no longer authenticate', async () => {
+  const old = createHmac('sha256', gateSecret).update('courtly-access-v1').digest('hex');
+  assert.equal((await withCookie(`courtly_access=${old}`)).status, 401);
 });
