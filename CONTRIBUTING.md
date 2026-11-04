@@ -15,7 +15,6 @@ Run these before opening a pull request. CI runs the same ones.
 
 ```sh
 npm run lint
-node scripts/write-build-info.mjs   # generates a git-ignored file that tsc needs
 npx tsc --noEmit
 npm test
 npm run build

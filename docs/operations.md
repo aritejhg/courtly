@@ -31,7 +31,7 @@ Schedule the runner with a systemd timer or similar. Choose an interval that kee
 
 ### Automated parser repair
 
-Repair is on by default. When a parser ambiguity remains, the runner starts a coding agent CLI (`COURTLY_REPAIR_COMMAND`, `codex` or `agy`) with permission checks disabled or reduced, and gives it the ambiguous message. **Pass `--no-llm` or set `COURTLY_DISABLE_LLM=1` unless you have accepted these consequences:**
+Repair is off by default. With `COURTLY_ENABLE_LLM_REPAIR=1`, when a parser ambiguity remains, the runner starts a coding agent CLI (`COURTLY_REPAIR_COMMAND`, `codex` or `agy`) with permission checks disabled or reduced, and gives it the ambiguous message. `--no-llm` and `COURTLY_DISABLE_LLM=1` override the opt-in. **Enable it only if you accept these consequences:**
 
 - Message text, which anyone in the group can write, reaches the agent and its provider. The prompt marks it as untrusted, which reduces prompt injection risk but does not eliminate it.
 - The agent can change code on the ingestion host, and the sync script will then refuse to overwrite those changes until they are resolved.
@@ -64,7 +64,7 @@ The script preserves `.env`, `work/`, `node_modules/`, `dist/`, and runtime data
 
 | Symptom | Check |
 | --- | --- |
-| Site returns 503 "Access gate is not configured" | Set the `COURTLY_ACCESS_CODE` Worker secret. `*.workers.dev` hosts fail closed without it. |
+| Site returns 503 "Access gate is not configured" | Set the `COURTLY_ACCESS_CODE` Worker secret. Built Workers fail closed without it. |
 | `/api/listings` returns 503 | The KV binding is missing or the feed has not been published. |
 | Listings are stale | Check the ingestion timer, logs in `work/production-ingestion.jsonl`, and any `publish_blocked` events. |
 | Code on the site is stale | Confirm the commit is on `main` and the deploy workflow passed. `/api/build` returns the deployed commit. |

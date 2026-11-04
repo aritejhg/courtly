@@ -70,8 +70,6 @@ npm dependencies keep their own licences; see each package in node_modules.
 Packages under licences other than the common permissive ones include:
   MPL-2.0: lightningcss, satori, @vercel/og, @resvg/resvg-wasm
   CC-BY-4.0: caniuse-lite (data)
-  Python-2.0: argparse
-  BlueOak-1.0.0: isexe, minimatch
   Unlicense: big-integer
   LGPL-3.0-or-later: @img/sharp-libvips-* and related @img/sharp-* binaries
-  (optional, marked development-only in package-lock.json)
+  (optional, platform-specific image processing binaries installed through npm)

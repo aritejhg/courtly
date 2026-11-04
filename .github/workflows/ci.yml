@@ -35,10 +35,6 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      # app/api/build imports this git-ignored file, which prebuild normally writes.
-      - name: Generate build info
-        run: node scripts/write-build-info.mjs
-
       - name: Type check
         run: npx tsc --noEmit
 

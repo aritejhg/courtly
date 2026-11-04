@@ -42,7 +42,7 @@ Open the URL printed by the dev server. It serves invented sample listings from 
 | Path | Contents |
 | --- | --- |
 | `app/` | Page, `/api/listings` (feed), and `/api/build` (deployed commit) |
-| `components/`, `hooks/` | UI components |
+| `components/` | UI components |
 | `lib/` | Filtering, search syntax, access gate, feed handling, MRT layer, travel status |
 | `middleware.ts` | Access gate in front of the app |
 | `scripts/` | Ingestion, parser, venue tools, publishing |
@@ -68,7 +68,7 @@ Telegram group
 - The dev server falls back to sample data. A built Worker never does: without a usable feed, `/api/listings` returns 503.
 - Unknown venues never get guessed coordinates. They are recorded for review.
 - Browser-side services: OpenStreetMap tiles, Nominatim for saved locations, sgraildata for the MRT overlay, and OneMap routing if a token is set. Without a token, travel times are estimates.
-- `app/layout.tsx` also loads the Cloudflare Web Analytics beacon.
+- If `VITE_CLOUDFLARE_ANALYTICS_TOKEN` is set, the page also loads the Cloudflare Web Analytics beacon.
 
 ## Environment variables
 
@@ -83,12 +83,13 @@ These are embedded in client JavaScript, so treat them as public.
 | `VITE_COURTLY_TELEGRAM_SOURCE_URL` | Invite link for the Telegram group button |
 | `VITE_COURTLY_TELEGRAM_CHAT_ID` | Chat ID for exact message links |
 | `VITE_ONEMAP_TOKEN` | OneMap token for public transport routing. Not set by the deploy workflow. |
+| `VITE_CLOUDFLARE_ANALYTICS_TOKEN` | Cloudflare Web Analytics token. If unset, the beacon is not loaded. |
 
 ### Worker runtime
 
 | Name | Purpose |
 | --- | --- |
-| `COURTLY_ACCESS_CODE` | Secret access code. If unset, `*.workers.dev` hosts return 503 and other hosts are open. |
+| `COURTLY_ACCESS_CODE` | Secret access code. If unset, a built Worker returns 503 on every host. The dev server runs without it. |
 | `COURTLY_FEED` | KV binding, created from `COURTLY_FEED_KV_NAMESPACE_ID` at build time |
 
 ### Build and deploy
@@ -109,12 +110,12 @@ These are embedded in client JavaScript, so treat them as public.
 | `COURTLY_TELEGRAM_SOURCE_URL` | required | `https://t.me/` link to the source |
 | `COURTLY_RUNTIME` | unset | Must be `hermes` or the runner exits. A safety guard against accidental runs. |
 | `COURTLY_PUBLISH` | unset | `1` is the same as `--publish` |
-| `COURTLY_DISABLE_LLM` | unset | `1` disables automated repair. See [operations](docs/operations.md#automated-parser-repair). |
+| `COURTLY_ENABLE_LLM_REPAIR` | unset | `1` opts in to automated repair. See [operations](docs/operations.md#automated-parser-repair). |
+| `COURTLY_DISABLE_LLM` | unset | `1` disables repair even if opted in, as does `--no-llm` |
 | `COURTLY_REPAIR_COMMAND` | `codex` | Repair agent: `codex` or `agy` |
+| `COURTLY_REPAIR_MODEL` | see `scripts/lib/llm-repair-config.mjs` | Model for the `codex` repair agent |
 | `COURTLY_MAX_LLM_REPAIRS` | `2` | Repair limit per run |
 | `COURTLY_CODEX_BIN`, `COURTLY_AGY_BIN` | auto, `agy` | Repair agent binaries |
-| `COURTLY_TELEGRAM_SOURCE` | `client` | `client` (MTProto), or `chrome` (Telegram Web through a debugging port) |
-| `COURTLY_CHROME_CDP_URL` | `http://127.0.0.1:9222` | Debugging URL for `chrome` mode |
 | `COURTLY_TELEGRAM_CONFIG` | `work/telegram-client.json` | Credentials file |
 | `COURTLY_TELEGRAM_API_ID`, `COURTLY_TELEGRAM_API_HASH`, `COURTLY_TELEGRAM_SESSION` | from file | Override the credentials file |
 | `COURTLY_TELEGRAM_STATE` | `work/telegram-client-state.json` | Read cursor |
@@ -143,7 +144,7 @@ Read [Responsible use](#responsible-use) first. Do these steps on the host that 
 5. Do a dry run. The runner treats `hermes` as its production flag, so this reads Telegram for real, but it writes only logs under `work/`:
 
    ```sh
-   COURTLY_RUNTIME=hermes node scripts/run-local-ingestion.mjs --dry-run --no-llm
+   COURTLY_RUNTIME=hermes node scripts/run-local-ingestion.mjs --dry-run
    ```
 
 6. Adapt the venue data if you need venues outside the catalog, by adding verified entries to `data/venue-overrides.json`.
@@ -188,8 +189,7 @@ Keep real data out of git. `data/telegram-messages.json` and `data/telegram-list
 | Variable | `COURTLY_PRODUCTION_URL` | No | Worker URL, which must return 401 to anonymous requests. If unset, the check is skipped with a warning. |
 | Secret | `COURTLY_TELEGRAM_SOURCE_URL` | No | Without it, the group button is hidden |
 | Secret | `COURTLY_TELEGRAM_CHAT_ID` | No | Without it, message links are hidden |
-
-Before deploying your own copy, replace the Cloudflare Web Analytics token in `app/layout.tsx`, or remove the beacon.
+| Variable | `VITE_CLOUDFLARE_ANALYTICS_TOKEN` | No | Without it, the analytics beacon is not loaded |
 
 ## Responsible use
 
@@ -202,7 +202,7 @@ This project processes messages that other people wrote. You are responsible for
 - **Comply with the PDPA.** Listings can include names, usernames, and message text, which may be personal data under Singapore's [Personal Data Protection Act](https://www.pdpc.gov.sg/). Consider your purpose and any notice or consent needed, collect no more than you need, keep it no longer than needed, and secure it. Keep the access gate on, since the feed exposes this data to anyone who gets past it.
 - **Honour removal requests.** Publish a way to contact you. When someone asks to be removed, delete their data from `data/telegram-messages.json` and `data/telegram-listings.json` on the ingestion host, and republish the feed. Check that the next run will not restore it. Deleted Telegram messages are only detected within the overlap window of recent messages.
 - **Follow third-party usage policies.** The public [OpenStreetMap tile](https://operations.osmfoundation.org/policies/tiles/) and [Nominatim](https://operations.osmfoundation.org/policies/nominatim/) services are donated resources with usage limits and attribution requirements. If your deployment gets significant traffic, switch to a commercial or self-hosted provider. Respect the terms of OneMap and of the sites behind the venue data.
-- **Understand automated repair.** It sends message text to a third-party LLM provider and is on by default. Use `--no-llm` unless you have reviewed [what it does](docs/operations.md#automated-parser-repair).
+- **Understand automated repair before enabling it.** It is off by default. When enabled, it sends message text to a third-party LLM provider. See [what it does](docs/operations.md#automated-parser-repair).
 
 ## Licence
 
