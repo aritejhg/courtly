@@ -52,6 +52,10 @@ test('source sync preserves unpublished repairs and permits clean source plus ru
     await assertSourceSyncSafe(source, app, repair, repair);
     await writeFile(path.join(app, 'scripts', 'new-fix.mjs'), 'export const fix = true;\n');
     await assert.rejects(assertSourceSyncSafe(source, app, repair, repair), /new-fix.mjs/);
+    await rm(path.join(app, 'scripts', 'new-fix.mjs'));
+    await rm(path.join(app, 'scripts', 'parser.mjs'));
+    await assert.rejects(assertSourceSyncSafe(source, app, repair, repair), /deployed source differs.*scripts\/parser\.mjs/);
+    await cp(path.join(source, 'scripts', 'parser.mjs'), path.join(app, 'scripts', 'parser.mjs'));
     await assert.rejects(assertSourceSyncSafe(source, app, repair, ''), /no deployed commit marker/);
   } finally {
     const relative = path.relative(os.tmpdir(), root);
