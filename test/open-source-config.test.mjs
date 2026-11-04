@@ -92,3 +92,26 @@ test('source sync never copies checked-in listing data over runtime data', async
   }
   assert.match(script, /--exclude='\.env'/);
 });
+
+test('source sync examples use generic overridable paths', async () => {
+  const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
+  const script = await read('scripts/deploy-from-github-oracle.sh');
+  const dropIn = await read('ops/courtly-ingest.service.d/github-deploy.conf');
+  for (const name of ['COURTLY_GITHUB_SOURCE_DIR', 'COURTLY_APP_DIR', 'COURTLY_GITHUB_KEY', 'COURTLY_GITHUB_KNOWN_HOSTS']) {
+    assert.match(script, new RegExp(`\\$\\{${name}:-/opt/courtly/`));
+  }
+  assert.doesNotMatch(script + dropIn, /\/home\//);
+  assert.match(dropIn, /ExecStartPre=\/usr\/bin\/bash \/opt\/courtly\/source\/scripts\/deploy-from-github-oracle\.sh/);
+});
+
+test('notice and docs carry the release warnings', async () => {
+  const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
+  const notice = await read('NOTICE');
+  assert.match(notice, /https:\/\/www\.onemap\.gov\.sg\/legal\/opendatalicence\.html/);
+  assert.match(notice, /https:\/\/www\.onemap\.gov\.sg\/legal\/apitermsofservice\.html/);
+  for (const doc of [await read('README.md'), await read('docs/operations.md')]) {
+    assert.match(doc, /credential-free checkout/);
+    assert.match(doc, /allowlist/);
+  }
+  assert.match(await read('docs/operations.md'), /Moving a VM to rewritten history/);
+});

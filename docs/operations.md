@@ -31,6 +31,8 @@ Schedule the runner with a systemd timer or similar. Choose an interval that kee
 
 ### Automated parser repair
 
+**Keep repair disabled unless the agent runs in a credential-free checkout, under a restricted OS identity, with an environment allowlist.** The agent runs with reduced permission checks and reads text that anyone in the group can write, so a successful prompt injection acts with everything that identity can reach. The checkout, identity, and environment must give it no access to the Telegram session, `.env`, Cloudflare tokens, deploy keys, or other credentials. Nothing in this repository sets up that isolation for you.
+
 Repair is off by default. With `COURTLY_ENABLE_LLM_REPAIR=1`, when a parser ambiguity remains, the runner starts a coding agent CLI (`COURTLY_REPAIR_COMMAND`, `codex` or `agy`) with permission checks disabled or reduced, and gives it the ambiguous message. `--no-llm` and `COURTLY_DISABLE_LLM=1` override the opt-in. **Enable it only if you accept these consequences:**
 
 - Message text, which anyone in the group can write, reaches the agent and its provider. The prompt marks it as untrusted, which reduces prompt injection risk but does not eliminate it.
@@ -40,7 +42,7 @@ If used, a repair may change only deterministic parser code, a synthetic regress
 
 ## Source sync on the VM
 
-`scripts/deploy-from-github-oracle.sh` is an example that keeps a VM on the latest `main`, and `ops/courtly-ingest.service.d/github-deploy.conf` runs it before each ingestion. Its paths have overridable defaults:
+`scripts/deploy-from-github-oracle.sh` is an example that keeps a VM on the latest `main`, and `ops/courtly-ingest.service.d/github-deploy.conf` runs it before each ingestion. Its paths have generic example defaults under `/opt/courtly`. Set each one for your host in `Environment=` lines of the drop-in, before a sync can deliver a new script. The drop-in's `ExecStartPre` path must match too:
 
 | Variable | Purpose |
 | --- | --- |
@@ -53,6 +55,21 @@ If used, a repair may change only deterministic parser code, a synthetic regress
 The script preserves `.env`, `work/`, `node_modules/`, `dist/`, and runtime data, including `data/telegram-messages.json` and `data/telegram-listings.json`. The checked-in samples therefore never replace real data on the VM.
 
 `scripts/lib/source-sync-guard.mjs` refuses to sync over uncommitted edits, unpushed commits, or drift from the recorded commit. Commit a blocked repair through GitHub rather than bypassing the guard. Edits made only on the VM are otherwise lost at the next sync.
+
+### Moving a VM to rewritten history
+
+The guard's ancestor check blocks a checkout whose history was rewritten, and an old `.courtly-source-commit` no longer exists in the new history. Do not weaken or bypass the guard. Migrate once, by re-cloning:
+
+1. Stop the ingestion timer and wait for any running service to finish.
+2. Back up the app directory, including `.env`, `work/`, and runtime data under `data/`.
+3. In the old checkout, save local commits and uncommitted edits as patches. Compare the app directory with the old checkout, and save any edits made only there. Reapply these repairs through the new repository, then wait for them to reach `main`.
+4. Set the variables above and the `ExecStartPre` path in the drop-in, then reload systemd.
+5. Move the old checkout aside and clone the new `main` to `COURTLY_GITHUB_SOURCE_DIR`.
+6. Copy the new source into the app directory with the same `rsync` options and excludes as the sync script, so `.env`, `work/`, and runtime data stay in place. Run `npm ci` there.
+7. Write the new commit SHA to `.courtly-source-commit` in the app directory. This only records the baseline you just copied.
+8. Run the sync script once, confirm it exits cleanly, then start the timer.
+
+Keep the backup and the old checkout until a full run has succeeded.
 
 ## Runtime data
 

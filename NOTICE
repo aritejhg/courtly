@@ -15,8 +15,20 @@ ActiveSG venue data
 
 OneMap
   Many coordinates and addresses in data/venue-overrides.json and
-  data/venue-coordinate-cache.json come from https://www.onemap.gov.sg and are
-  subject to OneMap's terms.
+  data/venue-coordinate-cache.json come from https://www.onemap.gov.sg.
+  OneMap's API terms state that use of its datasets is governed by the Singapore
+  Open Data Licence version 1.0. Attribution:
+
+    Contains information from OneMap, accessed on various dates from
+    https://www.onemap.gov.sg, which is made available under the terms of the
+    Singapore Open Data Licence version 1.0
+    https://www.onemap.gov.sg/legal/opendatalicence.html
+
+  API terms of service: https://www.onemap.gov.sg/legal/apitermsofservice.html
+  That licence excludes personal data, third party rights the agency cannot
+  license, and patents, trademarks and design rights, and it grants no rights to
+  downstream sub-licensees. This project passes on no OneMap rights; check the
+  licence for your own use. Access dates are not recorded per entry.
 
 People's Association / onePA
   Community club names and addresses in data/venue-overrides.json are referenced
