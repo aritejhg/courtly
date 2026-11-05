@@ -7,8 +7,9 @@
  */
 
 import { inferVenueArea, matchVenue } from './venue-mapping';
+export { getActiveListings, isListingActive } from './listing-activity.mjs';
 
-export type ListingStatus = 'active' | 'expired' | 'deleted';
+export type ListingStatus = 'active' | 'incomplete' | 'expired' | 'deleted';
 
 export type CourtListing = {
   id: string;
@@ -103,7 +104,7 @@ export function ingestTelegramMessage(message: TelegramMessage, now = new Date()
     playAt,
     playEndAt: playAt,
     postedAt,
-    status: message.deleted ? 'deleted' : new Date(playAt).getTime() > now.getTime() ? 'active' : 'expired',
+    status: message.deleted ? 'deleted' : new Date(playAt).getTime() > now.getTime() ? 'incomplete' : 'expired',
     deletedAt: message.deleted ? now.toISOString() : undefined,
     sourceMessageId: id,
     sourceUrl: message.sourceUrl ?? '',
@@ -120,14 +121,6 @@ export function ingestTelegramMessage(message: TelegramMessage, now = new Date()
     venueId: venueMatch.venue?.id,
     venueMatch: venueMatch.status,
   };
-}
-
-export function isListingActive(listing: CourtListing, now = new Date()) {
-  return listing.status === 'active' && !listing.deletedAt && new Date(listing.playAt).getTime() > now.getTime();
-}
-
-export function getActiveListings(listings: CourtListing[], now = new Date()) {
-  return listings.filter((listing) => isListingActive(listing, now));
 }
 
 /** Apply a Telegram delete/update event without removing audit history. */
