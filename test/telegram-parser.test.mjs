@@ -1032,6 +1032,22 @@ test('uses explicit calendar date despite an incorrect weekday label', () => {
   assert.equal(result.actualWeekday, 'sat');
 });
 
+test('treats the common "toady" typo as today in synthetic release posts', async () => {
+  const productionVenues = JSON.parse(await readFile(new URL('../data/badminton-venues.json', import.meta.url), 'utf8'));
+  const overrides = JSON.parse(await readFile(new URL('../data/venue-overrides.json', import.meta.url), 'utf8'));
+  const postedAt = '2026-11-05T09:21:23.000Z';
+  const result = buildListing({
+    messageId: 'synthetic-relative-day-001',
+    postedAt,
+    text: 'Friendly court availability\nDelta Sport Hall\nToady\n6-8pm $10',
+  }, [...productionVenues, ...overrides], { now: new Date(postedAt) });
+
+  assert.deepEqual(result.issues, []);
+  assert.equal(result.listing.playAt, '2026-11-05T10:00:00.000Z');
+  assert.equal(result.listing.playEndAt, '2026-11-05T12:00:00.000Z');
+  assert.equal(result.listing.status, 'active');
+});
+
 test('keeps strong listing intent even when the venue name is unknown', () => {
   assert.equal(isPotentialCourtMessage('Court to let go 9 Sep 6-8pm at New Unknown Academy $9', venues), true);
 });

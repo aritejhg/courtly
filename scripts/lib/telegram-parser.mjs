@@ -457,7 +457,7 @@ export function inferArea(text, venue) {
 }
 
 const MONTH_TOKEN = 'jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?';
-const DATE_TOKEN = new RegExp(`(?<![\\d.])\\b(?:today|tonight|tomorrow|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?|\\d{1,2}(?:st|nd|rd|th)?(?:\\s*(?:/|-)\\s*\\d{1,2}|\\s*-?\\s*(?:${MONTH_TOKEN}))|${MONTH_TOKEN}\\s+\\d{1,2}(?:st|nd|rd|th)?)\\b`, 'i');
+const DATE_TOKEN = new RegExp(`(?<![\\d.])\\b(?:today|toady|tonight|tomorrow|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?|\\d{1,2}(?:st|nd|rd|th)?(?:\\s*(?:/|-)\\s*\\d{1,2}|\\s*-?\\s*(?:${MONTH_TOKEN}))|${MONTH_TOKEN}\\s+\\d{1,2}(?:st|nd|rd|th)?)\\b`, 'i');
 // Telegram listings sometimes abbreviate PM as a trailing `m` (for example,
 // `9-10m`). Accept it only inside a clock expression.
 const TIME_RANGE = /(?<![\d.])\b((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm|noon|midnight|m)?\s*(?:-|–|—|to)\s*((?:\d{3,4})|(?:\d{1,2}(?:(?::|\.)\d{2})?))\s*(am|pm|noon|midnight|m)?\b/i;
@@ -561,7 +561,7 @@ export function parseDate(text, postedAt) {
     date = singaporeDate(explicitYear, month, day, 12);
   } else if (/\btomorrow\b/i.test(text)) {
     date = new Date(singaporeDate(postedParts.year, postedParts.month, postedParts.day, 12).getTime() + 86400000);
-  } else if (/\b(?:today|tonight)\b/i.test(text)) {
+  } else if (/\b(?:today|toady|tonight)\b/i.test(text)) {
     date = singaporeDate(postedParts.year, postedParts.month, postedParts.day, 12);
   } else if (weekdayMatch) {
     const target = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'].indexOf(weekdayMatch[1].slice(0, 3).toLowerCase());
@@ -579,7 +579,7 @@ export function parseDate(text, postedAt) {
   const actualWeekday = date.toLocaleDateString('en-SG', { timeZone: 'Asia/Singapore', weekday: 'short' }).slice(0, 3).toLowerCase();
   // Explicit calendar dates are stronger than a mistyped weekday label.
   // Keep the mismatch as metadata, but do not discard an otherwise exact date.
-  const explicitDate = Boolean(named || numeric || /\b(?:today|tonight|tomorrow)\b/i.test(text));
+  const explicitDate = Boolean(named || numeric || /\b(?:today|toady|tonight|tomorrow)\b/i.test(text));
   return { value: date, status: explicitDate || !weekday || weekday === actualWeekday ? 'deterministic' : 'ambiguous', weekday, actualWeekday };
 }
 
