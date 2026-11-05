@@ -392,6 +392,22 @@ test('resolves the recurring singular Crescent Girl School shorthand', async () 
   assert.equal(result.listing.lng, 103.8179673);
 });
 
+test('resolves the recurring Pei Ying Primary School listing to its verified hall', async () => {
+  const productionVenues = JSON.parse(await readFile(new URL('../data/badminton-venues.json', import.meta.url), 'utf8'));
+  const overrides = JSON.parse(await readFile(new URL('../data/venue-overrides.json', import.meta.url), 'utf8'));
+  const result = buildListing({
+    messageId: 'synthetic-peiying-school-001',
+    postedAt: '2026-11-05T04:00:00.000Z',
+    text: 'Offering courts at cost\nDate: 08/11 (Sunday)\nVenue: Pei Ying Primary school (near Khatib MRT)\nTime: 5pm-7pm',
+  }, [...productionVenues, ...overrides], { now: new Date('2026-11-05T04:00:00.000Z') });
+
+  assert.deepEqual(result.issues, []);
+  assert.equal(result.listing.facility, 'Peiying Primary School Hall');
+  assert.equal(result.listing.venueId, 'active-sg:peiying-primary-school-hall');
+  assert.equal(result.listing.lat, 1.417233);
+  assert.equal(result.listing.lng, 103.8304);
+});
+
 test('resolves the recovered missing-coordinate venue aliases to verified coordinates', async () => {
   const productionVenues = JSON.parse(await readFile(new URL('../data/badminton-venues.json', import.meta.url), 'utf8'));
   const overrides = JSON.parse(await readFile(new URL('../data/venue-overrides.json', import.meta.url), 'utf8'));
@@ -443,6 +459,7 @@ test('resolves the recovered missing-coordinate venue aliases to verified coordi
     'SAFRA Mount Faber',
     'SAFRA Toa Payoh',
     'Yishun spt hal',
+    'Pei Ying Primary School',
   ];
 
   for (const alias of recovered) {
