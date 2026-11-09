@@ -738,12 +738,16 @@ export function isIgnoredSwapMessage(text) {
   return hasSwapIntent && !hasReleaseIntent;
 }
 
-function isLocationQualifierLine(line) {
-  return /^\s*[([]?\s*(?:near|beside|opp(?:osite)?|at)?[^\n]*\b(?:mrt|lrt)\b/i.test(String(line || ''));
-}
-
 function venueOnLine(line, venues) {
-  return isLocationQualifierLine(line) ? null : matchVenue(line, venues).venue;
+  const value = String(line || '').trim();
+  // A station note qualifies the venue when it follows the venue name. Strip
+  // only that suffix; dropping the whole line loses the venue boundary.
+  const candidate = value.replace(/\s*\((?:[^()]*(?:near|beside|opp(?:osite)?|next\s+to|at)?[^()]*)\b(?:mrt|lrt)\b[^()]*\)\s*$/i, '').trim();
+  if (!candidate) return null;
+  // A standalone parenthesized town is a locality note, not another venue.
+  const locality = candidate.match(/^\(([^()]+)\)$/)?.[1];
+  if (locality && venues.some((venue) => normalize(venue.area) === normalize(locality))) return null;
+  return matchVenue(candidate, venues).venue;
 }
 
 export function isPotentialCourtMessage(text, venues) {

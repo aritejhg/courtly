@@ -989,6 +989,55 @@ test('parses Telegram shorthand m as PM in a repeated-listing message', async ()
   assert.equal(parsed[3].listing.rawText, message.rawText);
 });
 
+test('splits venue lines with station notes and ignores a standalone locality line', async () => {
+  const productionVenues = JSON.parse(await readFile(new URL('../data/badminton-venues.json', import.meta.url), 'utf8'));
+  const overrides = JSON.parse(await readFile(new URL('../data/venue-overrides.json', import.meta.url), 'utf8'));
+  const catalog = [...productionVenues, ...overrides];
+  const message = {
+    messageId: 'synthetic-multi-venue-001',
+    postedAt: '2026-11-01T04:00:00.000Z',
+    text: 'Sun 8 Nov\nShuqun Primary School (Next to Lakeside MRT)\n11am-2pm\nFrontier Primary School\n3pm-4pm',
+  };
+  const parts = splitMessageListings(message, catalog);
+  assert.equal(parts.length, 2);
+  const parsed = parts.map((part, listingIndex) => buildListing(message, catalog, {
+    now: new Date(message.postedAt), listingText: part.text, listingIndex, partCount: parts.length,
+  }));
+  assert.equal(parsed[0].listing.facility, 'Shuqun Primary School Hall');
+  assert.equal(parsed[1].listing.facility, 'Frontier Primary School Hall');
+
+  const localityMessage = {
+    ...message,
+    messageId: 'synthetic-locality-002',
+    text: 'Sun 8 Nov\nKeming Primary School\n(Bukit Batok)\n1pm-2pm',
+  };
+  const localityParts = splitMessageListings(localityMessage, catalog);
+  assert.equal(localityParts.length, 1);
+  const localityParsed = buildListing(localityMessage, catalog, {
+    now: new Date(message.postedAt), listingText: localityParts[0].text, listingIndex: 0, partCount: 1,
+  });
+  assert.equal(localityParsed.listing.facility, 'Keming Primary School Hall');
+});
+
+test('uses the specific verified VIP alias while retaining the generic venue alias', async () => {
+  const productionVenues = JSON.parse(await readFile(new URL('../data/badminton-venues.json', import.meta.url), 'utf8'));
+  const overrides = JSON.parse(await readFile(new URL('../data/venue-overrides.json', import.meta.url), 'utf8'));
+  const catalog = [...productionVenues, ...overrides];
+  assert.equal(matchVenue('Singapore Badminton Hall (SBH VIP)', catalog).venue.canonicalName, 'SBH @ Sims');
+  assert.equal(matchVenue('Singapore Badminton Hall', catalog).venue.canonicalName, 'SBH Geylang');
+  for (const [name, canonicalName] of [
+    ['Wyse Active', 'WYSE'],
+    ['Euonia JC Hall', 'Eunoia Junior College Hall'],
+    ['Changkat Changi Sec Sch', 'Changkat Changi Secondary School Hall'],
+    ['Edgefield Secondary Sch (Punggol)', 'Edgefield Secondary School Hall'],
+    ['Southview Primary School', 'South View Primary School Hall'],
+  ]) {
+    const result = matchVenue(name, catalog);
+    assert.equal(result.venue.canonicalName, canonicalName, name);
+    assert.ok(Number.isFinite(result.venue.lat) && Number.isFinite(result.venue.lng), name);
+  }
+});
+
 test('ignores wanted-only messages but keeps the availability half of mixed messages', () => {
   assert.equal(isPotentialCourtMessage('Looking for court at Anchor Green pri on 13 Sept 5pm', venues), false);
   const mixed = 'Looking for slot: Anchor Green pri\nSun 13 Sept 5pm\nCourt to let go: Sengkang SH\nMon 14 Sep 3-5pm $8';

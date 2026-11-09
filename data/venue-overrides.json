@@ -90,7 +90,8 @@
       "SBH Sims",
       "SBH VIP",
       "SBH VIP Hall",
-      "SBH Sims VIP"
+      "SBH Sims VIP",
+      "Singapore Badminton Hall (SBH VIP)"
     ],
     "source": "Telegram listing",
     "kind": "other",
@@ -98,6 +99,18 @@
     "address": "Geylang Lorong 23",
     "lat": 1.315460529862975,
     "lng": 103.8812548051696
+  },
+  {
+    "id": "manual:changkat-changi-secondary-school-hall",
+    "canonicalName": "Changkat Changi Secondary School Hall",
+    "aliases": ["Changkat Changi Secondary School Hall", "Changkat Changi Sec Sch"],
+    "source": "ActiveSG facility listing and OneMap school address",
+    "sourceUrl": "https://www.activesgcircle.gov.sg/facilities/changkat-changi-secondary-school-hall",
+    "kind": "school_sport_hall",
+    "area": "Tampines",
+    "address": "23 Simei Street 3 Singapore 529894",
+    "lat": 1.339506300728762,
+    "lng": 103.9532455255639
   },
   {
     "id": "manual:kampong-glam-cc",
@@ -768,6 +781,7 @@
       "WYSE",
       "WYSE Active Hub",
       "WYSE Active Hub Jurong East",
+      "Wyse Active",
       "1 Venture Avenue"
     ],
     "source": "Repeated exact Telegram venue name",
