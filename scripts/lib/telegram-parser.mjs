@@ -918,7 +918,7 @@ export function buildListing(message, venues, { now = new Date(), listingText = 
   const isDeleted = Boolean(message.deleted || /\b(taken|gone|claimed|deleted|no longer available)\b/i.test(rawText));
   const hasCompleteTimeRange = Boolean(time.value?.start && time.value?.end && time.value.end > time.value.start);
   const status = isDeleted ? 'deleted' : !playAt || playAt <= now ? 'expired'
-    : hasCompleteTimeRange ? 'active' : 'incomplete';
+    : hasCompleteTimeRange && venueMatch.status === 'deterministic' ? 'active' : 'incomplete';
   const listing = {
     id: `tg-${message.messageId}${partCount > 1 ? `-${listingIndex + 1}` : ''}-${slugify(venueMatch.venue?.canonicalName || 'unmatched')}`,
     facility: venueMatch.venue?.canonicalName || 'Unmatched venue',

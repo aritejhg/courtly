@@ -1134,6 +1134,36 @@ test('extracts obvious venue-shaped names when the catalog has no entry', () => 
   assert.equal('lat' in result.listing, false);
 });
 
+test('keeps a complete listing without a verified venue out of the active feed', () => {
+  const postedAt = '2026-11-10T04:00:00.000Z';
+  const result = buildListing({
+    messageId: 'synthetic-unverified-venue-001', postedAt,
+    text: 'Court to let go\n10 Dec 2026\nVenue: Unknown Sports Hall\n5pm-6pm',
+  }, venues, { now: new Date(postedAt) });
+
+  assert.equal(result.venueMatch.status, 'extracted');
+  assert.equal(result.listing.status, 'incomplete');
+  assert.ok(Date.parse(result.listing.playEndAt) > Date.parse(result.listing.playAt));
+  assert.equal('lat' in result.listing, false);
+});
+
+test('keeps ambiguous venue matches out of the active feed', () => {
+  const postedAt = '2026-11-10T04:00:00.000Z';
+  const ambiguousVenues = [
+    { id: 'synthetic-sbh-site-a', canonicalName: 'Synthetic SBH Site A', aliases: ['SBH Air-Con'], lat: 1.3, lng: 103.8 },
+    { id: 'synthetic-sbh-site-b', canonicalName: 'Synthetic SBH Site B', aliases: ['SBH Air-Con'], lat: 1.4, lng: 103.9 },
+  ];
+  const result = buildListing({
+    messageId: 'synthetic-ambiguous-venue-001', postedAt,
+    text: 'Court to let go\n10 Dec 2026\nVenue: SBH Air-Con\n5pm-6pm',
+  }, ambiguousVenues, { now: new Date(postedAt) });
+
+  assert.equal(result.venueMatch.status, 'ambiguous');
+  assert.equal(result.listing.status, 'incomplete');
+  assert.ok(Date.parse(result.listing.playEndAt) > Date.parse(result.listing.playAt));
+  assert.equal('lat' in result.listing, false);
+});
+
 test('uses explicit calendar date despite an incorrect weekday label', () => {
   const result = parseDate('13/6 (Sun)', '2026-06-12T09:00:00Z');
   assert.equal(result.status, 'deterministic');
