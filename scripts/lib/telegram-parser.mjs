@@ -108,6 +108,54 @@ export function expandedAliases(venue) {
   return [...aliases].map(normalize).filter((alias) => alias.length >= 3);
 }
 
+const venueAliasIndexCache = new WeakMap();
+
+function venueAliasIndex(venues) {
+  let index = venueAliasIndexCache.get(venues);
+  if (index) return index;
+  const directOwners = new Map();
+  const expandedOwners = new Map();
+  const directTextAliasEntries = [];
+  for (const venue of venues) {
+    const name = normalize(venue.canonicalName);
+    for (const alias of [venue.canonicalName, ...(venue.aliases || [])]) {
+      const key = normalize(alias);
+      const owners = directOwners.get(key) || new Map();
+      owners.set(name, venue);
+      directOwners.set(key, owners);
+    }
+    for (const alias of expandedAliases(venue)) {
+      const owners = expandedOwners.get(alias) || new Map();
+      owners.set(name, venue);
+      expandedOwners.set(alias, owners);
+    }
+    const explicitlyVerifiedUnmarkedAliases = new Set((venue.unmarkedAliases || []).map(normalize));
+    const directAliases = [venue.canonicalName, ...(venue.aliases || []), ...(venue.unmarkedAliases || [])]
+      .map(normalize)
+      .filter((alias) => explicitlyVerifiedUnmarkedAliases.has(alias)
+        || (alias.length >= 6 && alias.includes(' ')
+          && /\b(?:cc|community club|community centre|sport|sports|hall|sh|school|primary|secondary|pri|sec|girls|safra|sbh|kff|moe|active hub|arena|arina|clubhouse)\b/.test(alias))
+        || (venue.kind === 'sport_hall' && alias.length >= 3 && !alias.includes(' ')));
+    for (const alias of new Set(directAliases)) directTextAliasEntries.push({ venue, alias });
+  }
+  // Catalog arrays stay fixed during one ingestion run, so normalized aliases
+  // and their matchers can be reused for every source part.
+  const directTextAliases = directTextAliasEntries.map(({ venue, alias }) => ({
+    venue,
+    alias,
+    owners: expandedOwners.get(alias),
+    pattern: new RegExp(`(^| )${alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}( |$)`, 'i'),
+    requiresTimeContext: venue.kind === 'sport_hall' && !alias.includes(' '),
+  }));
+  const expandedPatterns = new Map([...expandedOwners.keys()].map((alias) => [
+    alias,
+    new RegExp(`(^| )${alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}( |$)`, 'i'),
+  ]));
+  index = { directOwners, expandedOwners, directTextAliases, expandedPatterns };
+  venueAliasIndexCache.set(venues, index);
+  return index;
+}
+
 function catalogVenueMatch(text, venues, { exact = false } = {}) {
   const normalizedText = normalize(String(text).replace(/(\d(?:\.\d+)?\s*(?:am|pm))(?=[A-Za-z])/gi, '$1 '));
   const stripListingMetadata = (line) => normalize(String(line)
@@ -140,32 +188,24 @@ function catalogVenueMatch(text, venues, { exact = false } = {}) {
       return [normalizedLine, normalize(line.replace(/\s*\([^)]*\)\s*$/, '').replace(/^(?:venue|location|place)\s*[:-]?\s*/i, '')), stripListingMetadata(line)];
     }).filter(Boolean),
   ]);
-  const directOwners = new Map();
-  for (const venue of venues) {
-    for (const directAlias of [venue.canonicalName, ...(venue.aliases || [])]) {
-      const key = normalize(directAlias);
-      const owners = directOwners.get(key) || new Set();
-      owners.add(normalize(venue.canonicalName));
-      directOwners.set(key, owners);
-    }
-  }
+  const { directOwners, expandedOwners, expandedPatterns } = venueAliasIndex(venues);
   const explicitlyCommunityClub = /\b(?:cc|community\s+(?:club|centre))\b/i.test(normalizedText)
     && !/\b(?:school|pri(?:mary)?|sec(?:ondary)?|sport(?:s)?\s*hall|sh)\b/i.test(normalizedText);
   const hits = [];
-  for (const venue of venues) {
+  const aliasEntries = exact
+    ? [...strictCandidates].flatMap((alias) => [...(expandedOwners.get(alias) || new Map()).values()].map((venue) => ({ venue, alias })))
+    : [...expandedOwners].flatMap(([alias, owners]) => [...owners.values()].map((venue) => ({ venue, alias })));
+  for (const { venue, alias } of aliasEntries) {
     // A bare sport-hall alias such as `Hougang` must not swallow an explicit
     // community-club listing such as `Hougang CC`. Keep uncertain venues
     // extracted instead of attaching the wrong coordinates.
     if (explicitlyCommunityClub && venue.kind !== 'community_club') continue;
-    for (const alias of expandedAliases(venue)) {
-      const owners = directOwners.get(alias);
-      if (owners?.size && !owners.has(normalize(venue.canonicalName))) continue;
-      // A verified alias is a strict key. Do not turn a known venue name into
-      // a fuzzy match merely because it appears inside an unknown name.
-      if (exact && !strictCandidates.has(alias)) continue;
-      const escaped = alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      if (new RegExp(`(^| )${escaped}( |$)`, 'i').test(normalizedText)) hits.push({ venue, alias, length: alias.length });
-    }
+    const owners = directOwners.get(alias);
+    if (owners?.size && !owners.has(normalize(venue.canonicalName))) continue;
+    // A verified alias is a strict key. Do not turn a known venue name into
+    // a fuzzy match merely because it appears inside an unknown name.
+    if (exact && !strictCandidates.has(alias)) continue;
+    if (expandedPatterns.get(alias)?.test(normalizedText)) hits.push({ venue, alias, length: alias.length });
   }
   if (!hits.length) return { venue: null, status: 'unmatched' };
   hits.sort((a, b) => b.length - a.length);
@@ -176,7 +216,6 @@ function catalogVenueMatch(text, venues, { exact = false } = {}) {
 }
 
 const strictVenueMatchCache = new WeakMap();
-const strictVenueAliasCache = new WeakMap();
 
 function strictVenueMatchesInText(text, venues) {
   let cache = strictVenueMatchCache.get(venues);
@@ -202,18 +241,7 @@ function strictVenueMatchesInText(text, venues) {
     // arbitrary substrings inside venue names.
     line.split(/\s+(?:near|beside|opp(?:osite)?|at)\s+/i)[0],
   ]);
-  let aliases = strictVenueAliasCache.get(venues);
-  if (!aliases) {
-    aliases = new Map();
-    for (const venue of venues) {
-      for (const alias of expandedAliases(venue)) {
-        const owners = aliases.get(alias) || new Map();
-        owners.set(normalize(venue.canonicalName), venue);
-        aliases.set(alias, owners);
-      }
-    }
-    strictVenueAliasCache.set(venues, aliases);
-  }
+  const { expandedOwners: aliases, directTextAliases } = venueAliasIndex(venues);
   const matches = variants.flatMap((variant) => {
     const alias = normalize(variant);
     const owners = aliases.get(alias);
@@ -229,32 +257,21 @@ function strictVenueMatchesInText(text, venues) {
     return [primary, cleanVenueCandidate(primary), primary.replace(/\s*\([^)]*\)/g, ' ')];
   }).map(normalize);
   const directText = directTextVariants.join(' ');
-  for (const venue of venues) {
-    const explicitlyVerifiedUnmarkedAliases = new Set((venue.unmarkedAliases || []).map(normalize));
-    const directAliases = [venue.canonicalName, ...(venue.aliases || []), ...(venue.unmarkedAliases || [])]
-      .map(normalize)
-      .filter((alias) => explicitlyVerifiedUnmarkedAliases.has(alias)
-        || (alias.length >= 6 && alias.includes(' ')
-          && /\b(?:cc|community club|community centre|sport|sports|hall|sh|school|primary|secondary|pri|sec|girls|safra|sbh|kff|moe|active hub|arena|arina|clubhouse)\b/.test(alias))
-        || (venue.kind === 'sport_hall' && alias.length >= 3 && !alias.includes(' ')))
-    for (const alias of directAliases) {
-      const owners = aliases.get(alias);
-      const requiresTimeContext = venue.kind === 'sport_hall' && !alias.includes(' ');
-      const hasTimeContext = /\b(?:\d{1,2}(?::\d{2})?\s*(?:am|pm|m)?\s*(?:-|to)\s*\d{1,2}|\$\s*\d|\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\b)/i.test(directText);
-      const escapedAlias = alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const exactMention = directTextVariants.some((variant) => {
-        const match = new RegExp(`(^| )${escapedAlias}( |$)`, 'i').exec(variant);
-        if (!match) return false;
-        const start = match.index + match[1].length;
-        const end = start + alias.length;
-        const before = variant.slice(0, start).trim();
-        const after = variant.slice(end).trim();
-        return !/\b(?:unknown|unverified|different|another)\s*$/i.test(before)
-          && !/^(?:annex|extension|branch|campus)\b/i.test(after);
-      });
-      if (!owners || owners.size !== 1 || !exactMention || (requiresTimeContext && !hasTimeContext)) continue;
-      matches.push({ venue, alias });
-    }
+  const hasTimeContext = /\b(?:\d{1,2}(?::\d{2})?\s*(?:am|pm|m)?\s*(?:-|to)\s*\d{1,2}|\$\s*\d|\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\b)/i.test(directText);
+  for (const { venue, alias, owners, pattern, requiresTimeContext } of directTextAliases) {
+    if (!directTextVariants.some((variant) => variant.includes(alias))) continue;
+    const exactMention = directTextVariants.some((variant) => {
+      const match = pattern.exec(variant);
+      if (!match) return false;
+      const start = match.index + match[1].length;
+      const end = start + alias.length;
+      const before = variant.slice(0, start).trim();
+      const after = variant.slice(end).trim();
+      return !/\b(?:unknown|unverified|different|another)\s*$/i.test(before)
+        && !/^(?:annex|extension|branch|campus)\b/i.test(after);
+    });
+    if (!owners || owners.size !== 1 || !exactMention || (requiresTimeContext && !hasTimeContext)) continue;
+    matches.push({ venue, alias });
   }
   cache.set(cacheKey, matches);
   return matches;
@@ -362,10 +379,11 @@ export function matchVenue(text, venues) {
   const labeledVenueAliases = String(text || '').split(/\r?\n/)
     .map((line) => line.match(/^\s*(?:venue|location|place)\s*[:：-]\s*(.+)$/i)?.[1]?.trim())
     .filter(Boolean);
-  const labeledMatches = [...new Map(venues
-    .filter((venue) => [venue.canonicalName, ...(venue.aliases || [])]
-      .some((alias) => labeledVenueAliases.some((value) => normalize(alias) === normalize(value))))
+  const { directOwners } = venueAliasIndex(venues);
+  const matchingDirectAliases = (values) => [...new Map(values.flatMap((value) =>
+    [...(directOwners.get(normalize(value)) || new Map()).values()])
     .map((venue) => [normalize(venue.canonicalName), venue])).values()];
+  const labeledMatches = matchingDirectAliases(labeledVenueAliases);
   if (labeledMatches.length === 1) {
     return { venue: labeledMatches[0], status: 'deterministic', alias: labeledVenueAliases.find((value) =>
       [labeledMatches[0].canonicalName, ...(labeledMatches[0].aliases || [])]
@@ -377,12 +395,10 @@ export function matchVenue(text, venues) {
   // Prefer an exact catalog alias over derived shorthand aliases. This keeps
   // a verified direct alias such as `Yew Tee` from colliding with a derived
   // school-hall alias for the same area.
-  const exactAliases = [...new Map(venues
-    .filter((venue) => [venue.canonicalName, ...(venue.aliases || [])]
-      .some((alias) => normalize(alias) === normalize(String(text || '').trim())))
-    .map((venue) => [normalize(venue.canonicalName), venue])).values()];
+  const exactAlias = normalize(String(text || '').trim());
+  const exactAliases = matchingDirectAliases([exactAlias]);
   if (exactAliases.length === 1) {
-    return { venue: exactAliases[0], status: 'deterministic', alias: normalize(String(text || '').trim()) };
+    return { venue: exactAliases[0], status: 'deterministic', alias: exactAlias };
   }
   if (exactAliases.length > 1) {
     return { venue: null, status: 'ambiguous', candidates: exactAliases.map((venue) => venue.canonicalName) };
