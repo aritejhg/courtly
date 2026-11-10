@@ -765,9 +765,11 @@
     "id": "telegram:shelton-college",
     "canonicalName": "Shelton College",
     "aliases": [
-      "Shelton College"
+      "Shelton College",
+      "Wings Badminton Academy"
     ],
-    "source": "Repeated exact Telegram venue name",
+    "source": "SportSG 2024 Sports Facilities National Census (2026 dataset); ACRA Entities Registered with UEN T21LL1440D",
+    "sourceUrl": "https://data.gov.sg/datasets/d_2cfb0867cdeb2b7303068995699dc33b/view",
     "kind": "other",
     "area": "Singapore",
     "lat": 1.274274940159087,
