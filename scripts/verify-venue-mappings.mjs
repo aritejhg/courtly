@@ -4,13 +4,14 @@ import { expandedAliases, matchVenue, normalize } from './lib/telegram-parser.mj
 
 const root = resolve('.');
 const readJson = async (relativePath) => JSON.parse(await readFile(resolve(root, relativePath), 'utf8'));
-const [activeSgVenues, overrides, messages, listings] = await Promise.all([
+const [activeSgVenues, overrides, sportsgCensusVenues, messages, listings] = await Promise.all([
   readJson('data/badminton-venues.json'),
   readJson('data/venue-overrides.json'),
+  readJson('data/sportsg-badminton-census.json'),
   readJson('data/telegram-messages.json'),
   readJson('data/telegram-listings.json'),
 ]);
-const venues = [...activeSgVenues, ...overrides];
+const venues = [...activeSgVenues, ...overrides, ...sportsgCensusVenues];
 const byId = new Map(venues.map((venue) => [venue.id, venue]));
 const failures = [];
 const directAliases = new Map();

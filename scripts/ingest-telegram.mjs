@@ -40,15 +40,16 @@ const readJson = async (path, fallback, { optional = false } = {}) => {
   }
 };
 
-const [messages, activeSgVenues, overrides, coordinateCache, previousListings, previousUnmatched] = await Promise.all([
+const [messages, activeSgVenues, overrides, sportsgCensusVenues, coordinateCache, previousListings, previousUnmatched] = await Promise.all([
   readJson(messagesPath, []),
   readJson(venuesPath, []),
   readJson('data/venue-overrides.json', []),
+  readJson('data/sportsg-badminton-census.json', []),
   readJson('data/venue-coordinate-cache.json', {}, { optional: true }),
   readJson(outputPath, [], { optional: true }),
   readJson(unmatchedPath, [], { optional: true }),
 ]);
-for (const [value, path] of [[messages, messagesPath], [activeSgVenues, venuesPath], [overrides, 'data/venue-overrides.json'], [previousListings, outputPath], [previousUnmatched, unmatchedPath]]) {
+for (const [value, path] of [[messages, messagesPath], [activeSgVenues, venuesPath], [overrides, 'data/venue-overrides.json'], [sportsgCensusVenues, 'data/sportsg-badminton-census.json'], [previousListings, outputPath], [previousUnmatched, unmatchedPath]]) {
   if (!Array.isArray(value)) {
     const error = new Error(`Invalid JSON schema: expected an array in ${path}`);
     error.name = 'IngestionInputError';
@@ -58,7 +59,7 @@ for (const [value, path] of [[messages, messagesPath], [activeSgVenues, venuesPa
     throw error;
   }
 }
-const venues = [...activeSgVenues, ...overrides].map((venue) => {
+const venues = [...activeSgVenues, ...overrides, ...sportsgCensusVenues].map((venue) => {
   const cached = coordinateCache[venue.id];
   return cached && (venue.lat == null || venue.lng == null) ? { ...venue, ...cached } : venue;
 });

@@ -357,6 +357,23 @@ function provisionalVenue(candidate) {
 }
 
 export function matchVenue(text, venues) {
+  // A labeled venue field is stronger evidence than a shorter alias embedded
+  // in the venue name (for example, `Canberra Sports Hub`).
+  const labeledVenueAliases = String(text || '').split(/\r?\n/)
+    .map((line) => line.match(/^\s*(?:venue|location|place)\s*[:：-]\s*(.+)$/i)?.[1]?.trim())
+    .filter(Boolean);
+  const labeledMatches = [...new Map(venues
+    .filter((venue) => [venue.canonicalName, ...(venue.aliases || [])]
+      .some((alias) => labeledVenueAliases.some((value) => normalize(alias) === normalize(value))))
+    .map((venue) => [normalize(venue.canonicalName), venue])).values()];
+  if (labeledMatches.length === 1) {
+    return { venue: labeledMatches[0], status: 'deterministic', alias: labeledVenueAliases.find((value) =>
+      [labeledMatches[0].canonicalName, ...(labeledMatches[0].aliases || [])]
+        .some((alias) => normalize(alias) === normalize(value))) };
+  }
+  if (labeledMatches.length > 1) {
+    return { venue: null, status: 'ambiguous', candidates: labeledMatches.map((venue) => venue.canonicalName) };
+  }
   // Prefer an exact catalog alias over derived shorthand aliases. This keeps
   // a verified direct alias such as `Yew Tee` from colliding with a derived
   // school-hall alias for the same area.
