@@ -324,11 +324,12 @@ This is an unattended repair run. Make safe in-scope workspace edits without ask
 async function main() {
   await acquireLock();
   const beforeState = await stateHash();
-  const [venues, overrides] = await Promise.all([
+  const [venues, overrides, sportsgCensusVenues] = await Promise.all([
     readJson(join(root, 'data', 'badminton-venues.json'), []),
     readJson(join(root, 'data', 'venue-overrides.json'), []),
+    readJson(join(root, 'data', 'sportsg-badminton-census.json'), []),
   ]);
-  const allVenues = [...venues, ...overrides];
+  const allVenues = [...venues, ...overrides, ...sportsgCensusVenues];
   let touchedIds = [];
   if (!dryRun) {
     const initialized = await initializeSampleData({

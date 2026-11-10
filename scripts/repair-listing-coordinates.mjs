@@ -54,12 +54,13 @@ export function repairListings(listings, venues) {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === resolve(import.meta.filename)) {
-  const [listings, activeSgVenues, overrides] = await Promise.all([
+  const [listings, activeSgVenues, overrides, sportsgCensusVenues] = await Promise.all([
     readJson(listingsPath),
     readJson(resolve('data/badminton-venues.json')),
     readJson(resolve('data/venue-overrides.json')),
+    readJson(resolve('data/sportsg-badminton-census.json')),
   ]);
-  const result = repairListings(listings, [...activeSgVenues, ...overrides]);
+  const result = repairListings(listings, [...activeSgVenues, ...overrides, ...sportsgCensusVenues]);
   if (result.repaired) {
     const temporaryPath = `${listingsPath}.tmp-${process.pid}`;
     await writeFile(temporaryPath, `${JSON.stringify(result.listings, null, 2)}\n`);

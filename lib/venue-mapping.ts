@@ -1,5 +1,6 @@
 import activeSgVenues from '@/data/badminton-venues.json';
 import overrideVenues from '@/data/venue-overrides.json';
+import sportsgCensusVenues from '@/data/sportsg-badminton-census.json';
 
 export type Venue = {
   id: string;
@@ -22,7 +23,7 @@ export type VenueMatch = {
   candidates?: string[];
 };
 
-export const badmintonVenues: Venue[] = [...activeSgVenues, ...overrideVenues] as Venue[];
+export const badmintonVenues: Venue[] = [...activeSgVenues, ...overrideVenues, ...sportsgCensusVenues] as Venue[];
 
 const AREA_HINTS: Array<[string, string]> = [
   ['anchor green', 'Punggol'], ['edgefield', 'Punggol'], ['gongshang', 'Hougang'], ['wellington', 'Sembawang'],

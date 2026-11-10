@@ -1038,6 +1038,47 @@ test('uses the specific verified VIP alias while retaining the generic venue ali
   }
 });
 
+test('resolves synthetic listings against the SportSG badminton census catalog', async () => {
+  const activeSgVenues = JSON.parse(await readFile(new URL('../data/badminton-venues.json', import.meta.url), 'utf8'));
+  const overrides = JSON.parse(await readFile(new URL('../data/venue-overrides.json', import.meta.url), 'utf8'));
+  const census = JSON.parse(await readFile(new URL('../data/sportsg-badminton-census.json', import.meta.url), 'utf8'));
+  const venues = [...activeSgVenues, ...overrides, ...census];
+  assert.ok(census.length > 900);
+  assert.ok(census.every((venue) => Number.isFinite(venue.lat) && Number.isFinite(venue.lng)));
+
+  const venue = census.find((item) => item.sourceName && item.canonicalName === item.sourceName);
+  assert.ok(venue);
+  const message = {
+    messageId: 'synthetic-census-listing-001',
+    postedAt: '2026-11-10T04:00:00.000Z',
+    text: `Selling a badminton court\nDate: 20 Dec 2026\nVenue: ${venue.canonicalName}\nTime: 5pm-6pm`,
+  };
+  const parsed = buildListing(message, venues, {
+    now: new Date(message.postedAt), listingText: message.text, listingIndex: 0, partCount: 1,
+  });
+  assert.equal(parsed.listing.facility, venue.canonicalName);
+  assert.equal(parsed.listing.lat, venue.lat);
+  assert.equal(parsed.listing.lng, venue.lng);
+
+  const hub = census.find((item) => item.sourceName === 'East Canberra Sports Hub');
+  assert.ok(hub);
+  const hubMessage = {
+    messageId: 'synthetic-census-disambiguation-002',
+    postedAt: message.postedAt,
+    text: `Selling a badminton court\nDate: 20 Dec 2026\nVenue: ${hub.sourceName}\nTime: 6pm-7pm`,
+  };
+  const hubParsed = buildListing(hubMessage, venues, {
+    now: new Date(message.postedAt), listingText: hubMessage.text, listingIndex: 0, partCount: 1,
+  });
+  assert.equal(hubParsed.listing.facility, hub.canonicalName);
+  assert.equal(hubParsed.listing.lat, hub.lat);
+  assert.equal(hubParsed.listing.lng, hub.lng);
+
+  const unnamed = census.find((item) => item.sourceName === null);
+  assert.ok(unnamed);
+  assert.equal(matchVenue(unnamed.aliases[0], venues).venue.id, unnamed.id);
+});
+
 test('ignores wanted-only messages but keeps the availability half of mixed messages', () => {
   assert.equal(isPotentialCourtMessage('Looking for court at Anchor Green pri on 13 Sept 5pm', venues), false);
   const mixed = 'Looking for slot: Anchor Green pri\nSun 13 Sept 5pm\nCourt to let go: Sengkang SH\nMon 14 Sep 3-5pm $8';
