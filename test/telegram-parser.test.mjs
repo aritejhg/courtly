@@ -1079,6 +1079,26 @@ test('resolves synthetic listings against the SportSG badminton census catalog',
   assert.equal(matchVenue(unnamed.aliases[0], venues).venue.id, unnamed.id);
 });
 
+test('resolves the verified Wings Badminton Academy site with coordinates', async () => {
+  const activeSgVenues = JSON.parse(await readFile(new URL('../data/badminton-venues.json', import.meta.url), 'utf8'));
+  const overrides = JSON.parse(await readFile(new URL('../data/venue-overrides.json', import.meta.url), 'utf8'));
+  const census = JSON.parse(await readFile(new URL('../data/sportsg-badminton-census.json', import.meta.url), 'utf8'));
+  const venues = [...activeSgVenues, ...overrides, ...census];
+  const message = {
+    messageId: 'synthetic-wings-academy-001',
+    postedAt: '2026-11-10T04:00:00.000Z',
+    text: 'Selling a badminton court\nDate: 20 Dec 2026\nVenue: Wings Badminton Academy\nTime: 5pm-6pm',
+  };
+  const parsed = buildListing(message, venues, {
+    now: new Date(message.postedAt), listingText: message.text, listingIndex: 0, partCount: 1,
+  });
+  const venue = overrides.find((item) => item.id === 'telegram:shelton-college');
+  assert.equal(parsed.listing.facility, 'Shelton College');
+  assert.equal(parsed.venueMatch.status, 'deterministic');
+  assert.equal(parsed.listing.lat, venue.lat);
+  assert.equal(parsed.listing.lng, venue.lng);
+});
+
 test('ignores wanted-only messages but keeps the availability half of mixed messages', () => {
   assert.equal(isPotentialCourtMessage('Looking for court at Anchor Green pri on 13 Sept 5pm', venues), false);
   const mixed = 'Looking for slot: Anchor Green pri\nSun 13 Sept 5pm\nCourt to let go: Sengkang SH\nMon 14 Sep 3-5pm $8';
