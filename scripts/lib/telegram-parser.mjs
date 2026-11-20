@@ -321,7 +321,7 @@ function cleanVenueCandidate(line) {
     .replace(/[.,:;-]+$/g, '')
     .replace(/\s+(?:mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\s*$/i, '')
     // Price splitting can leave an opening parenthesis attached to the venue.
-    .replace(/\s*[\[(]\s*$/g, '')
+    .replace(/\s*(?:[(]|\[)\s*$/g, '')
     .replace(/^\s*(?:today|tonight|tomorrow|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rs?(?:day)?)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\s+/i, '')
     .replace(/\s+/g, ' ')
     .trim();
