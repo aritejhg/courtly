@@ -1700,3 +1700,26 @@ test('rolls a month-day date that already passed into the next year, unless the 
   const explicit = parseDate('Spare court 2/1/2026 8pm', postedAt);
   assert.equal(explicit.value.toISOString(), '2026-01-02T04:00:00.000Z');
 });
+
+test('resolves synthetic community club acronyms after parenthetical price splitting', async () => {
+  const catalog = [
+    ...JSON.parse(await readFile(new URL('../data/badminton-venues.json', import.meta.url))),
+    ...JSON.parse(await readFile(new URL('../data/venue-overrides.json', import.meta.url))),
+  ];
+  const cases = [
+    ['synthetic-amk-cc', '23 Nov (Mon) 5.30pm-6.30pm AMK CC ($12)', 'onepa:ang-mo-kio-cc', 1.36683348076669, 103.840668130336],
+    ['synthetic-tpc-cc', '27 Nov (Fri) 1-3pm TPC CC ($8)', 'telegram:toa-payoh-central-cc', 1.334934520548422, 103.8502045427675],
+  ];
+  for (const [messageId, text, venueId, lat, lng] of cases) {
+    const result = buildListing(
+      { messageId, postedAt: '2026-11-20T00:00:00.000Z', text },
+      catalog,
+      { now: new Date('2026-11-20T00:00:00.000Z') },
+    );
+    assert.equal(result.venueMatch.status, 'deterministic', text);
+    assert.equal(result.listing.venueId, venueId, text);
+    assert.equal(result.listing.lat, lat, text);
+    assert.equal(result.listing.lng, lng, text);
+    assert.equal(result.listing.status, 'active', text);
+  }
+});
