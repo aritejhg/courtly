@@ -904,7 +904,7 @@
   {
     "id": "telegram:toa-payoh-central-cc",
     "canonicalName": "Toa Payoh Central CC",
-    "aliases": ["Toa Payoh Central CC", "Toa Payoh Central Community Club", "TP Central CC", "TP Central Community Club"],
+    "aliases": ["Toa Payoh Central CC", "Toa Payoh Central Community Club", "TP Central CC", "TP Central Community Club", "TPC CC"],
     "source": "OneMap",
     "sourceUrl": "https://www.onemap.gov.sg/",
     "kind": "community_club",
@@ -1176,6 +1176,18 @@
     "lat": 1.363106005257572,
     "lng": 103.8535605086277,
     "address": "861 Ang Mo Kio Avenue 10, Singapore 569734"
+  },
+  {
+    "id": "onepa:ang-mo-kio-cc",
+    "canonicalName": "Ang Mo Kio CC",
+    "aliases": ["Ang Mo Kio CC", "Ang Mo Kio Community Club", "AMK CC"],
+    "source": "People's Association / data.gov.sg",
+    "sourceUrl": "https://data.gov.sg/datasets/d_9de02d3fb33d96da1855f4fbef549a0f/view",
+    "kind": "community_club",
+    "area": "Ang Mo Kio",
+    "lat": 1.36683348076669,
+    "lng": 103.840668130336,
+    "address": "795 Ang Mo Kio Avenue 1, Singapore 569976"
   },
   {
     "id": "singapore-sports-hub:ocbc-arena",
