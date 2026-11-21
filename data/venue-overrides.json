@@ -1,5 +1,17 @@
 [
   {
+    "id": "manual:anchorvale-community-club",
+    "canonicalName": "Anchorvale CC",
+    "aliases": ["Anchorvale CC", "Anchorvale Community Club"],
+    "source": "OnePA; SLA OneMap",
+    "sourceUrl": "https://www.onepa.gov.sg/cc/anchorvale-cc",
+    "kind": "community_club",
+    "area": "Sengkang",
+    "lat": 1.397083297925743,
+    "lng": 103.8866942404779,
+    "address": "59 Anchorvale Road, Singapore 544965"
+  },
+  {
     "id": "manual:punggol-sport-centre",
     "canonicalName": "Punggol Sport Centre",
     "aliases": [

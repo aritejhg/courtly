@@ -1723,3 +1723,24 @@ test('resolves synthetic community club acronyms after parenthetical price split
     assert.equal(result.listing.status, 'active', text);
   }
 });
+
+test('prefers an explicit community club over a same-name census court record', async () => {
+  const catalog = [
+    ...JSON.parse(await readFile(new URL('../data/badminton-venues.json', import.meta.url))),
+    ...JSON.parse(await readFile(new URL('../data/venue-overrides.json', import.meta.url))),
+    ...JSON.parse(await readFile(new URL('../data/sportsg-badminton-census.json', import.meta.url))),
+  ];
+  const listing = buildListing(
+    { messageId: 'synthetic-anchorvale-cc', postedAt: '2026-11-21T00:00:00.000Z', text: '22 Nov 2026 5-6pm Anchorvale CC' },
+    catalog,
+    { now: new Date('2026-11-21T00:00:00.000Z') },
+  );
+  assert.equal(listing.venueMatch.status, 'deterministic');
+  assert.equal(listing.listing.venueId, 'manual:anchorvale-community-club');
+  assert.equal(listing.listing.lat, 1.397083297925743);
+  assert.equal(listing.listing.lng, 103.8866942404779);
+  assert.equal(listing.listing.status, 'active');
+  const postalVenue = matchVenue('Telok Blangah CC (Postal 108943)', catalog);
+  assert.equal(postalVenue.status, 'deterministic');
+  assert.equal(postalVenue.venue.id, 'sportsg-census:telok-blangah-cc-postal-108943-108943-1-275000-103-808000');
+});

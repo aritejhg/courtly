@@ -121,12 +121,14 @@ function venueAliasIndex(venues) {
     for (const alias of [venue.canonicalName, ...(venue.aliases || [])]) {
       const key = normalize(alias);
       const owners = directOwners.get(key) || new Map();
-      owners.set(name, venue);
+      const current = owners.get(name);
+      if (!current || (venue.kind === 'community_club' && current.kind !== 'community_club')) owners.set(name, venue);
       directOwners.set(key, owners);
     }
     for (const alias of expandedAliases(venue)) {
       const owners = expandedOwners.get(alias) || new Map();
-      owners.set(name, venue);
+      const current = owners.get(name);
+      if (!current || (venue.kind === 'community_club' && current.kind !== 'community_club')) owners.set(name, venue);
       expandedOwners.set(alias, owners);
     }
     const explicitlyVerifiedUnmarkedAliases = new Set((venue.unmarkedAliases || []).map(normalize));
@@ -191,6 +193,14 @@ function catalogVenueMatch(text, venues, { exact = false } = {}) {
   const { directOwners, expandedOwners, expandedPatterns } = venueAliasIndex(venues);
   const explicitlyCommunityClub = /\b(?:cc|community\s+(?:club|centre))\b/i.test(normalizedText)
     && !/\b(?:school|pri(?:mary)?|sec(?:ondary)?|sport(?:s)?\s*hall|sh)\b/i.test(normalizedText);
+  const directMatches = [...new Map([...strictCandidates].flatMap((alias) =>
+    [...(directOwners.get(alias) || new Map()).values()]).map((venue) => [venue.id, venue])).values()];
+  if (directMatches.length === 1) return { venue: directMatches[0], status: 'deterministic', alias: normalizedText };
+  if (directMatches.length > 1 && explicitlyCommunityClub) {
+    const communityClubs = directMatches.filter((venue) => venue.kind === 'community_club');
+    if (communityClubs.length === 1) return { venue: communityClubs[0], status: 'deterministic', alias: normalizedText };
+    if (communityClubs.length > 1) return { venue: null, status: 'ambiguous', candidates: communityClubs.map((venue) => venue.canonicalName) };
+  }
   const hits = [];
   const aliasEntries = exact
     ? [...strictCandidates].flatMap((alias) => [...(expandedOwners.get(alias) || new Map()).values()].map((venue) => ({ venue, alias })))
@@ -201,7 +211,7 @@ function catalogVenueMatch(text, venues, { exact = false } = {}) {
     // extracted instead of attaching the wrong coordinates.
     if (explicitlyCommunityClub && venue.kind !== 'community_club') continue;
     const owners = directOwners.get(alias);
-    if (owners?.size && !owners.has(normalize(venue.canonicalName))) continue;
+    if (owners?.size && ![...owners.values()].some((owner) => normalize(owner.canonicalName) === normalize(venue.canonicalName))) continue;
     // A verified alias is a strict key. Do not turn a known venue name into
     // a fuzzy match merely because it appears inside an unknown name.
     if (exact && !strictCandidates.has(alias)) continue;
@@ -376,6 +386,9 @@ function provisionalVenue(candidate) {
 }
 
 export function matchVenue(text, venues) {
+  const normalizedText = normalize(String(text || ''));
+  const explicitlyCommunityClub = /\b(?:cc|community\s+(?:club|centre))\b/i.test(normalizedText)
+    && !/\b(?:school|pri(?:mary)?|sec(?:ondary)?|sport(?:s)?\s*hall|sh)\b/i.test(normalizedText);
   // A labeled venue field is stronger evidence than a shorter alias embedded
   // in the venue name (for example, `Canberra Sports Hub`).
   const labeledVenueAliases = String(text || '').split(/\r?\n/)
@@ -385,7 +398,12 @@ export function matchVenue(text, venues) {
   const matchingDirectAliases = (values) => [...new Map(values.flatMap((value) =>
     [...(directOwners.get(normalize(value)) || new Map()).values()])
     .map((venue) => [normalize(venue.canonicalName), venue])).values()];
-  const labeledMatches = matchingDirectAliases(labeledVenueAliases);
+  const preferCommunityClubs = (matches) => {
+    if (!explicitlyCommunityClub || matches.length < 2) return matches;
+    const communityClubs = matches.filter((venue) => venue.kind === 'community_club');
+    return communityClubs.length ? communityClubs : matches;
+  };
+  const labeledMatches = preferCommunityClubs(matchingDirectAliases(labeledVenueAliases));
   if (labeledMatches.length === 1) {
     return { venue: labeledMatches[0], status: 'deterministic', alias: labeledVenueAliases.find((value) =>
       [labeledMatches[0].canonicalName, ...(labeledMatches[0].aliases || [])]
@@ -398,7 +416,7 @@ export function matchVenue(text, venues) {
   // a verified direct alias such as `Yew Tee` from colliding with a derived
   // school-hall alias for the same area.
   const exactAlias = normalize(String(text || '').trim());
-  const exactAliases = matchingDirectAliases([exactAlias]);
+  const exactAliases = preferCommunityClubs(matchingDirectAliases([exactAlias]));
   if (exactAliases.length === 1) {
     return { venue: exactAliases[0], status: 'deterministic', alias: exactAlias };
   }
